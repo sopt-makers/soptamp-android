@@ -15,13 +15,12 @@ compose-compiler = "1.3.2"
 material = "1.7.0"
 accompanist = "0.27.1"
 in-app-update = "2.0.1"
-secret-gradle-plugin = "2.0.1"
 
 junit = "4.13.2"
 androidx-test-junit = "1.1.4"
 androidx-test-espresso = "3.5.0"
 
-gradleplugin = "7.3.1"
+gradleplugin = "7.3.0"
 kspplugin = "1.7.20-1.0.8"
 
 dagger-hilt = "2.44.2"
@@ -53,7 +52,6 @@ security = { module = "androidx.security:security-crypto", version.ref = "securi
 
 material = { module = "com.google.android.material:material", version.ref = "material" }
 inappupdate = { module = "com.google.android.play:app-update-ktx", version.ref = "in-app-update" }
-secret-plugin = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "secret-gradle-plugin" }
 
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "activity" }
@@ -146,5 +144,4 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspplugin" }
-secret = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secret-gradle-plugin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
