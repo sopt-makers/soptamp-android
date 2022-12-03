@@ -9,10 +9,13 @@ val Purple100 = Color(0xFFFAF6FF)
 
 // Pink Scale
 val Pink300 = Color(0xFFFF7EAD)
+val Pink200 = Color(0xFFFFD3E3)
 val Pink100 = Color(0xFFFFF1F6)
 
 // Mint Scale
 val Mint300 = Color(0xFF53FFC0)
+val Mint200 = Color(0xFFD3FFF0)
+val Mint100 = Color(0xFFE5FFF6)
 
 // Red Scale
 val Red300 = Color(0xFFD92B2B)
@@ -32,3 +35,5 @@ val Gray300 = Color(0xFFD3D4D5)
 val Gray200 = Color(0xFFE4E5E6)
 val Gray100 = Color(0xFFEFF0F1)
 val Gray50 = Color(0xFFF7F8F9)
+
+val Access300 = Color(0xFF784AB1)
