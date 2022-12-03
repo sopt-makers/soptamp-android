@@ -21,18 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.stamp.designsystem.style.SoptTheme
 
-
 // edittext id 이메일을 입력해주세요.
 // edittext password 비밀번호를 입력해주세요.
 // Button 계정 찾기
 // Button 로그인
 // Button 회원가입
-
-
-@Composable
-fun LoginScreen() {
-
-}
 
 @Composable
 private fun LoginPage() {
@@ -58,7 +51,8 @@ private fun LoginPage() {
                 placeholderColor = Color(0xFF666768),
                 disabledTextColor = Color(0xFF666768)
             ),
-            onValueChange = { username.value = it })
+            onValueChange = { username.value = it }
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
@@ -73,7 +67,8 @@ private fun LoginPage() {
                 placeholderColor = Color(0xFF666768),
                 disabledTextColor = Color(0xFF666768)
             ),
-            onValueChange = { password.value = it })
+            onValueChange = { password.value = it }
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         Box(

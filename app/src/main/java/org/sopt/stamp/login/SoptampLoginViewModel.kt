@@ -12,7 +12,6 @@ class SoptampLoginViewModel {
     private val _singleEvent = Channel<SingleEvent>(Channel.BUFFERED)
     val singleEvent = _singleEvent.receiveAsFlow()
 
-
     sealed interface LoginAction {
         data class Success(val id: String, val password: String) : LoginAction
         data class Fail(val id: String, val password: String) : LoginAction
