@@ -10,11 +10,15 @@ class SoptColors(
     purple200: Color,
     purple100: Color,
     pink300: Color,
+    pink200: Color,
     pink100: Color,
     mint300: Color,
+    mint200: Color,
+    mint100: Color,
     error300: Color,
     error200: Color,
     error100: Color,
+    access300: Color,
     onSurface: Color,
     onSurface90: Color,
     onSurface80: Color,
@@ -36,15 +40,23 @@ class SoptColors(
         private set
     var pink300 by mutableStateOf(pink300)
         private set
+    var pink200 by mutableStateOf(pink200)
+        private set
     var pink100 by mutableStateOf(pink100)
         private set
     var mint300 by mutableStateOf(mint300)
+        private set
+    var mint200 by mutableStateOf(mint200)
+        private set
+    var mint100 by mutableStateOf(mint100)
         private set
     var error300 by mutableStateOf(error300)
         private set
     var error200 by mutableStateOf(error200)
         private set
     var error100 by mutableStateOf(error100)
+        private set
+    var access300 by mutableStateOf(access300)
         private set
     var onSurface by mutableStateOf(onSurface)
         private set
@@ -75,11 +87,15 @@ class SoptColors(
         purple200 = purple200,
         purple100 = purple100,
         pink300 = pink300,
+        pink200 = pink200,
         pink100 = pink100,
         mint300 = mint300,
+        mint200 = mint200,
+        mint100 = mint100,
         error300 = error300,
         error200 = error200,
         error100 = error100,
+        access300 = access300,
         onSurface,
         onSurface90,
         onSurface80,
@@ -99,11 +115,15 @@ class SoptColors(
         purple200 = other.purple200
         purple100 = other.purple100
         pink300 = other.pink300
+        pink200 = other.pink200
         pink100 = other.pink100
         mint300 = other.mint300
+        mint200 = other.mint200
+        mint100 = other.mint100
         error300 = other.error300
         error200 = other.error200
         error100 = other.error100
+        access300 = other.access300
         onSurface = other.onSurface
         onSurface90 = other.onSurface90
         onSurface80 = other.onSurface80
@@ -124,11 +144,15 @@ fun soptLightColors(
     purple200: Color = Purple200,
     purple100: Color = Purple100,
     pink300: Color = Pink300,
+    pink200: Color = Pink200,
     pink100: Color = Pink100,
     mint300: Color = Mint300,
+    mint200: Color = Mint200,
+    mint100: Color = Mint100,
     error300: Color = Red300,
     error200: Color = Red200,
     error100: Color = Red100,
+    access300: Color = Access300,
     onSurface: Color = Black,
     onSurface90: Color = Gray900,
     onSurface80: Color = Gray800,
@@ -145,11 +169,15 @@ fun soptLightColors(
     purple200,
     purple100,
     pink300,
+    pink200,
     pink100,
     mint300,
+    mint200,
+    mint100,
     error300,
     error200,
     error100,
+    access300,
     onSurface,
     onSurface90,
     onSurface80,

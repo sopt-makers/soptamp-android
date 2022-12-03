@@ -36,4 +36,4 @@ val Gray200 = Color(0xFFE4E5E6)
 val Gray100 = Color(0xFFEFF0F1)
 val Gray50 = Color(0xFFF7F8F9)
 
-val Acess300 = Color(0xFF784AB1)
+val Access300 = Color(0xFF784AB1)
