@@ -4,9 +4,12 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,13 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.style.SoptTheme
-import java.lang.IllegalArgumentException
+import org.sopt.stamp.util.MultiFormFactorPreviews
 
 enum class ToolbarIconType(
     @DrawableRes private val resId: Int = -1,
 ) {
     NONE,
-    BACK(R.drawable.ic_back);
+    WRITE(R.drawable.ic_write),
+    DELETE(R.drawable.ic_delete);
 
     companion object {
         fun getIdFrom(type: ToolbarIconType) = values().find { it.name == type.name }?.resId
@@ -31,7 +35,7 @@ enum class ToolbarIconType(
 
 @Composable
 fun Toolbar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     title: String = "",
     iconOption: ToolbarIconType = ToolbarIconType.NONE,
     onBack: () -> Unit = {},
@@ -40,19 +44,24 @@ fun Toolbar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+            .wrapContentHeight(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_back),
                 contentDescription = "Back Button",
                 modifier = Modifier.clickable(onClick = onBack)
+                    .align(Alignment.CenterVertically)
+                    .padding(8.dp),
             )
             Text(
                 text = title,
-                style = SoptTheme.typography.h1,
+                style = SoptTheme.typography.h2,
+                modifier = Modifier.padding(start = 2.dp),
                 color = SoptTheme.colors.onSurface
             )
         }
@@ -60,7 +69,23 @@ fun Toolbar(
         if (iconOption != ToolbarIconType.NONE) {
             Image(
                 painter = painterResource(id = ToolbarIconType.getIdFrom(iconOption)),
-                contentDescription = "Option Menu Icon"
+                contentDescription = "Option Menu Icon",
+                modifier = Modifier.clickable(onClick = onPressIcon)
+            )
+        }
+    }
+}
+
+@MultiFormFactorPreviews
+@Composable
+fun ToolbarPreview() {
+    SoptTheme {
+        Box(
+            Modifier.fillMaxSize()
+        ) {
+            Toolbar(
+                title = "미션",
+                iconOption = ToolbarIconType.WRITE
             )
         }
     }
