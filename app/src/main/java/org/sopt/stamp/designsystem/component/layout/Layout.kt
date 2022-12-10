@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Column(
+fun SoptColumn(
     modifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
@@ -29,7 +29,7 @@ fun Column(
 }
 
 @Composable
-fun Row(
+fun SoptRow(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
@@ -44,7 +44,7 @@ fun Row(
 }
 
 @Composable
-fun Box(
+fun SoptBox(
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.TopStart,
     propagateMinConstraints: Boolean = false,
