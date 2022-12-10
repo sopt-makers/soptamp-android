@@ -23,7 +23,7 @@ fun RatingBar(
     @DrawableRes icon: Int,
     maxStars: Int = DEFAULT_MAX,
     stars: Int,
-    gapSize: Int,
+    gapSize: Int = 10,
     selectedColor: Color = SoptTheme.colors.mint300,
     unselectedColor: Color = SoptTheme.colors.onSurface30,
 ) {
