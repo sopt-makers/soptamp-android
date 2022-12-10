@@ -1,6 +1,5 @@
 package org.sopt.stamp.designsystem.component.mission
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -14,10 +13,8 @@ fun CompletedStamp(
     modifier: Modifier
 ) {
     val completedStamp by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(stamp.lottie))
-    Column {
-        LottieAnimation(
-            composition = completedStamp,
-            modifier = modifier
-        )
-    }
+    LottieAnimation(
+        composition = completedStamp,
+        modifier = modifier
+    )
 }
