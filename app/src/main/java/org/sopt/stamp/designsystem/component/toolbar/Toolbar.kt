@@ -36,9 +36,9 @@ enum class ToolbarIconType(
 @Composable
 fun Toolbar(
     modifier: Modifier = Modifier,
-    title: String = "",
+    title: @Composable (() -> Unit)? = null,
     iconOption: ToolbarIconType = ToolbarIconType.NONE,
-    onBack: () -> Unit = {},
+    onBack: (() -> Unit)? = null,
     onPressIcon: () -> Unit = {},
 ) {
     Row(
@@ -51,19 +51,17 @@ fun Toolbar(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Back Button",
-                modifier = Modifier.clickable(onClick = onBack)
-                    .align(Alignment.CenterVertically)
-                    .padding(8.dp),
-            )
-            Text(
-                text = title,
-                style = SoptTheme.typography.h2,
-                modifier = Modifier.padding(start = 2.dp),
-                color = SoptTheme.colors.onSurface
-            )
+            if (onBack != null) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = "Back Button",
+                    modifier = Modifier
+                        .clickable(onClick = onBack)
+                        .align(Alignment.CenterVertically)
+                        .padding(8.dp),
+                )
+            }
+            title?.invoke()
         }
 
         if (iconOption != ToolbarIconType.NONE) {
@@ -84,8 +82,16 @@ fun ToolbarPreview() {
             Modifier.fillMaxSize()
         ) {
             Toolbar(
-                title = "미션",
-                iconOption = ToolbarIconType.WRITE
+                title = {
+                    Text(
+                        text = "미션",
+                        style = SoptTheme.typography.h2,
+                        modifier = Modifier.padding(start = 2.dp),
+                        color = SoptTheme.colors.onSurface
+                    )
+                },
+                iconOption = ToolbarIconType.WRITE,
+                onBack = {},
             )
         }
     }
