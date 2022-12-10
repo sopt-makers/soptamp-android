@@ -59,7 +59,7 @@ private fun RatingIcon(
 
 @MultiFormFactorPreviews
 @Composable
-fun RatingBarPreview() {
+private fun RatingBarPreview() {
     SoptTheme {
         Box(
             contentAlignment = Alignment.Center

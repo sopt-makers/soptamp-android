@@ -76,7 +76,7 @@ fun Toolbar(
 
 @MultiFormFactorPreviews
 @Composable
-fun ToolbarPreview() {
+private fun ToolbarPreview() {
     SoptTheme {
         Box(
             Modifier.fillMaxSize()
