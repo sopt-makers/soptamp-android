@@ -20,7 +20,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -149,6 +152,7 @@ private fun Memo(
 
 @Composable
 fun MissionDetailScreen() {
+    var memo by remember { mutableStateOf("") }
     SoptTheme {
         SoptColumn(
             modifier = Modifier.fillMaxSize()
@@ -173,16 +177,17 @@ fun MissionDetailScreen() {
                     stars = 2
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                ImageContent("https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg")
+                ImageContent(
+                    "https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg"
+                )
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo("", {}, SoptTheme.colors.mint300)
+                Memo(memo, { memo = it }, SoptTheme.colors.mint300)
             }
 
             Button(
                 onClick = { /*TODO*/ },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
                     .padding(bottom = 24.dp, top = 12.dp),
                 enabled = false,
                 shape = RoundedCornerShape(10.dp),
