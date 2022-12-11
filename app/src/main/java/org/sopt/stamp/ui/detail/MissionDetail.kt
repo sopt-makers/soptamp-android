@@ -182,6 +182,7 @@ fun MissionDetailScreen() {
                 onClick = { /*TODO*/ },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(56.dp)
                     .padding(bottom = 24.dp, top = 12.dp),
                 enabled = false,
                 shape = RoundedCornerShape(10.dp),
