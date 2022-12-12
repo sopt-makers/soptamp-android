@@ -80,8 +80,7 @@ fun PreviewMissionComponent() {
             id = 1,
             title = "일이삼사오육칠팔구십일일이삼사오육칠팔구십일",
             level = MissionLevel.of(1),
-            isCompleted = !false,
-            display = true
+            isCompleted = !false
         )
         MissionComponent(
             modifier = Modifier.width(160.dp),
