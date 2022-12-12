@@ -6,6 +6,5 @@ data class MissionUiModel(
     val id: Int,
     val title: String,
     val level: MissionLevel,
-    val isCompleted: Boolean,
-    val display: Boolean
+    val isCompleted: Boolean
 )
