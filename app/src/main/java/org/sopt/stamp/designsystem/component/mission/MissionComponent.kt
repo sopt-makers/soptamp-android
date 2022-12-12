@@ -26,7 +26,7 @@ fun MissionComponent(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit) = {}
 ) {
-    val shape = MissionShape.DefaultWave
+    val shape = MissionShape.DEFAULT_WAVE
     val stamp = Stamp.findStampByLevel(mission.level)
     Column(
         modifier = Modifier.fillMaxWidth(),

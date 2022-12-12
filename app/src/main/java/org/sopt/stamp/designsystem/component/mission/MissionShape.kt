@@ -111,7 +111,7 @@ internal class MissionShape(
     }
 
     companion object {
-        val DefaultWave: MissionShape = MissionShape(6)
+        val DEFAULT_WAVE: MissionShape = MissionShape(6)
         private const val TOTAL_PATTERN_LENGTH = 0.9f
         private const val SIDE_SIZE_RATIO: Float = 0.05f
     }
@@ -126,7 +126,7 @@ fun PreviewMissionShape() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            val shape = MissionShape.DefaultWave
+            val shape = MissionShape.DEFAULT_WAVE
             Card(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
