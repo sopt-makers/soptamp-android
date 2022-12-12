@@ -36,33 +36,33 @@ internal class MissionShape(
         size: Size,
         layoutDirection: LayoutDirection,
         density: Density
-    ): Outline = Outline.Generic(drawMissionPatternPath(size, patternCount))
+    ): Outline = Outline.Generic(drawMissionPatternPath(size))
 
-    private fun drawMissionPatternPath(size: Size, waveCount: Int): Path {
-        val pattern = MissionPattern(calculatePatternLength(size, waveCount))
-        return drawMissionPatternPath(size, pattern, patternCount)
+    private fun drawMissionPatternPath(size: Size): Path {
+        val pattern = MissionPattern(calculatePatternLength(size))
+        return drawMissionPatternPath(size, pattern)
     }
 
-    private fun calculatePatternLength(size: Size, patternCount: Int): Float {
+    private fun calculatePatternLength(size: Size): Float {
         return size.width * TOTAL_PATTERN_LENGTH / patternCount
     }
 
-    private fun drawMissionPatternPath(size: Size, pattern: MissionPattern, patternCount: Int): Path = Path().apply {
+    private fun drawMissionPatternPath(size: Size, pattern: MissionPattern): Path = Path().apply {
         val sideSize = size.width * SIDE_SIZE_RATIO
         reset()
         moveTo(0f, 0f)
         lineTo(sideSize, 0f)
-        drawTopMissionPattern(size, pattern, patternCount)
+        drawTopMissionPattern(size, pattern)
         lineTo(size.width, 0f)
         lineTo(size.width, size.height)
         lineTo(size.width - sideSize, size.height)
-        drawBottomMissionPattern(size, pattern, patternCount)
+        drawBottomMissionPattern(size, pattern)
         lineTo(0f, size.height)
         lineTo(0f, 0f)
         close()
     }
 
-    private fun Path.drawTopMissionPattern(size: Size, pattern: MissionPattern, patternCount: Int) {
+    private fun Path.drawTopMissionPattern(size: Size, pattern: MissionPattern) {
         val sideSize = size.width * SIDE_SIZE_RATIO
         val rectHeight = pattern.diameter / 2
         for (i in 1..patternCount) {
@@ -86,7 +86,7 @@ internal class MissionShape(
         }
     }
 
-    private fun Path.drawBottomMissionPattern(size: Size, pattern: MissionPattern, patternCount: Int) {
+    private fun Path.drawBottomMissionPattern(size: Size, pattern: MissionPattern) {
         val sideSize = size.width * SIDE_SIZE_RATIO
         val rectHeight = pattern.diameter / 2
         for (i in 1..patternCount) {
