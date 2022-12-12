@@ -38,6 +38,7 @@ google-services = "4.3.14"
 crashlytics = "2.9.2"
 firebase = "31.1.1"
 ktlint = "11.0.0"
+lottie = "5.2.0"
 
 [libraries]
 agp = { module = "com.android.tools.build:gradle", version.ref = "gradleplugin" }
@@ -71,6 +72,7 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 compose-destination-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "compose-destination" }
 compose-destination-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destination" }
 compose-hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "dagger-hilt-navigation-compose" }
+compose-lottie = {module="com.airbnb.android:lottie-compose", version.ref = "lottie"}
 
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 
@@ -123,7 +125,8 @@ compose = [
     "compose-runtime",
     "compose-ui-tooling-preview",
     "compose-hilt-navigation",
-    "compose-material-three"
+    "compose-material-three",
+    "compose-lottie"
 ]
 compose-test = ["compose-junit"]
 compose-android-test = ["compose-ui-test"]
