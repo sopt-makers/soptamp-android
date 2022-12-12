@@ -11,21 +11,20 @@ enum class Stamp(
     val missionLevel: MissionLevel,
     @RawRes val lottie: Int
 ) {
-    LEVEL1(MissionLevel.of(1), R.raw.pinkstamps),
-    LEVEL2(MissionLevel.of(2), R.raw.purplestamp),
-    LEVEL3(MissionLevel.of(3), R.raw.greenstamp);
+    LEVEL1(MissionLevel.of(1), R.raw.pinkstamps), LEVEL2(MissionLevel.of(2), R.raw.purplestamp), LEVEL3(
+        MissionLevel.of(3),
+        R.raw.greenstamp
+    );
 
     val starColor: Color
-        @Composable
-        get() = when (this) {
+        @Composable get() = when (this) {
             LEVEL1 -> SoptTheme.colors.pink300
             LEVEL2 -> SoptTheme.colors.purple300
             LEVEL3 -> SoptTheme.colors.mint300
         }
 
     val background: Color
-        @Composable
-        get() = when (this) {
+        @Composable get() = when (this) {
             LEVEL1 -> SoptTheme.colors.pink100
             LEVEL2 -> SoptTheme.colors.purple100
             LEVEL3 -> SoptTheme.colors.mint100
@@ -36,10 +35,8 @@ enum class Stamp(
     }
 
     companion object {
-
         val defaultStarColor: Color
-            @Composable
-            get() = SoptTheme.colors.onSurface30
+            @Composable get() = SoptTheme.colors.onSurface30
 
         fun findStampByLevel(level: MissionLevel): Stamp = values().find {
             it.hasStampLevel(level)
