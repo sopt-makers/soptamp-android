@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.style.SoptTheme
@@ -23,7 +24,7 @@ fun RatingBar(
     @DrawableRes icon: Int,
     maxStars: Int = DEFAULT_MAX,
     stars: Int,
-    gapSize: Int = 10,
+    gapSize: Dp = 10.dp,
     selectedColor: Color = SoptTheme.colors.mint300,
     unselectedColor: Color = SoptTheme.colors.onSurface30,
 ) {
@@ -33,7 +34,7 @@ fun RatingBar(
 
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(gapSize.dp)
+        horizontalArrangement = Arrangement.spacedBy(gapSize)
     ) {
         repeat(maxStars) {
             val ordinalIndex = it + 1
@@ -68,7 +69,7 @@ private fun RatingBarPreview() {
                 icon = R.drawable.ic_star,
                 maxStars = 3,
                 stars = 2,
-                gapSize = 10,
+                gapSize = 10.dp,
             )
         }
     }

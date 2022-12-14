@@ -28,8 +28,11 @@ enum class ToolbarIconType(
     DELETE(R.drawable.ic_delete);
 
     companion object {
-        fun getIdFrom(type: ToolbarIconType) = values().find { it.name == type.name }?.resId
-            ?: throw IllegalArgumentException("There's no icon in this class. Icon: ${type.name}")
+        @Composable
+        fun getResourceFrom(type: ToolbarIconType) = painterResource(
+            values().find { it.name == type.name }?.resId
+                ?: throw IllegalArgumentException("There's no icon in this class. Icon: ${type.name}")
+        )
     }
 }
 
@@ -66,7 +69,7 @@ fun Toolbar(
 
         if (iconOption != ToolbarIconType.NONE) {
             Image(
-                painter = painterResource(id = ToolbarIconType.getIdFrom(iconOption)),
+                painter = ToolbarIconType.getResourceFrom(iconOption),
                 contentDescription = "Option Menu Icon",
                 modifier = Modifier.clickable(onClick = onPressIcon)
             )
