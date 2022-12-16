@@ -108,8 +108,8 @@ fun TopRanker(
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var onClickRankerState by remember { mutableStateOf(0) }
-        val onClickRankerDescriptionState by remember { mutableStateOf("") }
+        var onClickRankerState by remember { mutableStateOf(topRanker.first.rank) }
+        val onClickRankerDescriptionState by remember { mutableStateOf(topRanker.first.description) }
         if (onClickRankerState > 0) {
             TopRankDescriptionBubble(
                 TopRankerDescriptionBubble.findBubbleByRank(onClickRankerState),
