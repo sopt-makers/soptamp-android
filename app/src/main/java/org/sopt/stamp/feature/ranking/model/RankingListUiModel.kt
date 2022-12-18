@@ -1,8 +1,8 @@
 package org.sopt.stamp.feature.ranking.model
 
 class RankingListUiModel private constructor(
-    val topRankingList: Triple<RankingUiModel, RankingUiModel, RankingUiModel>,
-    val otherRankingList: List<RankingUiModel>
+    val topRankingList: Triple<RankerUiModel, RankerUiModel, RankerUiModel>,
+    val otherRankingList: List<RankerUiModel>
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -28,18 +28,18 @@ class RankingListUiModel private constructor(
     }
 
     companion object {
-        operator fun invoke(rankingList: List<RankingUiModel>): RankingListUiModel {
+        operator fun invoke(rankingList: List<RankerUiModel>): RankingListUiModel {
             return RankingListUiModel(
                 rankingList.getTopRanking(),
                 rankingList.getOtherRanking()
             )
         }
 
-        private fun List<RankingUiModel>.getTopRanking(): Triple<RankingUiModel, RankingUiModel, RankingUiModel> {
+        private fun List<RankerUiModel>.getTopRanking(): Triple<RankerUiModel, RankerUiModel, RankerUiModel> {
             val topRankPartition = this.partition { it.isTopRank() }.first.toMutableList()
-            if (topRankPartition.size != RankingUiModel.STANDARD_TOP_RANK) {
-                repeat(RankingUiModel.STANDARD_TOP_RANK - topRankPartition.size) {
-                    topRankPartition.add(RankingUiModel.DEFAULT_RANK)
+            if (topRankPartition.size != RankerUiModel.STANDARD_TOP_RANK) {
+                repeat(RankerUiModel.STANDARD_TOP_RANK - topRankPartition.size) {
+                    topRankPartition.add(RankerUiModel.DEFAULT_RANK)
                 }
             }
             return Triple(
@@ -49,9 +49,8 @@ class RankingListUiModel private constructor(
             )
         }
 
-        private fun List<RankingUiModel>.getOtherRanking(): List<RankingUiModel> {
-            return this.partition { it.isNotTopRank() }
-                .second
+        private fun List<RankerUiModel>.getOtherRanking(): List<RankerUiModel> {
+            return this.filter { it.isNotTopRank() }
         }
     }
 }
