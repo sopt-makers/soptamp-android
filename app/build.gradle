@@ -10,6 +10,9 @@ plugins {
     alias libs.plugins.kotlinx.serialization
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'org.sopt.stamp'
     compileSdk 33
@@ -25,6 +28,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "SOPTAMP_API_KEY", properties["apiKey"]
     }
 
     buildTypes {
