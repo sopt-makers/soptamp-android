@@ -1,5 +1,6 @@
 package org.sopt.stamp.remote.model
 
+@kotlinx.serialization.Serializable
 data class MissionsResponse(
     val missions: List<MissionResponse>
 ) {

@@ -1,4 +1,4 @@
-package org.sopt.stamp.remote.api
+package org.sopt.stamp.remote.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -11,6 +11,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import org.sopt.stamp.remote.api.SoptampService
 import retrofit2.Retrofit
 import retrofit2.create
 

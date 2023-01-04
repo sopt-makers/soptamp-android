@@ -1,0 +1,45 @@
+package org.sopt.stamp.data.repository
+
+import javax.inject.Inject
+import org.sopt.stamp.data.error.ErrorData
+import org.sopt.stamp.data.mapper.toDomain
+import org.sopt.stamp.data.source.MissionsDataSource
+import org.sopt.stamp.domain.model.Missions
+import org.sopt.stamp.domain.repository.MissionsRepository
+
+class RemoteMissionsRepository @Inject constructor(
+    private val remote: MissionsDataSource
+) : MissionsRepository {
+    override suspend fun getAllMissions(userId: Int): Result<Missions> {
+        val result = remote.getAllMission(userId)
+            .mapCatching { it.toDomain() }
+        val exception = result.exceptionOrNull()
+        return if (exception is ErrorData) {
+            Result.failure(exception.toDomain())
+        } else {
+            result
+        }
+    }
+
+    override suspend fun getCompleteMissions(userId: Int): Result<Missions> {
+        val result = remote.getCompleteMission(userId)
+            .mapCatching { it.toDomain() }
+        val exception = result.exceptionOrNull()
+        return if (exception is ErrorData) {
+            Result.failure(exception.toDomain())
+        } else {
+            result
+        }
+    }
+
+    override suspend fun getInCompleteMissions(userId: Int): Result<Missions> {
+        val result = remote.getIncompleteMissions(userId)
+            .mapCatching { it.toDomain() }
+        val exception = result.exceptionOrNull()
+        return if (exception is ErrorData) {
+            Result.failure(exception.toDomain())
+        } else {
+            result
+        }
+    }
+}
