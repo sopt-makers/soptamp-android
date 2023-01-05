@@ -12,6 +12,7 @@ class MissionsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SoptTheme {
+                MissionListScreen()
             }
         }
     }
