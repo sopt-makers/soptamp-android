@@ -1,4 +1,4 @@
-package org.sopt.stamp.data.di
+package org.sopt.stamp.di
 
 import dagger.Binds
 import dagger.Module

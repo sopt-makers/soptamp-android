@@ -1,11 +1,11 @@
-package org.sopt.stamp.remote.di
+package org.sopt.stamp.di
 
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.sopt.stamp.data.remote.source.RemoteMissionsDataSource
 import org.sopt.stamp.data.source.MissionsDataSource
-import org.sopt.stamp.remote.source.RemoteMissionsDataSource
 import javax.inject.Singleton
 
 @Module
