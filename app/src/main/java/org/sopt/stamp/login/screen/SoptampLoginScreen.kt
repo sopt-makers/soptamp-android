@@ -1,5 +1,7 @@
 package org.sopt.stamp.login.screen
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -11,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -19,6 +22,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.style.SoptTheme
 
 // edittext id 이메일을 입력해주세요.
@@ -38,7 +42,10 @@ private fun LoginPage() {
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
 
-        Text(text = "SOPTAMP!", style = TextStyle(fontSize = 40.sp))
+        Image(
+            painter = painterResource(id = R.drawable.ic_soptamp),
+            contentDescription = "sopatmp logo",
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
