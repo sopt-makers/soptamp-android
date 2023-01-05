@@ -2,9 +2,7 @@ package org.sopt.stamp.feature.ranking
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FabPosition
@@ -22,8 +20,8 @@ import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
-import org.sopt.stamp.feature.ranking.model.RankingListUiModel
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
+import org.sopt.stamp.feature.ranking.model.RankingListUiModel
 
 @Composable
 fun RankingScreen(

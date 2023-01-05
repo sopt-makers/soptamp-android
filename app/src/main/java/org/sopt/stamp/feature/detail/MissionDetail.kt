@@ -20,10 +20,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,7 +50,7 @@ private fun HeaderView(
                 shape = RoundedCornerShape(10.dp)
             )
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp)
     ) {
         Column(
             modifier = Modifier.background(SoptTheme.colors.onSurface5),
@@ -69,7 +69,7 @@ private fun HeaderView(
 
 @Composable
 private fun ImageContent(
-    content: Any? = null,
+    content: Any? = null
 ) {
     val isImageEmpty = remember(content) { content == null }
 
@@ -95,7 +95,7 @@ private fun ImageContent(
                 Text(
                     text = "달성 사진을 올려주세요",
                     style = SoptTheme.typography.sub2,
-                    color = SoptTheme.colors.onSurface50,
+                    color = SoptTheme.colors.onSurface50
                 )
             }
         } else {
@@ -138,13 +138,13 @@ private fun Memo(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             textColor = SoptTheme.colors.onSurface90,
-            placeholderColor = SoptTheme.colors.onSurface60,
+            placeholderColor = SoptTheme.colors.onSurface60
         ),
         textStyle = SoptTheme.typography.caption1,
         placeholder = {
             Text(
                 text = "메모를 작성해 주세요.",
-                style = SoptTheme.typography.caption1,
+                style = SoptTheme.typography.caption1
             )
         }
     )
@@ -194,7 +194,7 @@ fun MissionDetailScreen() {
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = SoptTheme.colors.mint300,
                     disabledBackgroundColor = SoptTheme.colors.mint300.copy(alpha = 0.8f)
-                ),
+                )
             ) {
                 Text(
                     text = "제출",
