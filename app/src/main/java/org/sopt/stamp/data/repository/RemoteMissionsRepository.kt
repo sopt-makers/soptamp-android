@@ -4,13 +4,13 @@ import javax.inject.Inject
 import org.sopt.stamp.data.error.ErrorData
 import org.sopt.stamp.data.mapper.toDomain
 import org.sopt.stamp.data.source.MissionsDataSource
-import org.sopt.stamp.domain.model.Missions
+import org.sopt.stamp.domain.model.Mission
 import org.sopt.stamp.domain.repository.MissionsRepository
 
 class RemoteMissionsRepository @Inject constructor(
     private val remote: MissionsDataSource
 ) : MissionsRepository {
-    override suspend fun getAllMissions(userId: Int): Result<Missions> {
+    override suspend fun getAllMissions(userId: Int): Result<List<Mission>> {
         val result = remote.getAllMission(userId)
             .mapCatching { it.toDomain() }
         val exception = result.exceptionOrNull()
@@ -21,7 +21,7 @@ class RemoteMissionsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getCompleteMissions(userId: Int): Result<Missions> {
+    override suspend fun getCompleteMissions(userId: Int): Result<List<Mission>> {
         val result = remote.getCompleteMission(userId)
             .mapCatching { it.toDomain() }
         val exception = result.exceptionOrNull()
@@ -32,7 +32,7 @@ class RemoteMissionsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getInCompleteMissions(userId: Int): Result<Missions> {
+    override suspend fun getInCompleteMissions(userId: Int): Result<List<Mission>> {
         val result = remote.getIncompleteMissions(userId)
             .mapCatching { it.toDomain() }
         val exception = result.exceptionOrNull()
