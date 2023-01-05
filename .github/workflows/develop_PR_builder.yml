@@ -36,6 +36,11 @@ jobs:
       - name: Change gradlew permissions
         run: chmod +x ./gradlew
 
+      - name: Add Properties
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: echo apiKey=\"$API_KEY\" >> ./local.properties
+
       - name: Access Firebase Service
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
 
