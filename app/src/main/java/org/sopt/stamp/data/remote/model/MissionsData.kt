@@ -1,4 +1,4 @@
-package org.sopt.stamp.data.model
+package org.sopt.stamp.data.remote.model
 
 data class MissionsData(
     val missions: List<MissionData>

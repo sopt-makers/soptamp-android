@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.sopt.stamp.data.remote.service.StampService
-import org.sopt.stamp.remote.api.SoptampService
+import org.sopt.stamp.data.remote.api.StampService
+import org.sopt.stamp.data.remote.api.SoptampService
 import retrofit2.Retrofit
 import javax.inject.Singleton
 

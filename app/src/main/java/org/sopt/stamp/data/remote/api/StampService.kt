@@ -1,9 +1,9 @@
-package org.sopt.stamp.data.remote.service
+package org.sopt.stamp.data.remote.api
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.sopt.stamp.data.model.response.ModifyStampResponse
-import org.sopt.stamp.data.model.response.StampResponse
+import org.sopt.stamp.data.remote.model.response.ModifyStampResponse
+import org.sopt.stamp.data.remote.model.response.StampResponse
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST

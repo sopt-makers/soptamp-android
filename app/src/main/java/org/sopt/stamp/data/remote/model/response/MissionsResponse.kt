@@ -1,4 +1,4 @@
-package org.sopt.stamp.remote.model
+package org.sopt.stamp.data.remote.model.response
 
 import kotlinx.serialization.Serializable
 

@@ -1,11 +1,11 @@
-package org.sopt.stamp.remote.source
+package org.sopt.stamp.data.remote.source
 
 import java.net.UnknownHostException
 import javax.inject.Inject
 import org.sopt.stamp.data.error.ErrorData
-import org.sopt.stamp.data.model.MissionsData
+import org.sopt.stamp.data.remote.model.MissionsData
 import org.sopt.stamp.data.source.MissionsDataSource
-import org.sopt.stamp.remote.api.SoptampService
+import org.sopt.stamp.data.remote.api.SoptampService
 import org.sopt.stamp.remote.mapper.toData
 
 internal class RemoteMissionsDataSource @Inject constructor(

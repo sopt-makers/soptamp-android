@@ -1,6 +1,6 @@
 package org.sopt.stamp.data.mapper // ktlint-disable filename
 
-import org.sopt.stamp.data.model.MissionsData
+import org.sopt.stamp.data.remote.model.MissionsData
 import org.sopt.stamp.domain.model.Missions
 
 internal fun MissionsData.toDomain(): Missions = Missions(
