@@ -243,6 +243,9 @@ fun PreviewMissionListScreen() {
         )
     )
     SoptTheme {
-        MissionListScreen(missionListUiModel, listOf("전체 미션", "완료 미션", "미완료 미션"))
+        MissionListScreen(
+            missionListUiModel,
+            listOf("전체 미션", "완료 미션", "미완료 미션")
+        )
     }
 }
