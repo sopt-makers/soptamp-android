@@ -67,6 +67,7 @@ android {
 }
 
 dependencies {
+    implementation libs.kotlin.datetime
     implementation libs.kotlin.serialization.json
     implementation libs.core.ktx
     implementation libs.bundles.compose
