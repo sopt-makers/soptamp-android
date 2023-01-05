@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.sopt.stamp.BuildConfig
-import org.sopt.stamp.di.constant.String
+import org.sopt.stamp.di.constant.Strings
 import org.sopt.stamp.di.constant.Constant
 import javax.inject.Singleton
 
@@ -14,6 +14,6 @@ import javax.inject.Singleton
 object ConstantModule {
     @Provides
     @Singleton
-    @String(Constant.SOPTAMP_API_KEY)
+    @Strings(Constant.SOPTAMP_API_KEY)
     fun provideBaseUrl() = BuildConfig.SOPTAMP_API_KEY
 }

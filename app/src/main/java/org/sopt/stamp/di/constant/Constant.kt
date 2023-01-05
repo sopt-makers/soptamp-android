@@ -4,7 +4,7 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class String(val value: Constant)
+annotation class Strings(val value: Constant)
 
 enum class Constant {
     SOPTAMP_API_KEY
