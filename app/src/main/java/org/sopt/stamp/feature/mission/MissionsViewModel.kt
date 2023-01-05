@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,6 @@ import kotlinx.coroutines.launch
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.domain.repository.MissionsRepository
 import org.sopt.stamp.feature.mission.model.toUiModel
-import javax.inject.Inject
 
 @HiltViewModel
 class MissionsViewModel @Inject constructor(

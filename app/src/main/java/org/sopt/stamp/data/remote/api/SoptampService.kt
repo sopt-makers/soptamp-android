@@ -5,12 +5,12 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 
 internal interface SoptampService {
-    @GET("/mission/all")
+    @GET("mission/all")
     suspend fun getAllMissions(@Header("userId") userId: Int): List<MissionResponse>
 
-    @GET("/mission/complete")
+    @GET("mission/complete")
     suspend fun getCompleteMissions(@Header("userId") userId: Int): List<MissionResponse>
 
-    @GET("/mission/incomplete")
+    @GET("mission/incomplete")
     suspend fun getIncompleteMissions(@Header("userId") userId: Int): List<MissionResponse>
 }
