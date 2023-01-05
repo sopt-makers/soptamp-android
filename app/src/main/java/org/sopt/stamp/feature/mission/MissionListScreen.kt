@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -77,7 +77,7 @@ fun MissionListScreen(
 @Composable
 fun MissionListHeader(
     title: String,
-    onMenuClick: (MissionFilter) -> Unit = {}
+    onMenuClick: (String) -> Unit = {}
 ) {
     SoptTopAppBar(
         title = { MissionListHeaderTitle(title = title) },
@@ -98,9 +98,11 @@ fun MissionListHeaderTitle(
 
 @Composable
 fun DropDownMenuButton(
-    onMenuClick: (MissionFilter) -> Unit = {}
+    onMenuClick: (String) -> Unit = {}
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }
+    val menuTexts = listOf("전체 미션", "완료 미션", "미완료 미션")
+    var selectedIndex by remember { mutableStateOf(0) }
     Box {
         SoptampIconButton(
             imageVector = if (isMenuExpanded) {
@@ -118,22 +120,22 @@ fun DropDownMenuButton(
             offset = DpOffset((-69).dp, 12.dp),
             onDismissRequest = { isMenuExpanded = false }
         ) {
-            MissionFilter.values().forEach {
+            menuTexts.forEach { menuText ->
                 DropdownMenuItem(
                     contentPadding = PaddingValues(
                         horizontal = 20.dp,
                         vertical = 8.dp
                     ),
                     onClick = {
-                        onMenuClick(it)
-                        it.select()
+                        onMenuClick(menuText)
+                        selectedIndex = menuTexts.indexOf(menuText)
                         isMenuExpanded = false
                     }
                 ) {
                     Text(
-                        text = it.text,
+                        text = menuText,
                         style = SoptTheme.typography.h3,
-                        color = if (it.isSelected) Color.Black else SoptTheme.colors.onSurface40
+                        color = if (menuText == menuTexts[selectedIndex]) Color.Black else SoptTheme.colors.onSurface40
                     )
                 }
             }

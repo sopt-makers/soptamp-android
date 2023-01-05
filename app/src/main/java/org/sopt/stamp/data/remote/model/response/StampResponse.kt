@@ -1,10 +1,10 @@
-package org.sopt.stamp.data.model.response
+package org.sopt.stamp.data.remote.model.response
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseStampDto(
+data class StampResponse(
     val createdAt: Instant? = null,
     val updatedAt: Instant? = null,
     val id: Long,

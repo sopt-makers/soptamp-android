@@ -1,8 +1,8 @@
-package org.sopt.stamp.data.model.response
+package org.sopt.stamp.data.remote.model.response
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseModifyStampDto(
+data class ModifyStampResponse(
     val stampId: Int,
 )

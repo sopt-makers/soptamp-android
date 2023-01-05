@@ -1,9 +1,9 @@
-package org.sopt.stamp.data.remote.service
+package org.sopt.stamp.data.remote.api
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.sopt.stamp.data.model.response.ResponseModifyStampDto
-import org.sopt.stamp.data.model.response.ResponseStampDto
+import org.sopt.stamp.data.remote.model.response.ModifyStampResponse
+import org.sopt.stamp.data.remote.model.response.StampResponse
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -15,7 +15,7 @@ interface StampService {
     @GET("stamp/{missionId}")
     suspend fun retrieveStamp(
         @Path("missionId") missionId: Int
-    ): ResponseStampDto
+    ): StampResponse
 
     @Multipart
     @PUT("stamp/{missionId}")
@@ -23,7 +23,7 @@ interface StampService {
         @Path("missionId") missionId: Int,
         @Part stampContent: RequestBody,
         @Part imageUrl: MultipartBody.Part? = null,
-    ): ResponseModifyStampDto
+    ): ModifyStampResponse
 
     @Multipart
     @POST("stamp/{missionId}")
@@ -31,5 +31,5 @@ interface StampService {
         @Path("missionId") missionId: Int,
         @Part stampContent: RequestBody,
         @Part imageUrl: MultipartBody.Part? = null,
-    ): ResponseStampDto
+    ): StampResponse
 }
