@@ -1,7 +1,7 @@
 package org.sopt.stamp.remote.mapper // ktlint-disable filename
 
-import org.sopt.stamp.data.remote.model.MissionsData
-import org.sopt.stamp.data.remote.model.response.MissionsResponse
+import org.sopt.stamp.data.model.MissionsData
+import org.sopt.stamp.remote.model.MissionsResponse
 
 internal fun MissionsResponse.toData(): MissionsData = MissionsData(
     missions = this.missions.map { it.toData() }

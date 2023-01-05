@@ -1,12 +1,11 @@
 package org.sopt.stamp.data.mapper // ktlint-disable filename
 
-import org.sopt.stamp.data.remote.model.MissionsData
-import org.sopt.stamp.domain.model.Missions
+import org.sopt.stamp.data.model.MissionData
+import org.sopt.stamp.domain.model.Mission
 
-internal fun MissionsData.toDomain(): Missions = Missions(
-    missions = this.missions.map { it.toDomain() }
-)
-internal fun MissionsData.MissionData.toDomain(): Missions.Mission = Missions.Mission(
+internal fun List<MissionData>.toDomain(): List<Mission> = this.map { it.toDomain() }
+
+internal fun MissionData.toDomain(): Mission = Mission(
     id = this.id,
     title = this.title,
     level = this.level,

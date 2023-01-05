@@ -1,6 +1,6 @@
-package org.sopt.stamp.data.remote.api
+package org.sopt.stamp.remote.api
 
-import org.sopt.stamp.data.remote.model.response.MissionsResponse
+import org.sopt.stamp.remote.model.MissionsResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 
