@@ -7,7 +7,7 @@ import org.sopt.stamp.data.source.MissionsDataSource
 import org.sopt.stamp.domain.model.Mission
 import org.sopt.stamp.domain.repository.MissionsRepository
 
-class RemoteMissionsRepository @Inject constructor(
+internal class RemoteMissionsRepository @Inject constructor(
     private val remote: MissionsDataSource
 ) : MissionsRepository {
     override suspend fun getAllMissions(userId: Int): Result<List<Mission>> {
