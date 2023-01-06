@@ -24,8 +24,8 @@ class MissionNavArgsSerializer : DestinationsNavTypeSerializer<MissionNavArgs> {
         return "${value.id}::${value.title}::${value.level}::${value.isCompleted}"
     }
 
-    override fun fromRouteString(value: String): MissionNavArgs {
-        val (id, title, level, isCompleted) = value.split("::")
+    override fun fromRouteString(routeStr: String): MissionNavArgs {
+        val (id, title, level, isCompleted) = routeStr.split("::")
         return MissionNavArgs(
             id = id.toInt(),
             title = title,

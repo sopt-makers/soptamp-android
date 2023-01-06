@@ -38,6 +38,9 @@ import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.ratingbar.RatingBar
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.domain.MissionLevel
+import org.sopt.stamp.domain.model.Mission
+import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
@@ -156,7 +159,7 @@ private fun Memo(
 @Destination("detail")
 @Composable
 fun MissionDetailScreen(
-
+    args: MissionNavArgs
 ) {
     var memo by remember { mutableStateOf("") }
     SoptTheme {
@@ -215,7 +218,13 @@ fun MissionDetailScreen(
 @DefaultPreview
 @Composable
 fun MissionDetailPreview() {
+    val args = MissionNavArgs(
+        id = 1,
+        title = "앱잼 팀원 다 함께 바다 보고 오기",
+        level = MissionLevel.of(2),
+        isCompleted = false,
+    )
     SoptTheme {
-        MissionDetailScreen()
+        MissionDetailScreen(args)
     }
 }
