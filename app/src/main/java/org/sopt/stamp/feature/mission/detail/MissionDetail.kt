@@ -1,4 +1,4 @@
-package org.sopt.stamp.ui.detail
+package org.sopt.stamp.feature.mission.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

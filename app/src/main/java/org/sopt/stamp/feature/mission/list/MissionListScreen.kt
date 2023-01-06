@@ -1,4 +1,4 @@
-package org.sopt.stamp.feature.mission
+package org.sopt.stamp.feature.mission.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -43,6 +43,8 @@ import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.model.MissionsFilter
+import org.sopt.stamp.feature.mission.MissionsState
+import org.sopt.stamp.feature.mission.MissionsViewModel
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
 
 @MissionNavGraph(true)
