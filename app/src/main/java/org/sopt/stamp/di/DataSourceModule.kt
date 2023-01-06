@@ -5,8 +5,10 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.sopt.stamp.data.remote.source.RemoteMissionsDataSource
+import org.sopt.stamp.data.remote.source.RemoteRankingDataSource
 import org.sopt.stamp.data.remote.source.RemoteUserDataSource
 import org.sopt.stamp.data.source.MissionsDataSource
+import org.sopt.stamp.data.source.RankingDataSource
 import org.sopt.stamp.data.source.UserDataSource
 import javax.inject.Singleton
 
@@ -24,4 +26,10 @@ internal abstract class DataSourceModule {
     abstract fun bindRemoteUserDataSource(
         source: RemoteUserDataSource
     ): UserDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindRemoteRankDataSource(
+        source: RemoteRankingDataSource
+    ): RankingDataSource
 }
