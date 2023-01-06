@@ -104,18 +104,21 @@ fun PreviewTopRankerList() {
             topRanker = Triple(
                 RankerUiModel(
                     rank = 1,
-                    user = "jinsu",
+                    userId = 1,
+                    nickname = "jinsu",
                     score = 1000
 
                 ),
                 RankerUiModel(
                     rank = 2,
-                    user = "jinsu",
+                    userId = 1,
+                    nickname = "jinsu",
                     score = 900
                 ),
                 RankerUiModel(
                     rank = 3,
-                    user = "jinsu",
+                    userId = 1,
+                    nickname = "jinsu",
                     score = 800
                 )
             )

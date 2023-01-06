@@ -43,7 +43,7 @@ fun RankListItem(item: RankerUiModel) {
         Spacer(modifier = Modifier.size(16.dp))
         RankerInformation(
             modifier = Modifier.weight(1f),
-            user = item.user,
+            user = item.nickname,
             description = item.description
         )
         Spacer(modifier = Modifier.size(12.dp))
@@ -84,7 +84,8 @@ fun PreviewRankListItem() {
         RankListItem(
             item = RankerUiModel(
                 rank = 4,
-                user = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                userId = 1,
+                nickname = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
                 description = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
                 score = 300
             )

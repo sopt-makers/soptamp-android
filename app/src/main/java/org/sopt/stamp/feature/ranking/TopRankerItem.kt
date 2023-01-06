@@ -29,7 +29,7 @@ fun TopRankerItem(
     height: Dp,
     onClick: (Int, String) -> Unit = { _, _ -> }
 ) {
-    val (rank, user, description, score) = ranker
+    val (rank, userId, nickname, description, score) = ranker
     Column(
         modifier = Modifier.noRippleClickable { onClick(rank, description ?: RankerUiModel.DEFAULT_DESCRIPTION) },
         verticalArrangement = Arrangement.Bottom,
@@ -39,7 +39,7 @@ fun TopRankerItem(
         TopRankBarOfGraph(rank = rank, score = score, height = height)
         Spacer(modifier = Modifier.size(10.dp))
         Text(
-            text = user,
+            text = nickname,
             style = SoptTheme.typography.h3,
             color = Color.Black
         )
@@ -98,7 +98,8 @@ fun PreviewTopRankerItem() {
         TopRankerItem(
             ranker = RankerUiModel(
                 rank = 1,
-                user = "jinsu",
+                userId = 1,
+                nickname = "jinsu",
                 score = 1000
             ),
             height = 150.dp

@@ -77,7 +77,8 @@ fun PreviewRankingScreen() {
         previewRanking.add(
             RankerUiModel(
                 rank = it + 1,
-                user = "jinsu",
+                userId = 1,
+                nickname = "jinsu",
                 score = 1000 - (it * 10)
             )
         )
