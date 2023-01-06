@@ -1,13 +1,13 @@
 package org.sopt.stamp
 
 import android.app.Application
-import com.airbnb.mvrx.mocking.MockableMavericks
+import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        MockableMavericks.initialize(this)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }

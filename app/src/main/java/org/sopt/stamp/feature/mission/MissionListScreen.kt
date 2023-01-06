@@ -30,8 +30,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
 import org.sopt.stamp.R
+import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
 import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
@@ -43,25 +45,31 @@ import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
 
+@MissionNavGraph(true)
+@Destination("list")
 @Composable
 fun MissionListScreen(
-    missionsViewModel: MissionsViewModel = viewModel()
+    missionsViewModel: MissionsViewModel = hiltViewModel()
 ) {
     val state by missionsViewModel.state.collectAsState()
-    when (state) {
-        MissionsState.Loading -> Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) { CircularProgressIndicator() }
-        MissionsState.Failure -> NetworkErrorDialog {
-            missionsViewModel.fetchMissions()
+    SoptTheme {
+        when (state) {
+            MissionsState.Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
+
+            MissionsState.Failure -> NetworkErrorDialog {
+                missionsViewModel.fetchMissions()
+            }
+
+            is MissionsState.Success -> MissionListScreen(
+                missionListUiModel = (state as MissionsState.Success).missionListUiModel,
+                menuTexts = MissionsFilter.getTitleOfMissionsList(),
+                onMenuClick = { filter -> missionsViewModel.fetchMissions(filter) },
+                onMissionItemClick = {}
+            )
         }
-        is MissionsState.Success -> MissionListScreen(
-            missionListUiModel = (state as MissionsState.Success).missionListUiModel,
-            menuTexts = MissionsFilter.getTitleOfMissionsList(),
-            onMenuClick = { filter -> missionsViewModel.fetchMissions(filter) },
-            onMissionItemClick = {}
-        )
     }
 }
 
