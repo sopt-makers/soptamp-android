@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
@@ -45,13 +47,17 @@ import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.feature.mission.MissionsState
 import org.sopt.stamp.feature.mission.MissionsViewModel
+import org.sopt.stamp.feature.mission.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
+import org.sopt.stamp.feature.mission.model.MissionNavArgs
+import org.sopt.stamp.feature.mission.model.toArgs
 
 @MissionNavGraph(true)
 @Destination("list")
 @Composable
 fun MissionListScreen(
-    missionsViewModel: MissionsViewModel = hiltViewModel()
+    missionsViewModel: MissionsViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
     val state by missionsViewModel.state.collectAsState()
     SoptTheme {
@@ -69,7 +75,7 @@ fun MissionListScreen(
                 missionListUiModel = (state as MissionsState.Success).missionListUiModel,
                 menuTexts = MissionsFilter.getTitleOfMissionsList(),
                 onMenuClick = { filter -> missionsViewModel.fetchMissions(filter) },
-                onMissionItemClick = {}
+                onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) }
             )
         }
     }
@@ -80,7 +86,7 @@ fun MissionListScreen(
     missionListUiModel: MissionListUiModel,
     menuTexts: List<String>,
     onMenuClick: (String) -> Unit = {},
-    onMissionItemClick: () -> Unit = {}
+    onMissionItemClick: (item: MissionNavArgs) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -110,7 +116,9 @@ fun MissionListScreen(
                     MissionComponent(
                         mission = missionUiModel,
                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 20.dp),
-                        onClick = {}
+                        onClick = {
+                            onMissionItemClick(missionUiModel.toArgs())
+                        }
                     )
                 }
             }

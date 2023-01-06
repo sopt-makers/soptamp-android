@@ -32,6 +32,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
@@ -39,7 +41,6 @@ import org.sopt.stamp.designsystem.component.ratingbar.RatingBar
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
-import org.sopt.stamp.domain.model.Mission
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.util.DefaultPreview
 
@@ -159,8 +160,10 @@ private fun Memo(
 @Destination("detail")
 @Composable
 fun MissionDetailScreen(
-    args: MissionNavArgs
+    args: MissionNavArgs,
+    resultNavigator: ResultBackNavigator<Boolean>
 ) {
+    val (id, title, level, isCompleted) = args
     var memo by remember { mutableStateOf("") }
     SoptTheme {
         SoptColumn(
@@ -176,7 +179,9 @@ fun MissionDetailScreen(
                         color = SoptTheme.colors.onSurface
                     )
                 },
-                onBack = {}
+                onBack = {
+                    resultNavigator.navigateBack(false)
+                }
             )
             Column(
                 modifier = Modifier.weight(1f)
@@ -225,6 +230,6 @@ fun MissionDetailPreview() {
         isCompleted = false,
     )
     SoptTheme {
-        MissionDetailScreen(args)
+        MissionDetailScreen(args, EmptyResultBackNavigator())
     }
 }
