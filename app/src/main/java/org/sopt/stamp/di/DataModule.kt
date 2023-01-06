@@ -5,9 +5,11 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.sopt.stamp.data.repository.RemoteMissionsRepository
+import org.sopt.stamp.data.repository.RemoteRankingRepository
 import org.sopt.stamp.data.repository.RemoteUserRepository
 import org.sopt.stamp.data.repository.StampRepositoryImpl
 import org.sopt.stamp.domain.repository.MissionsRepository
+import org.sopt.stamp.domain.repository.RankingRepository
 import org.sopt.stamp.domain.repository.StampRepository
 import org.sopt.stamp.domain.repository.UserRepository
 import javax.inject.Singleton
@@ -21,6 +23,12 @@ internal abstract class DataModule {
     abstract fun bindMissionsRepository(
         repository: RemoteMissionsRepository
     ): MissionsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRankRepository(
+        repository: RemoteRankingRepository
+    ): RankingRepository
 
     @Binds
     @Singleton
