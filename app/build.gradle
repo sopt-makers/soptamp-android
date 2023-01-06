@@ -71,6 +71,8 @@ dependencies {
     implementation libs.kotlin.serialization.json
     implementation libs.core.ktx
     implementation libs.bundles.compose
+    implementation libs.compose.destination.core
+    ksp libs.compose.destination.ksp
     implementation libs.appcompat
     implementation libs.lifecycle.viewmodel
     implementation libs.startup
