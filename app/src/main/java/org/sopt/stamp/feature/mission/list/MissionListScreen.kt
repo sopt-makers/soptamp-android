@@ -38,7 +38,7 @@ import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
 import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
 import org.sopt.stamp.designsystem.component.mission.MissionComponent
-import org.sopt.stamp.designsystem.component.mission.model.MissionUiModel
+import org.sopt.stamp.feature.mission.model.MissionUiModel
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel

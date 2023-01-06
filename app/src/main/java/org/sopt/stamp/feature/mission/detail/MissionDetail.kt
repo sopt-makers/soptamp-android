@@ -31,7 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.ramcosta.composedestinations.annotation.Destination
 import org.sopt.stamp.R
+import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.ratingbar.RatingBar
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
@@ -150,8 +152,12 @@ private fun Memo(
     )
 }
 
+@MissionNavGraph
+@Destination("detail")
 @Composable
-fun MissionDetailScreen() {
+fun MissionDetailScreen(
+
+) {
     var memo by remember { mutableStateOf("") }
     SoptTheme {
         SoptColumn(
