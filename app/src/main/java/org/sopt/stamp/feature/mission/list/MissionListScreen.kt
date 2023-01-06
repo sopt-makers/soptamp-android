@@ -33,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultBackNavigator
+import com.ramcosta.composedestinations.result.ResultRecipient
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
@@ -57,9 +59,19 @@ import org.sopt.stamp.feature.mission.model.toArgs
 @Composable
 fun MissionListScreen(
     missionsViewModel: MissionsViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    resultRecipient: ResultRecipient<MissionDetailScreenDestination, Boolean>
 ) {
     val state by missionsViewModel.state.collectAsState()
+
+    resultRecipient.onNavResult { result ->
+        when(result) {
+            is NavResult.Canceled -> Unit
+            is NavResult.Value -> {
+                if (result.value) missionsViewModel.fetchMissions()
+            }
+        }
+    }
     SoptTheme {
         when (state) {
             MissionsState.Loading -> Box(

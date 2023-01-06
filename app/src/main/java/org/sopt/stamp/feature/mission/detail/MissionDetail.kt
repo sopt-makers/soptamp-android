@@ -180,7 +180,7 @@ fun MissionDetailScreen(
                     )
                 },
                 onBack = {
-                    resultNavigator.navigateBack(false)
+                    resultNavigator.navigateBack()
                 }
             )
             Column(
