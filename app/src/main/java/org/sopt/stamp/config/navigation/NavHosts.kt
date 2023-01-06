@@ -6,26 +6,20 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 /*
 * Splash와 Onboarding 포함한 Screen
 * */
+@RootNavGraph
+@NavGraph
+annotation class AuthNavGraph(
+    val start: Boolean = false
+)
+
 @RootNavGraph(start = true)
 @NavGraph
-annotation class Initializer(
+annotation class MissionNavGraph(
     val start: Boolean = false
 )
 
 @RootNavGraph
 @NavGraph
-annotation class Auth(
-    val start: Boolean = false
-)
-
-@RootNavGraph
-@NavGraph
-annotation class Mission(
-    val start: Boolean = false
-)
-
-@RootNavGraph
-@NavGraph
-annotation class Setting(
+annotation class SettingNavGraph(
     val start: Boolean = false
 )

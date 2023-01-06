@@ -37,9 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".feature.mission.MissionsActivity"
-            android:exported="true" />
     </application>
 
 </manifest>
