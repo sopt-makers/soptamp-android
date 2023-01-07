@@ -20,6 +20,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -164,6 +165,9 @@ fun MissionDetailScreen(
     resultNavigator: ResultBackNavigator<Boolean>
 ) {
     val (id, title, level, isCompleted) = args
+    LaunchedEffect(id) {
+        // TODO by Nunu 여기에 서버통신 로직 넣기
+    }
     var memo by remember { mutableStateOf("") }
     SoptTheme {
         SoptColumn(
@@ -187,8 +191,8 @@ fun MissionDetailScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 HeaderView(
-                    title = "앱잼 팀원 다 함께 바다 보고 오기",
-                    stars = 2
+                    title = title,
+                    stars = level.value
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 ImageContent(
