@@ -34,7 +34,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
-import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
@@ -42,7 +41,6 @@ import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
 import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
 import org.sopt.stamp.designsystem.component.mission.MissionComponent
-import org.sopt.stamp.feature.mission.model.MissionUiModel
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
@@ -52,6 +50,7 @@ import org.sopt.stamp.feature.mission.MissionsViewModel
 import org.sopt.stamp.feature.mission.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
+import org.sopt.stamp.feature.mission.model.MissionUiModel
 import org.sopt.stamp.feature.mission.model.toArgs
 
 @MissionNavGraph(true)
@@ -65,7 +64,7 @@ fun MissionListScreen(
     val state by missionsViewModel.state.collectAsState()
 
     resultRecipient.onNavResult { result ->
-        when(result) {
+        when (result) {
             is NavResult.Canceled -> Unit
             is NavResult.Value -> {
                 if (result.value) missionsViewModel.fetchMissions()

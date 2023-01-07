@@ -1,7 +1,11 @@
 package org.sopt.stamp.feature.mission.detail
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +44,7 @@ import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.ratingbar.RatingBar
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
+import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
@@ -79,6 +84,9 @@ private fun ImageContent(
     content: Any? = null
 ) {
     val isImageEmpty = remember(content) { content == null }
+    val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+        // TODO by Nunu 이미지 피커 결과 업데이트 하기
+    }
 
     Box(
         modifier = Modifier
@@ -96,7 +104,12 @@ private fun ImageContent(
                     .background(
                         color = SoptTheme.colors.onSurface5,
                         shape = RoundedCornerShape(10.dp)
-                    ),
+                    )
+                    .clickable {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -168,6 +181,7 @@ fun MissionDetailScreen(
     LaunchedEffect(id) {
         // TODO by Nunu 여기에 서버통신 로직 넣기
     }
+
     var memo by remember { mutableStateOf("") }
     SoptTheme {
         SoptColumn(
@@ -183,6 +197,7 @@ fun MissionDetailScreen(
                         color = SoptTheme.colors.onSurface
                     )
                 },
+                iconOption = if (isCompleted) ToolbarIconType.NONE else ToolbarIconType.WRITE,
                 onBack = {
                     resultNavigator.navigateBack()
                 }
