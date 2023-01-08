@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 
-
 @Composable
 private fun SignUpPage() {
     Scaffold(
@@ -59,7 +58,6 @@ private fun SignUpPage() {
             Spacer(modifier = Modifier.height(20.dp))
             SignUpInput("이메일", "이메일을 입력해주세요", email)
 
-
             Spacer(modifier = Modifier.height(20.dp))
             PasswordInput("비밀번호", "비밀번호를 입력해주세요.", "비밀번호를 다시 입력해주세요.", password)
 
@@ -76,7 +74,6 @@ private fun SignUpPage() {
             ) {
                 Text(text = "가입하기")
             }
-
         }
     }
 }
@@ -133,7 +130,8 @@ private fun SignUpTextField(inputDesc: String, input: MutableState<TextFieldValu
         )
     modifier = if (fillMaxWidth) modifier.fillMaxWidth() else modifier
 
-    TextField(value = input.value,
+    TextField(
+        value = input.value,
         label = { Text(text = inputDesc) },
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
@@ -151,9 +149,9 @@ private fun SignUpTextField(inputDesc: String, input: MutableState<TextFieldValu
             Text(
                 text = inputDesc, style = SoptTheme.typography.caption1
             )
-        })
+        }
+    )
 }
-
 
 @Preview(showBackground = true)
 @Composable
