@@ -1,4 +1,4 @@
-package org.sopt.stamp.login
+package org.sopt.stamp.feature.login
 
 data class SoptampLoginViewState(
     val id: String?,

@@ -1,4 +1,4 @@
-package org.sopt.stamp.login
+package org.sopt.stamp.feature.login
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

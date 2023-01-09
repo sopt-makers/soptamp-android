@@ -1,4 +1,4 @@
-package org.sopt.stamp.login.screen
+package org.sopt.stamp.feature.login.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
