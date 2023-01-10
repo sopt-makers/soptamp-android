@@ -1,4 +1,4 @@
-package org.sopt.stamp.designsystem.component.mission.model
+package org.sopt.stamp.feature.mission.model
 
 import org.sopt.stamp.domain.MissionLevel
 
