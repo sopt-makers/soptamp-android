@@ -9,7 +9,7 @@ data class StampResponse(
     val updatedAt: String? = null,
     val id: Int,
     val contents: String,
-    val images: List<String>,
+    val images: List<String>? = null,
     val userId: Int,
     val missionId: Int,
 ) {
@@ -18,7 +18,7 @@ data class StampResponse(
         updatedAt = updatedAt,
         id = id,
         contents = contents,
-        images = images,
+        images = images ?: emptyList(),
         userId = userId,
         missionId = missionId,
     )

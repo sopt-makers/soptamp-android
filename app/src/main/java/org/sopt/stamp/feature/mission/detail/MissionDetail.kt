@@ -25,16 +25,16 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
@@ -47,6 +47,7 @@ import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
+import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.util.DefaultPreview
 
@@ -81,11 +82,12 @@ private fun HeaderView(
 
 @Composable
 private fun ImageContent(
-    content: Any? = null
+    imageModel: ImageModel,
+    onChangeImage: (images: ImageModel) -> Unit
 ) {
-    val isImageEmpty = remember(content) { content == null }
-    val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        // TODO by Nunu 이미지 피커 결과 업데이트 하기
+    val isImageEmpty = remember(imageModel) { imageModel is ImageModel.Empty }
+    val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
+        onChangeImage(ImageModel.Local(it))
     }
 
     Box(
@@ -119,14 +121,32 @@ private fun ImageContent(
                 )
             }
         } else {
-            AsyncImage(
-                model = content,
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(10.dp)),
-                contentScale = ContentScale.Crop
-            )
+            when (imageModel) {
+                is ImageModel.Local -> {
+                    AsyncImage(
+                        model = imageModel.uri[0],
+                        contentDescription = "",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(10.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                is ImageModel.Remote -> {
+                    AsyncImage(
+                        model = imageModel.url[0],
+                        contentDescription = "",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(10.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                else -> throw IllegalStateException("예외처리 했으므로 여긴 안 통과함")
+            }
+
         }
     }
 }
@@ -175,14 +195,24 @@ private fun Memo(
 @Composable
 fun MissionDetailScreen(
     args: MissionNavArgs,
-    resultNavigator: ResultBackNavigator<Boolean>
+    resultNavigator: ResultBackNavigator<Boolean>,
+    viewModel: MissionDetailViewModel = hiltViewModel()
 ) {
     val (id, title, level, isCompleted) = args
+    val content by viewModel.content.collectAsState("")
+    val imageModel by viewModel.imageModel.collectAsState(ImageModel.Empty)
+    val isSuccess by viewModel.isSuccess.collectAsState(false)
+
     LaunchedEffect(id) {
-        // TODO by Nunu 여기에 서버통신 로직 넣기
+        viewModel.initMissionState(id)
+    }
+    LaunchedEffect(isSuccess) {
+        if (isSuccess) {
+            // TODO by Nunu 로티 애니메이션 뷰 보여줘야됨
+            resultNavigator.navigateBack(true)
+        }
     }
 
-    var memo by remember { mutableStateOf("") }
     SoptTheme {
         SoptColumn(
             modifier = Modifier.fillMaxSize()
@@ -210,15 +240,13 @@ fun MissionDetailScreen(
                     stars = level.value
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                ImageContent(
-                    "https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg"
-                )
+                ImageContent(imageModel, viewModel::onChangeImage)
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(memo, { memo = it }, SoptTheme.colors.mint300)
+                Memo(content, viewModel::onChangeContent, SoptTheme.colors.mint300)
             }
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = viewModel::onSubmit,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp, top = 12.dp),
@@ -249,6 +277,6 @@ fun MissionDetailPreview() {
         isCompleted = false,
     )
     SoptTheme {
-        MissionDetailScreen(args, EmptyResultBackNavigator())
+        MissionDetailScreen(args, EmptyResultBackNavigator(), hiltViewModel())
     }
 }

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
+import org.sopt.stamp.domain.model.Archive
 import org.sopt.stamp.domain.repository.StampRepository
 import org.sopt.stamp.feature.mission.model.ImageModel
 import timber.log.Timber
@@ -21,7 +22,15 @@ data class PostUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val error: Throwable? = null,
-)
+) {
+    companion object {
+        fun from(data: Archive) = PostUiState(
+            id = data.id,
+            imageUri = if (data.images.isEmpty()) ImageModel.Empty else ImageModel.Remote(data.images),
+            content = data.contents
+        )
+    }
+}
 
 @HiltViewModel
 class MissionDetailViewModel @Inject constructor(
@@ -35,6 +44,23 @@ class MissionDetailViewModel @Inject constructor(
         }
     val isSuccess = uiState.map { it.isSuccess }
     val content = uiState.map { it.content }
+    val imageModel = uiState.map { it.imageUri }
+
+    fun initMissionState(id: Int) {
+        viewModelScope.launch {
+            uiState.update { it.copy(id = id, isError = false, error = null, isLoading = true) }
+            repository.getMissionContent(id)
+                .onSuccess { it ->
+                    val result = PostUiState.from(it).copy(id = id)
+                    uiState.update { result }
+                }.onFailure { error ->
+                    Timber.e(error)
+                    uiState.update {
+                        it.copy(isLoading = false, isError = true, error = error)
+                    }
+                }
+        }
+    }
 
     fun onChangeContent(content: String) {
         uiState.update {
@@ -45,12 +71,6 @@ class MissionDetailViewModel @Inject constructor(
     fun onChangeImage(imageModel: ImageModel) {
         uiState.update {
             it.copy(imageUri = imageModel)
-        }
-    }
-
-    fun onUpdateId(id: Int) {
-        uiState.update {
-            it.copy(id = id)
         }
     }
 

@@ -33,7 +33,14 @@ class StampRepositoryImpl @Inject constructor(
         val contentRequestBody = contentJson.toRequestBody("application/json".toMediaType())
         val imageRequestBody = when (imageUri) {
             is ImageModel.Empty -> null
-            is ImageModel.Local -> ContentUriRequestBody(context, imageUri.uri).toFormData()
+            is ImageModel.Local -> {
+                imageUri.uri.map {
+                    ContentUriRequestBody(context, it)
+                }.map {
+                    it.toFormData()
+                }
+            }
+
             is ImageModel.Remote -> null
         }
         return runCatching {
@@ -60,7 +67,14 @@ class StampRepositoryImpl @Inject constructor(
         val contentRequestBody = contentJson.toRequestBody("application/json".toMediaType())
         val imageRequestBody = when (imageUri) {
             is ImageModel.Empty -> null
-            is ImageModel.Local -> ContentUriRequestBody(context, imageUri.uri).toFormData()
+            is ImageModel.Local -> {
+                imageUri.uri.map {
+                    ContentUriRequestBody(context, it)
+                }.map {
+                    it.toFormData()
+                }
+            }
+
             is ImageModel.Remote -> null
         }
         return runCatching {
