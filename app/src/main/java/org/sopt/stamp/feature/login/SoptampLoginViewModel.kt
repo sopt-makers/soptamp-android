@@ -25,7 +25,6 @@ class SoptampLoginViewModel @Inject constructor(
     override fun handleAction(action: LoginAction) {
         when (action) {
             is LoginAction.Login -> login(action.id, action.password)
-            is LoginAction.LoginFail -> TODO()
         }
     }
 
@@ -56,7 +55,6 @@ interface LoginHandleAction {
 
 sealed interface LoginAction {
     data class Login(val id: String, val password: String) : LoginAction
-    data class LoginFail(val message: String) : LoginAction
 }
 
 sealed interface SingleEvent {
