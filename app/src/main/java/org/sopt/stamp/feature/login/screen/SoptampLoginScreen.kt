@@ -111,7 +111,8 @@ private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue
         )
     modifier = if (fillMaxWidth) modifier.fillMaxWidth() else modifier
 
-    TextField(value = input.value,
+    TextField(
+        value = input.value,
         label = { Text(text = inputDesc) },
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
@@ -129,7 +130,8 @@ private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue
             Text(
                 text = inputDesc, style = SoptTheme.typography.caption1
             )
-        })
+        }
+    )
 }
 
 @Preview(showBackground = true)

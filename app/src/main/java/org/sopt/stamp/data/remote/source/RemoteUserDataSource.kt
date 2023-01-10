@@ -25,7 +25,6 @@ class RemoteUserDataSource @Inject constructor(
         }
     }
 
-
     override suspend fun checkNickname(nickname: String): Result<UserResponse> {
         val result = kotlin.runCatching { userService.checkNickname(nickname) }
         return when (val exception = result.exceptionOrNull()) {

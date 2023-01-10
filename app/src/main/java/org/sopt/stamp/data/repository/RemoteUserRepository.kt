@@ -11,7 +11,11 @@ class RemoteUserRepository @Inject constructor(
     private val remote: UserDataSource
 ) : UserRepository {
     override suspend fun signup(
-        nickname: String, email: String, password: String, osType: String, clientToken: String
+        nickname: String,
+        email: String,
+        password: String,
+        osType: String,
+        clientToken: String
     ): Result<UserResponse> {
         val result = remote.signup(nickname, email, password, osType, clientToken).mapCatching { it }
         val exception = result.exceptionOrNull()

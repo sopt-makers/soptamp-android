@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.sopt.stamp.domain.repository.UserRepository
+import org.sopt.stamp.data.repository.RemoteUserRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 class SoptampSignUpViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: RemoteUserRepository
 ) : ViewModel(), SignUpHandleAction {
     private val _viewState = MutableStateFlow(SoptampSignUpViewState.init())
     val viewState = _viewState.asStateFlow()
