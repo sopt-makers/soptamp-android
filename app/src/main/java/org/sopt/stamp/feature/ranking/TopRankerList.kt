@@ -17,11 +17,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.sopt.stamp.R
+import org.sopt.stamp.designsystem.component.button.SoptampIconButton
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
 import org.sopt.stamp.feature.ranking.model.TopRankerDescriptionBubble
@@ -79,20 +84,35 @@ fun TopRankDescriptionBubble(bubble: TopRankerDescriptionBubble, onClickRankerDe
             contentDescription = "Top Ranker DescriptionBubble",
             tint = bubble.backgroundColor
         )
-        Text(
+        Row(
             modifier = Modifier.fillMaxWidth().padding(
-                top = 7.dp,
-                bottom = 17.dp,
-                start = 34.dp,
-                end = 34.dp
+                top = 3.dp,
+                bottom = 13.dp,
+                start = 24.dp,
+                end = 8.dp
             ),
-            text = onClickRankerDescriptionState,
-            style = SoptTheme.typography.sub3,
-            color = bubble.textColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center
-        )
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            val maxLength: Int = 19
+            val description = if (onClickRankerDescriptionState.length > maxLength) {
+                "${onClickRankerDescriptionState.substring(0 until maxLength)}..."
+            } else {
+                onClickRankerDescriptionState
+            }
+            Text(
+                text = description,
+                style = SoptTheme.typography.sub3,
+                color = bubble.textColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center
+            )
+            SoptampIconButton(
+                imageVector = ImageVector.vectorResource(id = R.drawable.right_forward),
+                tint = Color.White
+            )
+        }
     }
 }
 
@@ -106,6 +126,7 @@ fun PreviewTopRankerList() {
                     rank = 1,
                     userId = 1,
                     nickname = "jinsu",
+                    description = "일이삼사육칠팔구십일이삼사오육칠팔구십dlfdl",
                     score = 1000
 
                 ),

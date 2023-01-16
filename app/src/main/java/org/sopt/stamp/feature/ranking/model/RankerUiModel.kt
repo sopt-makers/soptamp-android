@@ -1,5 +1,7 @@
 package org.sopt.stamp.feature.ranking.model
 
+import org.sopt.stamp.domain.model.Rank
+
 data class RankerUiModel(
     val rank: Int,
     val userId: Int,
@@ -17,3 +19,15 @@ data class RankerUiModel(
         val DEFAULT_RANK = RankerUiModel(0, 1, DEFAULT_USER_NAME, null, 0)
     }
 }
+
+fun List<Rank>.toUiModel(): RankingListUiModel = RankingListUiModel(
+    this.map { it.toUiModel() }
+)
+
+fun Rank.toUiModel(): RankerUiModel = RankerUiModel(
+    rank = this.rank,
+    userId = this.userId,
+    nickname = this.nickname,
+    description = this.profileMessage,
+    score = this.point
+)
