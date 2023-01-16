@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.sopt.stamp.data.remote.api.StampService
+import org.sopt.stamp.data.remote.api.RankService
 import org.sopt.stamp.data.remote.api.SoptampService
 import org.sopt.stamp.data.remote.api.UserService
 import retrofit2.Retrofit
@@ -24,6 +25,12 @@ internal object RemoteModule {
     fun provideSoptampService(
         retrofit: Retrofit
     ): SoptampService = retrofit.create(SoptampService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideRankingService(
+        retrofit: Retrofit
+    ): RankService = retrofit.create(RankService::class.java)
 
     @Provides
     @Singleton
