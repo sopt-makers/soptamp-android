@@ -12,7 +12,10 @@ import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.style.SoptTheme
 
 @Composable
-fun SoptampFloatingButton(text: String) {
+fun SoptampFloatingButton(
+    text: String,
+    onClick: () -> Unit = {}
+) {
     ExtendedFloatingActionButton(
         text = {
             Text(
@@ -28,7 +31,7 @@ fun SoptampFloatingButton(text: String) {
                 tint = Color.White
             )
         },
-        onClick = { },
+        onClick = { onClick() },
         shape = RoundedCornerShape(46.dp),
         backgroundColor = SoptTheme.colors.purple300
     )
