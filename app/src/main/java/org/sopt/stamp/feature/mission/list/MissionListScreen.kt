@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -73,10 +72,7 @@ fun MissionListScreen(
     }
     SoptTheme {
         when (state) {
-            MissionsState.Loading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
+            MissionsState.Loading -> LoadingScreen()
 
             MissionsState.Failure -> NetworkErrorDialog {
                 missionsViewModel.fetchMissions()
