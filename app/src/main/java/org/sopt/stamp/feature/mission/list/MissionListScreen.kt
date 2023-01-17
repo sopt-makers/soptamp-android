@@ -1,4 +1,4 @@
-package org.sopt.stamp.feature.mission
+package org.sopt.stamp.feature.mission.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,26 +32,45 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
 import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
 import org.sopt.stamp.designsystem.component.mission.MissionComponent
-import org.sopt.stamp.designsystem.component.mission.model.MissionUiModel
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.model.MissionsFilter
+import org.sopt.stamp.feature.mission.MissionsState
+import org.sopt.stamp.feature.mission.MissionsViewModel
+import org.sopt.stamp.feature.mission.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
+import org.sopt.stamp.feature.mission.model.MissionNavArgs
+import org.sopt.stamp.feature.mission.model.MissionUiModel
+import org.sopt.stamp.feature.mission.model.toArgs
 
 @MissionNavGraph(true)
 @Destination("list")
 @Composable
 fun MissionListScreen(
-    missionsViewModel: MissionsViewModel = hiltViewModel()
+    missionsViewModel: MissionsViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator,
+    resultRecipient: ResultRecipient<MissionDetailScreenDestination, Boolean>
 ) {
     val state by missionsViewModel.state.collectAsState()
+
+    resultRecipient.onNavResult { result ->
+        when (result) {
+            is NavResult.Canceled -> Unit
+            is NavResult.Value -> {
+                if (result.value) missionsViewModel.fetchMissions()
+            }
+        }
+    }
     SoptTheme {
         when (state) {
             MissionsState.Loading -> Box(
@@ -67,7 +86,7 @@ fun MissionListScreen(
                 missionListUiModel = (state as MissionsState.Success).missionListUiModel,
                 menuTexts = MissionsFilter.getTitleOfMissionsList(),
                 onMenuClick = { filter -> missionsViewModel.fetchMissions(filter) },
-                onMissionItemClick = {}
+                onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) }
             )
         }
     }
@@ -78,7 +97,7 @@ fun MissionListScreen(
     missionListUiModel: MissionListUiModel,
     menuTexts: List<String>,
     onMenuClick: (String) -> Unit = {},
-    onMissionItemClick: () -> Unit = {}
+    onMissionItemClick: (item: MissionNavArgs) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -108,7 +127,9 @@ fun MissionListScreen(
                     MissionComponent(
                         mission = missionUiModel,
                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 20.dp),
-                        onClick = {}
+                        onClick = {
+                            onMissionItemClick(missionUiModel.toArgs())
+                        }
                     )
                 }
             }

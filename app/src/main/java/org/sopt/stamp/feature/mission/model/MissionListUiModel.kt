@@ -1,6 +1,5 @@
 package org.sopt.stamp.feature.mission.model
 
-import org.sopt.stamp.designsystem.component.mission.model.MissionUiModel
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.model.Mission
 
