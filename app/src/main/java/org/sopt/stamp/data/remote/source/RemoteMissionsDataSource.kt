@@ -19,22 +19,4 @@ internal class RemoteMissionsDataSource @Inject constructor(
             else -> Result.failure(exception)
         }
     }
-
-    override suspend fun getCompleteMission(userId: Int): Result<List<MissionData>> {
-        val result = kotlin.runCatching { soptampService.getCompleteMissions(userId).toData() }
-        return when (val exception = result.exceptionOrNull()) {
-            null -> result
-            is UnknownHostException -> return Result.failure(ErrorData.NetworkUnavailable)
-            else -> Result.failure(exception)
-        }
-    }
-
-    override suspend fun getIncompleteMissions(userId: Int): Result<List<MissionData>> {
-        val result = kotlin.runCatching { soptampService.getIncompleteMissions(userId).toData() }
-        return when (val exception = result.exceptionOrNull()) {
-            null -> result
-            is UnknownHostException -> return Result.failure(ErrorData.NetworkUnavailable)
-            else -> Result.failure(exception)
-        }
-    }
 }
