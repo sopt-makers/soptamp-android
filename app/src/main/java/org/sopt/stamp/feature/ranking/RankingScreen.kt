@@ -20,6 +20,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
@@ -31,9 +33,11 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
 import org.sopt.stamp.feature.ranking.model.RankingListUiModel
 
+@Destination("ranking")
 @Composable
 fun RankingScreen(
-    rankingViewModel: RankingViewModel = viewModel()
+    rankingViewModel: RankingViewModel = viewModel(),
+    navigator: DestinationsNavigator,
 ) {
     val state by rankingViewModel.state.collectAsState()
     when (state) {
@@ -41,11 +45,13 @@ fun RankingScreen(
         RankingState.Failure -> NetworkErrorDialog {
             rankingViewModel.fetchRanking()
         }
+
         is RankingState.Success -> RankingScreen(
             rankingListUiModel = (state as RankingState.Success).uiModel,
             userId = (state as RankingState.Success).userId
         )
     }
+    //back handler
 }
 
 @Composable
@@ -86,7 +92,7 @@ fun RankingScreen(
         ) {
             item { TopRankerList(rankingListUiModel.topRankingList) }
             items(rankingListUiModel.otherRankingList) { item ->
-                RankListItem(item)
+                RankListItem(item, item.userId == userId)
             }
         }
     }
@@ -118,13 +124,13 @@ fun PreviewRankingScreen() {
         previewRanking.add(
             RankerUiModel(
                 rank = it + 1,
-                userId = 1,
+                userId = it + 1,
                 nickname = "jinsu",
                 score = 1000 - (it * 10)
             )
         )
     }
     SoptTheme {
-        RankingScreen(RankingListUiModel(previewRanking), 1)
+        RankingScreen(RankingListUiModel(previewRanking), 6)
     }
 }

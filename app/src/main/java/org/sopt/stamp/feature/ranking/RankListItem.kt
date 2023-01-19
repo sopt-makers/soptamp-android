@@ -1,6 +1,7 @@
 package org.sopt.stamp.feature.ranking
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,24 +22,38 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
 
 @Composable
-fun RankListItem(item: RankerUiModel) {
+fun RankListItem(item: RankerUiModel, isMyRanking: Boolean = false) {
     val itemPadding = PaddingValues(
         top = 19.dp,
         bottom = 16.dp,
         start = 15.dp,
         end = 15.dp
     )
+    val backgroundModifier = if (isMyRanking) {
+        Modifier.background(
+            color = SoptTheme.colors.purple100,
+            shape = RoundedCornerShape(8.dp)
+        ).border(
+            width = 2.dp,
+            color = SoptTheme.colors.purple300,
+            shape = RoundedCornerShape(8.dp)
+        )
+    } else {
+        Modifier.background(
+            color = SoptTheme.colors.onSurface5,
+            shape = RoundedCornerShape(8.dp)
+        )
+    }
     Row(
-        modifier = Modifier.fillMaxWidth()
-            .background(
-                color = SoptTheme.colors.onSurface5,
-                shape = RoundedCornerShape(8.dp)
-            ).padding(itemPadding),
+        modifier = backgroundModifier
+            .fillMaxWidth()
+            .padding(itemPadding),
         horizontalArrangement = Arrangement.Center
     ) {
         RankNumber(
             modifier = Modifier.padding(horizontal = 17.dp),
-            rank = item.rank
+            rank = item.rank,
+            isMyRankNumber = isMyRanking
         )
         Spacer(modifier = Modifier.size(16.dp))
         RankerInformation(
@@ -47,7 +62,11 @@ fun RankListItem(item: RankerUiModel) {
             description = item.description
         )
         Spacer(modifier = Modifier.size(12.dp))
-        RankScore(rank = item.rank, score = item.score)
+        RankScore(
+            rank = item.rank,
+            score = item.score,
+            isMyRankScore = isMyRanking
+        )
     }
 }
 
@@ -88,7 +107,8 @@ fun PreviewRankListItem() {
                 nickname = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
                 description = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
                 score = 300
-            )
+            ),
+            true
         )
     }
 }
