@@ -1,6 +1,5 @@
 package org.sopt.stamp.feature.mission
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.sopt.stamp.domain.error.Error
+import org.sopt.stamp.domain.model.Mission
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.domain.repository.MissionsRepository
 import org.sopt.stamp.feature.mission.model.toUiModel
@@ -45,8 +46,11 @@ class MissionsViewModel @Inject constructor(
         missions.mapCatching { it.toUiModel(filter.title) }
             .onSuccess { missions -> _state.value = MissionsState.Success(missions) }
             .onFailure { throwable ->
-                Log.d("test", "$throwable")
-                _state.value = MissionsState.Failure
+                when (throwable) {
+                    is Error.NetworkUnavailable -> { _state.value = MissionsState.Failure(throwable)}
+                    else -> throw throwable
+                }
             }
+
     }
 }

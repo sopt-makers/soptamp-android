@@ -1,5 +1,6 @@
 package org.sopt.stamp.feature.mission
 
+import org.sopt.stamp.domain.error.Error
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
 
 sealed class MissionsState {
@@ -7,5 +8,5 @@ sealed class MissionsState {
 
     data class Success(val missionListUiModel: MissionListUiModel) : MissionsState()
 
-    object Failure : MissionsState()
+    data class Failure(val error: Error) : MissionsState()
 }

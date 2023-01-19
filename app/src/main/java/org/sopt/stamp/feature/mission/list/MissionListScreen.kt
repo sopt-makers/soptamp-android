@@ -1,11 +1,16 @@
 package org.sopt.stamp.feature.mission.list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -21,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -43,6 +49,7 @@ import org.sopt.stamp.designsystem.component.mission.MissionComponent
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
+import org.sopt.stamp.domain.error.Error
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.feature.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.mission.MissionsState
@@ -73,9 +80,12 @@ fun MissionListScreen(
     SoptTheme {
         when (state) {
             MissionsState.Loading -> LoadingScreen()
-
-            MissionsState.Failure -> NetworkErrorDialog {
-                missionsViewModel.fetchMissions()
+            is MissionsState.Failure -> {
+                when ((state as MissionsState.Failure).error) {
+                    Error.NetworkUnavailable -> NetworkErrorDialog {
+                        missionsViewModel.fetchMissions()
+                    }
+                }
             }
 
             is MissionsState.Success -> MissionListScreen(
@@ -103,7 +113,12 @@ fun MissionListScreen(
                 onMenuClick = { onMenuClick(it) }
             )
         },
-        floatingActionButton = { SoptampFloatingButton("랭킹 보기") },
+        floatingActionButton = {
+            SoptampFloatingButton(
+                text = "랭킹 보기",
+                onClick = {}
+            )
+        },
         floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
         Column(
@@ -116,6 +131,9 @@ fun MissionListScreen(
                     end = 8.dp
                 )
         ) {
+            if (missionListUiModel.missionList.isEmpty()) {
+                MissionEmptyScreen(contentText = missionListUiModel.title)
+            }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2)
             ) {
@@ -134,14 +152,43 @@ fun MissionListScreen(
 }
 
 @Composable
+fun MissionEmptyScreen(contentText: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            imageVector = ImageVector.vectorResource(id = R.drawable.empty_mission),
+            contentDescription = "empty mission list"
+        )
+        Spacer(modifier = Modifier.size(23.dp))
+        Text(
+            text = "아직 ${contentText}이 없습니다!",
+            style = SoptTheme.typography.sub2,
+            color = SoptTheme.colors.onSurface50
+        )
+    }
+}
+
+@Composable
 fun MissionListHeader(
     title: String,
     menuTexts: List<String>,
     onMenuClick: (String) -> Unit = {}
 ) {
+    var currentText by remember { mutableStateOf(title) }
     SoptTopAppBar(
         title = { MissionListHeaderTitle(title = title) },
-        dropDownButton = { DropDownMenuButton(menuTexts) }
+        dropDownButton = {
+            DropDownMenuButton(
+                menuTexts = menuTexts,
+                onMenuClick = { selectedMenuText ->
+                    currentText = selectedMenuText
+                    onMenuClick(selectedMenuText)
+                }
+            )
+        }
     )
 }
 
@@ -169,7 +216,8 @@ fun DropDownMenuButton(
                 ImageVector.vectorResource(id = R.drawable.up_expand)
             } else {
                 ImageVector.vectorResource(id = R.drawable.down_expand)
-            }
+            },
+            onClick = { isMenuExpanded = true }
         )
         DropdownMenu(
             modifier = Modifier
@@ -189,8 +237,8 @@ fun DropDownMenuButton(
                         vertical = 8.dp
                     ),
                     onClick = {
-                        onMenuClick(menuText)
                         selectedIndex = menuTexts.indexOf(menuText)
+                        onMenuClick(menuText)
                         isMenuExpanded = false
                     }
                 ) {
