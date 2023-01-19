@@ -22,8 +22,10 @@ internal class RemoteMissionsRepository @Inject constructor(
     }
 
     override suspend fun getCompleteMissions(userId: Int): Result<List<Mission>> {
-        val result = remote.getCompleteMission(userId)
-            .mapCatching { it.toDomain() }
+        val result = remote.getAllMission(userId)
+            .mapCatching {
+                it.filter { mission -> mission.isCompleted }.toDomain()
+            }
         val exception = result.exceptionOrNull()
         return if (exception is ErrorData) {
             Result.failure(exception.toDomain())
@@ -33,8 +35,10 @@ internal class RemoteMissionsRepository @Inject constructor(
     }
 
     override suspend fun getInCompleteMissions(userId: Int): Result<List<Mission>> {
-        val result = remote.getIncompleteMissions(userId)
-            .mapCatching { it.toDomain() }
+        val result = remote.getAllMission(userId)
+            .mapCatching {
+                it.filter { mission -> !mission.isCompleted }.toDomain()
+            }
         val exception = result.exceptionOrNull()
         return if (exception is ErrorData) {
             Result.failure(exception.toDomain())
