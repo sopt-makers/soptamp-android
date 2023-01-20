@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserResponse(
     val userId: Int?,
-    val message: String?
+    val message: String?,
+    val statusCode: Int?
 )
