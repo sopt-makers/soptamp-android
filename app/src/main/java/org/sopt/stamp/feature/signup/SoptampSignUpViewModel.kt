@@ -23,9 +23,12 @@ class SoptampSignUpViewModel @Inject constructor(
 
     override fun handleAction(action: SignUpAction) {
         when (action) {
+            is SignUpAction.PutNickname -> putNickname(action.input)
+            is SignUpAction.PutEmail -> putEmail(action.input)
+            is SignUpAction.PutPassword -> TODO()
             is SignUpAction.SignUp -> signUp(action.nickname, action.email, action.password)
-            is SignUpAction.CheckNickname -> checkNickname(action.nickname)
-            is SignUpAction.CheckEmail -> checkEmail(action.email)
+            is SignUpAction.CheckNickname -> checkNickname()
+            is SignUpAction.CheckEmail -> checkEmail()
             is SignUpAction.CheckPassword -> checkPassword(action.password)
         }
     }
@@ -48,44 +51,64 @@ class SoptampSignUpViewModel @Inject constructor(
         }
     }
 
-    private fun checkNickname(nickname: String) {
+    private fun checkNickname() {
         viewModelScope.launch {
-            userRepository.checkNickname(nickname)
-                .onSuccess {
-                    // 200
-                    _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
+            viewState.value.nickname?.let {
+                userRepository.checkNickname(it)
+                    .onSuccess {
+                        // 200
+                        _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
 
-                    // 400
-                    _viewState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = it.message
-                        )
+                        // 400
+                        _viewState.update { prevState ->
+                            prevState.copy(
+                                errorMessage = it.message
+                            )
+                        }
                     }
-                }
-                .onFailure { Timber.tag("test").d(it) }
+                    .onFailure { Timber.tag("test").d(it) }
+            }
         }
     }
 
-    private fun checkEmail(email: String) {
+    private fun checkEmail() {
         viewModelScope.launch {
-            userRepository.checkEmail(email)
-                .onSuccess {
-                    // 200
-                    _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
+            viewState.value.email?.let {
+                userRepository.checkEmail(it)
+                    .onSuccess {
+                        // 200
+                        _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
 
-                    // 400
-                    _viewState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = it.message
-                        )
+                        // 400
+                        _viewState.update { prevState ->
+                            prevState.copy(
+                                errorMessage = it.message
+                            )
+                        }
                     }
-                }
-                .onFailure { Timber.tag("test").d(it) }
+                    .onFailure { Timber.tag("test").d(it) }
+            }
         }
     }
 
     private fun checkPassword(password: String) {
         // TODO
+    }
+
+    private fun putNickname(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                nickname = input
+            )
+        }
+    }
+
+    private fun putEmail(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                email = input
+            )
+        }
     }
 }
 
@@ -94,8 +117,11 @@ interface SignUpHandleAction {
 }
 
 sealed interface SignUpAction {
-    data class CheckNickname(val nickname: String) : SignUpAction
-    data class CheckEmail(val email: String) : SignUpAction
+    data class PutNickname(val input: String) : SignUpAction
+    data class PutEmail(val input: String) : SignUpAction
+    data class PutPassword(val input: String) : SignUpAction
+    object CheckNickname : SignUpAction
+    object CheckEmail : SignUpAction
     data class CheckPassword(val password: String, val passwordCheck: String) : SignUpAction
     data class SignUp(val nickname: String, val email: String, val password: String) : SignUpAction
 }
