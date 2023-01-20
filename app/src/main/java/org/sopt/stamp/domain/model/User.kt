@@ -1,6 +1,6 @@
 package org.sopt.stamp.domain.model
 
-data class UserResponse(
+data class User(
     val userId: Int?,
     val message: String?,
     val statusCode: Int?
