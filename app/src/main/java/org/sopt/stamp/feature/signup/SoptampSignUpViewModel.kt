@@ -2,9 +2,14 @@ package org.sopt.stamp.feature.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,10 +31,11 @@ class SoptampSignUpViewModel @Inject constructor(
             is SignUpAction.PutNickname -> putNickname(action.input)
             is SignUpAction.PutEmail -> putEmail(action.input)
             is SignUpAction.PutPassword -> TODO()
+            is SignUpAction.PutPasswordConfirm -> TODO()
             is SignUpAction.SignUp -> signUp(action.nickname, action.email, action.password)
             is SignUpAction.CheckNickname -> checkNickname()
             is SignUpAction.CheckEmail -> checkEmail()
-            is SignUpAction.CheckPassword -> checkPassword(action.password)
+            is SignUpAction.CheckPassword -> checkPassword()
         }
     }
 
@@ -91,8 +97,25 @@ class SoptampSignUpViewModel @Inject constructor(
         }
     }
 
-    private fun checkPassword(password: String) {
-        // TODO
+    @OptIn(FlowPreview::class)
+    private fun checkPassword() {
+        viewState.debounce(200)
+            .onEach { state ->
+                if (!state.password.isNullOrBlank() && !state.passwordConfirm.isNullOrBlank() && (state.password == state.passwordConfirm)) {
+                    _viewState.update { prevState ->
+                        prevState.copy(
+                            errorMessage = ""
+                        )
+                    }
+                } else {
+                    _viewState.update { prevState ->
+                        prevState.copy(
+                            errorMessage = ""
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
+
     }
 
     private fun putNickname(input: String) {
@@ -120,9 +143,10 @@ sealed interface SignUpAction {
     data class PutNickname(val input: String) : SignUpAction
     data class PutEmail(val input: String) : SignUpAction
     data class PutPassword(val input: String) : SignUpAction
+    data class PutPasswordConfirm(val input: String) : SignUpAction
     object CheckNickname : SignUpAction
     object CheckEmail : SignUpAction
-    data class CheckPassword(val password: String, val passwordCheck: String) : SignUpAction
+    object CheckPassword : SignUpAction
     data class SignUp(val nickname: String, val email: String, val password: String) : SignUpAction
 }
 

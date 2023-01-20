@@ -57,18 +57,24 @@ private fun SignUpScreen(
             SignUpInput("닉네임",
                 "닉네임을 입력해주세요",
                 nickname,
-                { viewModel.handleAction(SignUpAction.CheckNickname) },
-                { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) })
+                checkInput = { viewModel.handleAction(SignUpAction.CheckNickname) },
+                putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) })
 
             Spacer(modifier = Modifier.height(20.dp))
             SignUpInput("이메일",
                 "이메일을 입력해주세요",
                 email,
-                { viewModel.handleAction(SignUpAction.CheckEmail) },
-                { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) })
+                checkInput = { viewModel.handleAction(SignUpAction.CheckEmail) },
+                putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) })
 
             Spacer(modifier = Modifier.height(20.dp))
-            PasswordInput("비밀번호", "비밀번호를 입력해주세요.", "비밀번호를 다시 입력해주세요.", password)
+            PasswordInput("비밀번호",
+                "비밀번호를 입력해주세요.",
+                "비밀번호를 다시 입력해주세요.",
+                password,
+                checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
+                putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
+                putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) })
 
             Spacer(modifier = Modifier.height(90.dp))
             Button(
@@ -120,15 +126,23 @@ private fun SignUpInput(
 }
 
 @Composable
-private fun PasswordInput(inputTitle: String, firstInputDesc: String, secondInputDesc: String, password: MutableState<TextFieldValue>) {
+private fun PasswordInput(
+    inputTitle: String,
+    firstInputDesc: String,
+    secondInputDesc: String,
+    password: MutableState<TextFieldValue>,
+    checkInputSame: () -> Unit,
+    putPassword: (String) -> Unit,
+    putPasswordConfirm: (String) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(text = inputTitle)
         Spacer(modifier = Modifier.height(16.dp))
-        SignUpTextField(firstInputDesc, password, true)
+        SignUpTextField(firstInputDesc, password, true, putPassword)
         Spacer(modifier = Modifier.height(12.dp))
-        SignUpTextField(secondInputDesc, password, true)
+        SignUpTextField(secondInputDesc, password, true, putPasswordConfirm)
     }
 }
 
