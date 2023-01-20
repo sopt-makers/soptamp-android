@@ -41,38 +41,36 @@ class SoptampSignUpViewModel @Inject constructor(
 
     private fun signUp(nickname: String, email: String, password: String) {
         viewModelScope.launch {
-            userRepository.signup(nickname, email, password, "android", "null")
-                .onSuccess {
-                    // 200
-                    _singleEvent.trySend(SingleEvent.SignUpSuccess)
-
-                    // 500
+            userRepository.signup(nickname, email, password, "android", "null").let { res ->
+                res.message.let {
                     _viewState.update { prevState ->
                         prevState.copy(
-                            errorMessage = it.message
+                            errorMessage = it
                         )
                     }
                 }
-                .onFailure { Timber.tag("test").d(it) }
+                if (res.statusCode == 200) {
+                    _singleEvent.trySend(SingleEvent.SignUpSuccess)
+                }
+            }
         }
     }
 
     private fun checkNickname() {
         viewModelScope.launch {
             viewState.value.nickname?.let {
-                userRepository.checkNickname(it)
-                    .onSuccess {
-                        // 200
-                        _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
-
-                        // 400
+                userRepository.checkNickname(it).let { res ->
+                    res.message.let {
                         _viewState.update { prevState ->
                             prevState.copy(
-                                errorMessage = it.message
+                                errorMessage = it
                             )
                         }
                     }
-                    .onFailure { Timber.tag("test").d(it) }
+                    if (res.statusCode == 200) {
+                        _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
+                    }
+                }
             }
         }
     }
@@ -80,19 +78,18 @@ class SoptampSignUpViewModel @Inject constructor(
     private fun checkEmail() {
         viewModelScope.launch {
             viewState.value.email?.let {
-                userRepository.checkEmail(it)
-                    .onSuccess {
-                        // 200
-                        _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
-
-                        // 400
+                userRepository.checkEmail(it).let { res ->
+                    res.message.let {
                         _viewState.update { prevState ->
                             prevState.copy(
-                                errorMessage = it.message
+                                errorMessage = it
                             )
                         }
                     }
-                    .onFailure { Timber.tag("test").d(it) }
+                    if (res.statusCode == 200) {
+                        _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
+                    }
+                }
             }
         }
     }
