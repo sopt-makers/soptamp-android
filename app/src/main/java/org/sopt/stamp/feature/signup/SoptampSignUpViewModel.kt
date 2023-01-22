@@ -30,8 +30,8 @@ class SoptampSignUpViewModel @Inject constructor(
         when (action) {
             is SignUpAction.PutNickname -> putNickname(action.input)
             is SignUpAction.PutEmail -> putEmail(action.input)
-            is SignUpAction.PutPassword -> TODO()
-            is SignUpAction.PutPasswordConfirm -> TODO()
+            is SignUpAction.PutPassword -> putPassword(action.input)
+            is SignUpAction.PutPasswordConfirm -> putPasswordConfirm(action.input)
             is SignUpAction.SignUp -> signUp(action.nickname, action.email, action.password)
             is SignUpAction.CheckNickname -> checkNickname()
             is SignUpAction.CheckEmail -> checkEmail()
@@ -129,6 +129,24 @@ class SoptampSignUpViewModel @Inject constructor(
                 email = input
             )
         }
+    }
+
+    private fun putPassword(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                password = input
+            )
+        }
+        checkPassword()
+    }
+
+    private fun putPasswordConfirm(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                passwordConfirm = input
+            )
+        }
+        checkPassword()
     }
 }
 
