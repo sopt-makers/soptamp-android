@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.repository.RemoteUserRepository
-import timber.log.Timber
 import javax.inject.Inject
 
 class SoptampLoginViewModel @Inject constructor(
@@ -30,21 +29,18 @@ class SoptampLoginViewModel @Inject constructor(
 
     private fun login(id: String, password: String) {
         viewModelScope.launch {
-            userRepository.login(id, password)
-                .onSuccess {
-                    // 200
-                    _singleEvent.trySend(SingleEvent.LoginSuccess)
-
-                    // 400
+            userRepository.login(id, password).let { res ->
+                res.message?.let { msg ->
                     _viewState.update { prevState ->
                         prevState.copy(
-                            errorMessage = it.message
+                            errorMessage = msg
                         )
                     }
+                    if (res.statusCode == 200) {
+                        _singleEvent.trySend(SingleEvent.LoginSuccess)
+                    }
                 }
-                .onFailure {
-                    Timber.tag("test").d(it)
-                }
+            }
         }
     }
 }
