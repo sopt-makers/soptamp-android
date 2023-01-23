@@ -2,14 +2,11 @@ package org.sopt.stamp.feature.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.repository.RemoteUserRepository
-import timber.log.Timber
 import javax.inject.Inject
 
 class SoptampSignUpViewModel @Inject constructor(
@@ -23,69 +20,126 @@ class SoptampSignUpViewModel @Inject constructor(
 
     override fun handleAction(action: SignUpAction) {
         when (action) {
+            is SignUpAction.PutNickname -> putNickname(action.input)
+            is SignUpAction.PutEmail -> putEmail(action.input)
+            is SignUpAction.PutPassword -> putPassword(action.input)
+            is SignUpAction.PutPasswordConfirm -> putPasswordConfirm(action.input)
             is SignUpAction.SignUp -> signUp(action.nickname, action.email, action.password)
-            is SignUpAction.CheckNickname -> checkNickname(action.nickname)
-            is SignUpAction.CheckEmail -> checkEmail(action.email)
-            is SignUpAction.CheckPassword -> checkPassword(action.password)
+            is SignUpAction.CheckNickname -> checkNickname()
+            is SignUpAction.CheckEmail -> checkEmail()
+            is SignUpAction.CheckPassword -> checkPassword()
         }
     }
 
     private fun signUp(nickname: String, email: String, password: String) {
         viewModelScope.launch {
-            userRepository.signup(nickname, email, password, "android", "null")
-                .onSuccess {
-                    // 200
+            userRepository.signup(nickname, email, password, "android", "null").let { res ->
+                res.message.let {
+                    _viewState.update { prevState ->
+                        prevState.copy(
+                            errorMessage = it
+                        )
+                    }
+                }
+                if (res.statusCode == 200) {
                     _singleEvent.trySend(SingleEvent.SignUpSuccess)
-
-                    // 500
-                    _viewState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = it.message
-                        )
-                    }
                 }
-                .onFailure { Timber.tag("test").d(it) }
+            }
         }
     }
 
-    private fun checkNickname(nickname: String) {
+    private fun checkNickname() {
         viewModelScope.launch {
-            userRepository.checkNickname(nickname)
-                .onSuccess {
-                    // 200
-                    _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
-
-                    // 400
-                    _viewState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = it.message
-                        )
+            viewState.value.nickname?.let {
+                userRepository.checkNickname(it).let { res ->
+                    res.message.let {
+                        _viewState.update { prevState ->
+                            prevState.copy(
+                                errorMessage = it
+                            )
+                        }
+                    }
+                    if (res.statusCode == 200) {
+                        _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
                     }
                 }
-                .onFailure { Timber.tag("test").d(it) }
+            }
         }
     }
 
-    private fun checkEmail(email: String) {
+    private fun checkEmail() {
         viewModelScope.launch {
-            userRepository.checkEmail(email)
-                .onSuccess {
-                    // 200
-                    _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
-
-                    // 400
-                    _viewState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = it.message
-                        )
+            viewState.value.email?.let {
+                userRepository.checkEmail(it).let { res ->
+                    res.message.let {
+                        _viewState.update { prevState ->
+                            prevState.copy(
+                                errorMessage = it
+                            )
+                        }
+                    }
+                    if (res.statusCode == 200) {
+                        _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
                     }
                 }
-                .onFailure { Timber.tag("test").d(it) }
+            }
         }
     }
 
-    private fun checkPassword(password: String) {
-        // TODO
+    @OptIn(FlowPreview::class)
+    private fun checkPassword() {
+        viewState.debounce(200)
+            .onEach { state ->
+                if (!state.password.isNullOrBlank() && !state.passwordConfirm.isNullOrBlank() &&
+                    (state.password == state.passwordConfirm)
+                ) {
+                    _viewState.update { prevState ->
+                        prevState.copy(
+                            errorMessage = ""
+                        )
+                    }
+                } else {
+                    _viewState.update { prevState ->
+                        prevState.copy(
+                            errorMessage = ""
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
+    }
+
+    private fun putNickname(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                nickname = input
+            )
+        }
+    }
+
+    private fun putEmail(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                email = input
+            )
+        }
+    }
+
+    private fun putPassword(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                password = input
+            )
+        }
+        checkPassword()
+    }
+
+    private fun putPasswordConfirm(input: String) {
+        _viewState.update { prevState ->
+            prevState.copy(
+                passwordConfirm = input
+            )
+        }
+        checkPassword()
     }
 }
 
@@ -94,9 +148,13 @@ interface SignUpHandleAction {
 }
 
 sealed interface SignUpAction {
-    data class CheckNickname(val nickname: String) : SignUpAction
-    data class CheckEmail(val email: String) : SignUpAction
-    data class CheckPassword(val password: String, val passwordCheck: String) : SignUpAction
+    data class PutNickname(val input: String) : SignUpAction
+    data class PutEmail(val input: String) : SignUpAction
+    data class PutPassword(val input: String) : SignUpAction
+    data class PutPasswordConfirm(val input: String) : SignUpAction
+    object CheckNickname : SignUpAction
+    object CheckEmail : SignUpAction
+    object CheckPassword : SignUpAction
     data class SignUp(val nickname: String, val email: String, val password: String) : SignUpAction
 }
 
