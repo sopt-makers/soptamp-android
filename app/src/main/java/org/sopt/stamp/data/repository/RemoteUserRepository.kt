@@ -16,7 +16,6 @@ class RemoteUserRepository @Inject constructor(
         clientToken: String
     ): User = remote.signup(nickname, email, password, osType, clientToken).toUser()
 
-
     override suspend fun checkNickname(nickname: String): User = remote.checkNickname(nickname).toUser()
 
     override suspend fun checkEmail(email: String): User = remote.checkEmail(email).toUser()
