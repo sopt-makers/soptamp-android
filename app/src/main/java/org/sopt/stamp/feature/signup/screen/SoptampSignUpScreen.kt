@@ -19,11 +19,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import org.sopt.stamp.config.navigation.SignUpNavGraph
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.signup.SignUpAction
 import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 
+@SignUpNavGraph
+@Destination("signup")
 @Composable
 private fun SignUpScreen(
     viewModel: SoptampSignUpViewModel = hiltViewModel(),

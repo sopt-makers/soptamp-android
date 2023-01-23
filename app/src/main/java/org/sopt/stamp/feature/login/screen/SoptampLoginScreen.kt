@@ -22,15 +22,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ramcosta.composedestinations.annotation.Destination
 import org.sopt.stamp.R
+import org.sopt.stamp.config.navigation.LoginNavGraph
+import org.sopt.stamp.config.navigation.SignUpNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
 
-// edittext id 이메일을 입력해주세요.
-// edittext password 비밀번호를 입력해주세요.
-// Button 계정 찾기
-// Button 로그인
-// Button 회원가입
-
+@LoginNavGraph
+@Destination("login")
 @Composable
 private fun LoginPage() {
     Column(
