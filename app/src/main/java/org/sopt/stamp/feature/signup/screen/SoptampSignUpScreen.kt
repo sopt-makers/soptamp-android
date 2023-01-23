@@ -1,23 +1,10 @@
 package org.sopt.stamp.feature.signup.screen
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
-import org.sopt.stamp.feature.mission.MissionsViewModel
 import org.sopt.stamp.feature.signup.SignUpAction
 import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 
@@ -54,27 +40,33 @@ private fun SignUpScreen(
             val password = remember { mutableStateOf(TextFieldValue()) }
 
             Spacer(modifier = Modifier.height(20.dp))
-            SignUpInput("닉네임",
+            SignUpInput(
+                "닉네임",
                 "닉네임을 입력해주세요",
                 nickname,
                 checkInput = { viewModel.handleAction(SignUpAction.CheckNickname) },
-                putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) })
+                putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
-            SignUpInput("이메일",
+            SignUpInput(
+                "이메일",
                 "이메일을 입력해주세요",
                 email,
                 checkInput = { viewModel.handleAction(SignUpAction.CheckEmail) },
-                putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) })
+                putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) }
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
-            PasswordInput("비밀번호",
+            PasswordInput(
+                "비밀번호",
                 "비밀번호를 입력해주세요.",
                 "비밀번호를 다시 입력해주세요.",
                 password,
                 checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
                 putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
-                putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) })
+                putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) }
+            )
 
             Spacer(modifier = Modifier.height(90.dp))
             Button(
@@ -95,7 +87,11 @@ private fun SignUpScreen(
 
 @Composable
 private fun SignUpInput(
-    inputTitle: String, inputDesc: String, input: MutableState<TextFieldValue>, checkInput: () -> Unit, putInput: (String) -> Unit
+    inputTitle: String,
+    inputDesc: String,
+    input: MutableState<TextFieldValue>,
+    checkInput: () -> Unit,
+    putInput: (String) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -155,7 +151,8 @@ private fun SignUpTextField(inputDesc: String, input: MutableState<TextFieldValu
         )
     modifier = if (fillMaxWidth) modifier.fillMaxWidth() else modifier
 
-    TextField(value = input.value,
+    TextField(
+        value = input.value,
         label = { Text(text = inputDesc) },
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
@@ -176,7 +173,8 @@ private fun SignUpTextField(inputDesc: String, input: MutableState<TextFieldValu
             Text(
                 text = inputDesc, style = SoptTheme.typography.caption1
             )
-        })
+        }
+    )
 }
 
 @Preview(showBackground = true)

@@ -1,10 +1,8 @@
 package org.sopt.stamp.data.remote.source
 
-import org.sopt.stamp.data.error.ErrorData
 import org.sopt.stamp.data.remote.api.UserService
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import org.sopt.stamp.data.source.UserDataSource
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 class RemoteUserDataSource @Inject constructor(

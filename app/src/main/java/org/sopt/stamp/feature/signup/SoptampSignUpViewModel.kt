@@ -4,17 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.repository.RemoteUserRepository
-import timber.log.Timber
 import javax.inject.Inject
 
 class SoptampSignUpViewModel @Inject constructor(
@@ -98,7 +90,9 @@ class SoptampSignUpViewModel @Inject constructor(
     private fun checkPassword() {
         viewState.debounce(200)
             .onEach { state ->
-                if (!state.password.isNullOrBlank() && !state.passwordConfirm.isNullOrBlank() && (state.password == state.passwordConfirm)) {
+                if (!state.password.isNullOrBlank() && !state.passwordConfirm.isNullOrBlank() &&
+                    (state.password == state.passwordConfirm)
+                ) {
                     _viewState.update { prevState ->
                         prevState.copy(
                             errorMessage = ""
@@ -112,7 +106,6 @@ class SoptampSignUpViewModel @Inject constructor(
                     }
                 }
             }.launchIn(viewModelScope)
-
     }
 
     private fun putNickname(input: String) {
