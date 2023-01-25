@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -52,6 +53,7 @@ fun SignUpPageScreen(
                     "닉네임을 입력해주세요",
                     nickname,
                     checkInput = { viewModel.handleAction(SignUpAction.CheckNickname) },
+                    keyboardType = KeyboardType.Text,
                     putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
                 )
 
@@ -61,6 +63,7 @@ fun SignUpPageScreen(
                     "이메일을 입력해주세요",
                     email,
                     checkInput = { viewModel.handleAction(SignUpAction.CheckEmail) },
+                    keyboardType = KeyboardType.Email,
                     putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) }
                 )
 
@@ -71,6 +74,7 @@ fun SignUpPageScreen(
                     "비밀번호를 다시 입력해주세요.",
                     password,
                     checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
+                    keyboardType = KeyboardType.Password,
                     putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
                     putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) }
                 )
@@ -98,6 +102,7 @@ private fun SignUpInput(
     inputTitle: String,
     inputDesc: String,
     input: MutableState<TextFieldValue>,
+    keyboardType: KeyboardType,
     checkInput: () -> Unit,
     putInput: (String) -> Unit
 ) {
@@ -109,7 +114,7 @@ private fun SignUpInput(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            SignUpTextField(inputDesc, input, false, putInput)
+            SignUpTextField(inputDesc, input, keyboardType, false, putInput)
             Box {
                 Button(
                     onClick = { checkInput.invoke() },
@@ -136,6 +141,7 @@ private fun PasswordInput(
     secondInputDesc: String,
     password: MutableState<TextFieldValue>,
     checkInputSame: () -> Unit,
+    keyboardType: KeyboardType,
     putPassword: (String) -> Unit,
     putPasswordConfirm: (String) -> Unit
 ) {
@@ -144,14 +150,20 @@ private fun PasswordInput(
     ) {
         Text(text = inputTitle)
         Spacer(modifier = Modifier.height(16.dp))
-        SignUpTextField(firstInputDesc, password, true, putPassword)
+        SignUpTextField(firstInputDesc, password, keyboardType, true, putPassword)
         Spacer(modifier = Modifier.height(12.dp))
-        SignUpTextField(secondInputDesc, password, true, putPasswordConfirm)
+        SignUpTextField(secondInputDesc, password, keyboardType, true, putPasswordConfirm)
     }
 }
 
 @Composable
-private fun SignUpTextField(inputDesc: String, input: MutableState<TextFieldValue>, fillMaxWidth: Boolean, putInput: (String) -> Unit) {
+private fun SignUpTextField(
+    inputDesc: String,
+    input: MutableState<TextFieldValue>,
+    keyboardType: KeyboardType,
+    fillMaxWidth: Boolean,
+    putInput: (String) -> Unit
+) {
     var modifier = Modifier
         .clip(RoundedCornerShape(10.dp))
         .border(
@@ -171,8 +183,8 @@ private fun SignUpTextField(inputDesc: String, input: MutableState<TextFieldValu
             textColor = SoptTheme.colors.onSurface90,
             placeholderColor = SoptTheme.colors.onSurface60
         ),
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else
+            VisualTransformation.None,
         onValueChange = {
             input.value = it
             putInput(input.value.text)

@@ -7,7 +7,8 @@ import org.sopt.stamp.domain.model.User
 data class UserResponse(
     val userId: Int? = -1,
     val message: String? = "",
-    val statusCode: Int? = -1
+    val statusCode: Int? = -1,
+    val profileMessage: String? = ""
 ) {
     fun toUser() = User(userId, message, statusCode)
 }

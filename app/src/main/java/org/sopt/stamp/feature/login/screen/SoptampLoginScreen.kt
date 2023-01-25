@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,12 +56,14 @@ fun LoginPageScreen(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 LoginTextField(inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true,
+                    keyboardType = KeyboardType.Email,
                     putInput = { input ->
                         viewModel.handleAction(LoginAction.PutEmail(input))
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 LoginTextField(inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true,
+                    keyboardType = KeyboardType.Password,
                     putInput = { input ->
                         viewModel.handleAction(LoginAction.PutPassword(input))
                     }
@@ -81,7 +84,7 @@ fun LoginPageScreen(
                 modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)
             ) {
                 Button(
-                    onClick = { viewModel.handleAction(LoginAction.Login)},
+                    onClick = { viewModel.handleAction(LoginAction.Login) },
                     shape = RoundedCornerShape(9.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -106,7 +109,13 @@ fun LoginPageScreen(
 }
 
 @Composable
-private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue>, fillMaxWidth: Boolean, putInput: (String) -> Unit) {
+private fun LoginTextField(
+    inputDesc: String,
+    keyboardType: KeyboardType,
+    input: MutableState<TextFieldValue>,
+    fillMaxWidth: Boolean,
+    putInput: (String) -> Unit
+) {
     var modifier = Modifier
         .clip(RoundedCornerShape(10.dp))
         .border(
@@ -126,8 +135,9 @@ private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue
             textColor = SoptTheme.colors.onSurface90,
             placeholderColor = SoptTheme.colors.onSurface60
         ),
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else
+            VisualTransformation.None,
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         onValueChange = {
             input.value = it
             putInput(input.value.text)
