@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.repository.RemoteUserRepository
-import org.sopt.stamp.feature.signup.SignUpAction
 import javax.inject.Inject
 
 @HiltViewModel

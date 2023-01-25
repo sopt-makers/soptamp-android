@@ -30,7 +30,6 @@ import org.sopt.stamp.config.navigation.LoginNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.login.LoginAction
 import org.sopt.stamp.feature.login.SoptampLoginViewModel
-import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 
 @LoginNavGraph(true)
 @Destination("page")
@@ -56,14 +55,16 @@ fun LoginPageScreen(
                 horizontalAlignment = Alignment.End
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                LoginTextField(inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true,
+                LoginTextField(
+                    inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true,
                     keyboardType = KeyboardType.Email,
                     putInput = { input ->
                         viewModel.handleAction(LoginAction.PutEmail(input))
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                LoginTextField(inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true,
+                LoginTextField(
+                    inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true,
                     keyboardType = KeyboardType.Password,
                     putInput = { input ->
                         viewModel.handleAction(LoginAction.PutPassword(input))
