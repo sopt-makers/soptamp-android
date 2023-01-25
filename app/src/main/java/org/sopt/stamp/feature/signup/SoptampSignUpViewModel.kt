@@ -26,16 +26,22 @@ class SoptampSignUpViewModel @Inject constructor(
             is SignUpAction.PutEmail -> putEmail(action.input)
             is SignUpAction.PutPassword -> putPassword(action.input)
             is SignUpAction.PutPasswordConfirm -> putPasswordConfirm(action.input)
-            is SignUpAction.SignUp -> signUp(action.nickname, action.email, action.password)
+            is SignUpAction.SignUp -> signUp()
             is SignUpAction.CheckNickname -> checkNickname()
             is SignUpAction.CheckEmail -> checkEmail()
             is SignUpAction.CheckPassword -> checkPassword()
         }
     }
 
-    private fun signUp(nickname: String, email: String, password: String) {
+    private fun signUp() {
         viewModelScope.launch {
-            userRepository.signup(nickname, email, password, "android", "null").let { res ->
+            userRepository.signup(
+                viewState.value.nickname.orEmpty(),
+                viewState.value.email.orEmpty(),
+                viewState.value.password.orEmpty(),
+                "android",
+                "null"
+            ).let { res ->
                 res.message.let {
                     _viewState.update { prevState ->
                         prevState.copy(
@@ -157,7 +163,7 @@ sealed interface SignUpAction {
     object CheckNickname : SignUpAction
     object CheckEmail : SignUpAction
     object CheckPassword : SignUpAction
-    data class SignUp(val nickname: String, val email: String, val password: String) : SignUpAction
+    object SignUp : SignUpAction
 }
 
 sealed interface SingleEvent {

@@ -5,9 +5,9 @@ import org.sopt.stamp.domain.model.User
 
 @Serializable
 data class UserResponse(
-    val userId: Int?,
-    val message: String?,
-    val statusCode: Int?
+    val userId: Int? = -1,
+    val message: String? = "",
+    val statusCode: Int? = -1
 ) {
     fun toUser() = User(userId, message, statusCode)
 }

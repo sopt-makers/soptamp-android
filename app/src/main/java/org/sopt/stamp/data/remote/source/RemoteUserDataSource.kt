@@ -2,6 +2,7 @@ package org.sopt.stamp.data.remote.source
 
 import org.sopt.stamp.data.remote.api.UserService
 import org.sopt.stamp.data.remote.model.request.LoginRequest
+import org.sopt.stamp.data.remote.model.request.SignUpRequest
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import org.sopt.stamp.data.source.UserDataSource
 import javax.inject.Inject
@@ -16,7 +17,11 @@ class RemoteUserDataSource @Inject constructor(
         osType: String,
         clientToken: String
     ): UserResponse {
-        val response = userService.signup(nickname, email, password, osType, clientToken)
+        val response = userService.signup(
+            SignUpRequest(
+                nickname, email, password
+            )
+        )
         return UserResponse(
             response.body()?.userId,
             response.body()?.message,

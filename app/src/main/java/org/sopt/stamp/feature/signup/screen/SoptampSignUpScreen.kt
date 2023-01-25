@@ -27,9 +27,9 @@ import org.sopt.stamp.feature.signup.SignUpAction
 import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 
 @SignUpNavGraph(true)
-@Destination("signup")
+@Destination("Page")
 @Composable
-fun SignUpScreen(
+fun SignUpPageScreen(
     viewModel: SoptampSignUpViewModel = hiltViewModel()
 ) {
     SoptTheme {
@@ -77,7 +77,7 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.height(90.dp))
                 Button(
-                    onClick = { },
+                    onClick = { viewModel.handleAction(SignUpAction.SignUp) },
                     shape = RoundedCornerShape(9.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -189,6 +189,6 @@ private fun SignUpTextField(inputDesc: String, input: MutableState<TextFieldValu
 @Composable
 fun PreviewSignUpScreen() {
     SoptTheme {
-        SignUpScreen()
+        SignUpPageScreen()
     }
 }

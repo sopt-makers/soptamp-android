@@ -24,13 +24,13 @@ annotation class SettingNavGraph(
     val start: Boolean = false
 )
 
-@RootNavGraph(start = true)
+@RootNavGraph
 @NavGraph
 annotation class LoginNavGraph(
     val start: Boolean = false
 )
 
-@RootNavGraph
+@RootNavGraph(start = true)
 @NavGraph
 annotation class SignUpNavGraph(
     val start: Boolean = false
