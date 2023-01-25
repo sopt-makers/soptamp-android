@@ -30,7 +30,7 @@ import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 @Destination("signup")
 @Composable
 fun SignUpScreen(
-    viewModel: SoptampSignUpViewModel = hiltViewModel(),
+    viewModel: SoptampSignUpViewModel = hiltViewModel()
 ) {
     SoptTheme {
         Scaffold(topBar = { SoptTopAppBar(title = { Text(text = "회원가입") }) }) { paddingValues ->

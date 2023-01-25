@@ -2,6 +2,7 @@ package org.sopt.stamp.feature.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -9,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.sopt.stamp.data.repository.RemoteUserRepository
 import javax.inject.Inject
 
+@HiltViewModel
 class SoptampSignUpViewModel @Inject constructor(
     private val userRepository: RemoteUserRepository
 ) : ViewModel(), SignUpHandleAction {

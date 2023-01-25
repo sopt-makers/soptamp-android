@@ -22,15 +22,21 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.LoginNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.feature.login.LoginAction
+import org.sopt.stamp.feature.login.SoptampLoginViewModel
+import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 
 @LoginNavGraph(true)
 @Destination("page")
 @Composable
-fun LoginPageScreen() {
+fun LoginPageScreen(
+    viewModel: SoptampLoginViewModel = hiltViewModel()
+) {
     SoptTheme {
         Column(
             modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
@@ -48,10 +54,17 @@ fun LoginPageScreen() {
                 horizontalAlignment = Alignment.End
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                LoginTextField(inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true)
-
+                LoginTextField(inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true,
+                    putInput = { input ->
+                        viewModel.handleAction(LoginAction.PutEmail(input))
+                    }
+                )
                 Spacer(modifier = Modifier.height(20.dp))
-                LoginTextField(inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true)
+                LoginTextField(inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true,
+                    putInput = { input ->
+                        viewModel.handleAction(LoginAction.PutPassword(input))
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -68,7 +81,7 @@ fun LoginPageScreen() {
                 modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)
             ) {
                 Button(
-                    onClick = { },
+                    onClick = { viewModel.handleAction(LoginAction.Login)},
                     shape = RoundedCornerShape(9.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -93,7 +106,7 @@ fun LoginPageScreen() {
 }
 
 @Composable
-private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue>, fillMaxWidth: Boolean) {
+private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue>, fillMaxWidth: Boolean, putInput: (String) -> Unit) {
     var modifier = Modifier
         .clip(RoundedCornerShape(10.dp))
         .border(
@@ -115,7 +128,10 @@ private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue
         ),
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        onValueChange = { input.value = it },
+        onValueChange = {
+            input.value = it
+            putInput(input.value.text)
+        },
         placeholder = {
             Text(
                 text = inputDesc, style = SoptTheme.typography.caption1

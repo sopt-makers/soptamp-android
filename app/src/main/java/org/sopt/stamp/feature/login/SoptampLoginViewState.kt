@@ -1,7 +1,7 @@
 package org.sopt.stamp.feature.login
 
 data class SoptampLoginViewState(
-    val id: String?,
+    val email: String?,
     val password: String?,
     val errorMessage: String?
 ) {
