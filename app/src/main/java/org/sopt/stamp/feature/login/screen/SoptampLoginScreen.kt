@@ -80,9 +80,7 @@ fun LoginPageScreen(
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-            Box(
-                modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)
-            ) {
+            Box {
                 Button(
                     onClick = { viewModel.handleAction(LoginAction.Login) },
                     shape = RoundedCornerShape(9.dp),
