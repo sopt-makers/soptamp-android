@@ -48,7 +48,8 @@ fun LoginPageScreen(
 
             Image(
                 painter = painterResource(id = R.drawable.ic_soptamp),
-                contentDescription = "sopatmp logo",
+                contentDescription = "soptamp logo",
+                modifier = Modifier.padding(vertical = 72.dp)
             )
 
             Column(
@@ -79,7 +80,7 @@ fun LoginPageScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(56.dp))
             Box {
                 Button(
                     onClick = { viewModel.handleAction(LoginAction.Login) },
