@@ -26,10 +26,10 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.signup.SignUpAction
 import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 
-@SignUpNavGraph
+@SignUpNavGraph(true)
 @Destination("signup")
 @Composable
-private fun SignUpScreen(
+fun SignUpScreen(
     viewModel: SoptampSignUpViewModel = hiltViewModel(),
 ) {
     Scaffold(topBar = { SoptTopAppBar(title = { Text(text = "회원가입") }) }) { paddingValues ->

@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
-import org.sopt.stamp.feature.mission.NavGraphs
+import org.sopt.stamp.feature.NavGraphs
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

@@ -28,10 +28,10 @@ import org.sopt.stamp.config.navigation.LoginNavGraph
 import org.sopt.stamp.config.navigation.SignUpNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
 
-@LoginNavGraph
+@LoginNavGraph(true)
 @Destination("login")
 @Composable
-private fun LoginPage() {
+fun LoginPage() {
     Column(
         modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ) {
