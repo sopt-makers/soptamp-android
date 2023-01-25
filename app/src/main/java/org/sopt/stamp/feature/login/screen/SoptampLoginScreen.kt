@@ -25,69 +25,70 @@ import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.LoginNavGraph
-import org.sopt.stamp.config.navigation.SignUpNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
 
 @LoginNavGraph(true)
-@Destination("login")
+@Destination("page")
 @Composable
-fun LoginPage() {
-    Column(
-        modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        val username = remember { mutableStateOf(TextFieldValue()) }
-        val password = remember { mutableStateOf(TextFieldValue()) }
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_soptamp),
-            contentDescription = "sopatmp logo",
-        )
-
+fun LoginPageScreen() {
+    SoptTheme {
         Column(
-            horizontalAlignment = Alignment.End
+            modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(20.dp))
-            LoginTextField(inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true)
+
+            val username = remember { mutableStateOf(TextFieldValue()) }
+            val password = remember { mutableStateOf(TextFieldValue()) }
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_soptamp),
+                contentDescription = "sopatmp logo",
+            )
+
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Spacer(modifier = Modifier.height(20.dp))
+                LoginTextField(inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true)
+
+                Spacer(modifier = Modifier.height(20.dp))
+                LoginTextField(inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true)
+
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "계정찾기",
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.clickable(onClick = { }),
+                    style = SoptTheme.typography.caption3,
+                    color = SoptTheme.colors.onSurface50
+                )
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
-            LoginTextField(inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true)
+            Box(
+                modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)
+            ) {
+                Button(
+                    onClick = { },
+                    shape = RoundedCornerShape(9.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(0xFFC292FF), contentColor = Color(0xFFFFFFFF)
+                    )
+                ) {
+                    Text(text = "로그인")
+                }
+            }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "계정찾기",
+                text = "회원가입",
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable(onClick = { }),
-                style = SoptTheme.typography.caption3,
-                color = SoptTheme.colors.onSurface50
+                style = SoptTheme.typography.caption1
             )
         }
-
-        Spacer(modifier = Modifier.height(20.dp))
-        Box(
-            modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)
-        ) {
-            Button(
-                onClick = { },
-                shape = RoundedCornerShape(9.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xFFC292FF), contentColor = Color(0xFFFFFFFF)
-                )
-            ) {
-                Text(text = "로그인")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "회원가입",
-            textDecoration = TextDecoration.Underline,
-            modifier = Modifier.clickable(onClick = { }),
-            style = SoptTheme.typography.caption1
-        )
     }
 }
 
@@ -127,6 +128,6 @@ private fun LoginTextField(inputDesc: String, input: MutableState<TextFieldValue
 @Composable
 fun PreviewLoginScreen() {
     SoptTheme {
-        LoginPage()
+        LoginPageScreen()
     }
 }

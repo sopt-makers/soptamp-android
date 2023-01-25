@@ -32,58 +32,62 @@ import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 fun SignUpScreen(
     viewModel: SoptampSignUpViewModel = hiltViewModel(),
 ) {
-    Scaffold(topBar = { SoptTopAppBar(title = { Text(text = "회원가입") }) }) { paddingValues ->
-        val defaultPadding = PaddingValues(
-            top = 0.dp, bottom = paddingValues.calculateBottomPadding(), start = 16.dp, end = 16.dp
-        )
-        Column(
-            modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            val nickname = remember { mutableStateOf(TextFieldValue()) }
-            val email = remember { mutableStateOf(TextFieldValue()) }
-            val password = remember { mutableStateOf(TextFieldValue()) }
-
-            Spacer(modifier = Modifier.height(20.dp))
-            SignUpInput(
-                "닉네임",
-                "닉네임을 입력해주세요",
-                nickname,
-                checkInput = { viewModel.handleAction(SignUpAction.CheckNickname) },
-                putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
+    SoptTheme {
+        Scaffold(topBar = { SoptTopAppBar(title = { Text(text = "회원가입") }) }) { paddingValues ->
+            val defaultPadding = PaddingValues(
+                top = 0.dp, bottom = paddingValues.calculateBottomPadding(), start = 16.dp, end = 16.dp
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
-            SignUpInput(
-                "이메일",
-                "이메일을 입력해주세요",
-                email,
-                checkInput = { viewModel.handleAction(SignUpAction.CheckEmail) },
-                putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-            PasswordInput(
-                "비밀번호",
-                "비밀번호를 입력해주세요.",
-                "비밀번호를 다시 입력해주세요.",
-                password,
-                checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
-                putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
-                putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) }
-            )
-
-            Spacer(modifier = Modifier.height(90.dp))
-            Button(
-                onClick = { },
-                shape = RoundedCornerShape(9.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xFFC292FF), contentColor = Color(0xFFFFFFFF)
-                )
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "가입하기")
+                val nickname = remember { mutableStateOf(TextFieldValue()) }
+                val email = remember { mutableStateOf(TextFieldValue()) }
+                val password = remember { mutableStateOf(TextFieldValue()) }
+
+                Spacer(modifier = Modifier.height(20.dp))
+                SignUpInput(
+                    "닉네임",
+                    "닉네임을 입력해주세요",
+                    nickname,
+                    checkInput = { viewModel.handleAction(SignUpAction.CheckNickname) },
+                    putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+                SignUpInput(
+                    "이메일",
+                    "이메일을 입력해주세요",
+                    email,
+                    checkInput = { viewModel.handleAction(SignUpAction.CheckEmail) },
+                    putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) }
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+                PasswordInput(
+                    "비밀번호",
+                    "비밀번호를 입력해주세요.",
+                    "비밀번호를 다시 입력해주세요.",
+                    password,
+                    checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
+                    putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
+                    putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) }
+                )
+
+                Spacer(modifier = Modifier.height(90.dp))
+                Button(
+                    onClick = { },
+                    shape = RoundedCornerShape(9.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(0xFFC292FF), contentColor = Color(0xFFFFFFFF)
+                    )
+                ) {
+                    Text(text = "가입하기")
+                }
             }
         }
     }
