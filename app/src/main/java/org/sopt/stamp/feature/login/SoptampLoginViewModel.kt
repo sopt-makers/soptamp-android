@@ -10,12 +10,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.stamp.App
+import org.sopt.stamp.data.local.SoptampDataStore
 import org.sopt.stamp.data.repository.RemoteUserRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SoptampLoginViewModel @Inject constructor(
-    private val userRepository: RemoteUserRepository
+    private val userRepository: RemoteUserRepository,
+    private val dataStore: SoptampDataStore,
 ) : ViewModel(), LoginHandleAction {
 
     private val _viewState = MutableStateFlow(SoptampLoginViewState.init())
@@ -43,8 +45,8 @@ class SoptampLoginViewModel @Inject constructor(
                     }
                     if (res.statusCode == 200) {
                         _singleEvent.trySend(SingleEvent.LoginSuccess)
-                        res.userId?.let { App.getInstance().getDataStore().setUserId(it) }
-                        res.profileMessage?.let { App.getInstance().getDataStore().setProfileMessage(it) }
+                        res.userId?.let { dataStore.setUserId(it) }
+                        res.profileMessage?.let { dataStore.setProfileMessage(it) }
                     }
                 }
             }
@@ -76,12 +78,12 @@ sealed interface LoginAction {
 
     data class PutEmail(val input: String) : LoginAction
     data class PutPassword(val input: String) : LoginAction
-    object Login : LoginAction
+    data object Login : LoginAction
 }
 
 sealed interface SingleEvent {
-    object Loading : SingleEvent
-    object LoginSuccess : SingleEvent
-    object NavigateToJoin : SingleEvent
-    object NavigateToFindAccount : SingleEvent
+    data object Loading : SingleEvent
+    data object LoginSuccess : SingleEvent
+    data object NavigateToJoin : SingleEvent
+    data object NavigateToFindAccount : SingleEvent
 }

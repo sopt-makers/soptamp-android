@@ -10,9 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import javax.inject.Inject
 
-class SoptampDataStoreModule(private val context: Context) {
-
+class SoptampDataStore @Inject constructor(
+    private val context: Context
+) {
     private val Context.dataStore by preferencesDataStore(name = "pref")
 
     /** USER_ID  */
@@ -54,5 +56,4 @@ class SoptampDataStoreModule(private val context: Context) {
             pref[PROFILE_MESSAGE] = profileMessage
         }
     }
-
 }
