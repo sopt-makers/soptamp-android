@@ -45,9 +45,9 @@ import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.model.MissionsFilter
+import org.sopt.stamp.feature.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.mission.MissionsState
 import org.sopt.stamp.feature.mission.MissionsViewModel
-import org.sopt.stamp.feature.mission.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.feature.mission.model.MissionUiModel

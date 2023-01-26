@@ -12,7 +12,7 @@ annotation class AuthNavGraph(
     val start: Boolean = false
 )
 
-@RootNavGraph(start = true)
+@RootNavGraph
 @NavGraph
 annotation class MissionNavGraph(
     val start: Boolean = false
@@ -21,5 +21,17 @@ annotation class MissionNavGraph(
 @RootNavGraph
 @NavGraph
 annotation class SettingNavGraph(
+    val start: Boolean = false
+)
+
+@RootNavGraph(start = true)
+@NavGraph
+annotation class LoginNavGraph(
+    val start: Boolean = false
+)
+
+@RootNavGraph
+@NavGraph
+annotation class SignUpNavGraph(
     val start: Boolean = false
 )
