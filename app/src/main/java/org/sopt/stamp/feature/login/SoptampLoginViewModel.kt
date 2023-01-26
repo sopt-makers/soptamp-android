@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.sopt.stamp.App
 import org.sopt.stamp.data.local.SoptampDataStore
 import org.sopt.stamp.data.repository.RemoteUserRepository
 import javax.inject.Inject
@@ -78,12 +77,12 @@ sealed interface LoginAction {
 
     data class PutEmail(val input: String) : LoginAction
     data class PutPassword(val input: String) : LoginAction
-    data object Login : LoginAction
+    object Login : LoginAction
 }
 
 sealed interface SingleEvent {
-    data object Loading : SingleEvent
-    data object LoginSuccess : SingleEvent
-    data object NavigateToJoin : SingleEvent
-    data object NavigateToFindAccount : SingleEvent
+    object Loading : SingleEvent
+    object LoginSuccess : SingleEvent
+    object NavigateToJoin : SingleEvent
+    object NavigateToFindAccount : SingleEvent
 }
