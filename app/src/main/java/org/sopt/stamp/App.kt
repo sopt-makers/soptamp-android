@@ -9,13 +9,17 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.soloader.SoLoader
 import dagger.hilt.android.HiltAndroidApp
+import org.sopt.stamp.data.local.SoptampDataStoreModule
 
 @HiltAndroidApp
 class App : Application() {
+
+    private lateinit var dataStore: SoptampDataStoreModule
     override fun onCreate() {
         super.onCreate()
         initFlipper()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        dataStore = SoptampDataStoreModule(this)
     }
 
     private fun initFlipper() {
@@ -27,6 +31,8 @@ class App : Application() {
             }.start()
         }
     }
+
+    fun getDataStore(): SoptampDataStoreModule = dataStore
 
     companion object {
         val networkFlipperPlugin = NetworkFlipperPlugin()
