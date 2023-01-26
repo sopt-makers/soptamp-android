@@ -15,11 +15,13 @@ import org.sopt.stamp.data.local.SoptampDataStoreModule
 class App : Application() {
 
     private lateinit var dataStore: SoptampDataStoreModule
+    fun getDataStore(): SoptampDataStoreModule = dataStore
     override fun onCreate() {
         super.onCreate()
+        soptampApplication = this
+        dataStore = SoptampDataStoreModule(this)
         initFlipper()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        dataStore = SoptampDataStoreModule(this)
     }
 
     private fun initFlipper() {
@@ -32,9 +34,9 @@ class App : Application() {
         }
     }
 
-    fun getDataStore(): SoptampDataStoreModule = dataStore
-
     companion object {
         val networkFlipperPlugin = NetworkFlipperPlugin()
+        private lateinit var soptampApplication: App
+        fun getInstance(): App = soptampApplication
     }
 }

@@ -10,5 +10,5 @@ data class UserResponse(
     val statusCode: Int? = -1,
     val profileMessage: String? = ""
 ) {
-    fun toUser() = User(userId, message, statusCode)
+    fun toUser() = User(userId, message, statusCode, profileMessage)
 }
