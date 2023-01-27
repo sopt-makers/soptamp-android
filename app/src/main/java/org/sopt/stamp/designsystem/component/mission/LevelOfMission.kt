@@ -20,7 +20,7 @@ fun LevelOfMission(stamp: Stamp, spaceSize: Dp) {
 
 @Composable
 private fun MissionLevelOfStar(stamp: Stamp) {
-    repeat(MissionLevel.MAXIMUM_LEVEL) {
+    (MissionLevel.MINIMUM_LEVEL..MissionLevel.MAXIMUM_LEVEL).forEach {
         val starColor = if (it <= stamp.missionLevel.value) {
             stamp.starColor
         } else {
