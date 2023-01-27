@@ -11,10 +11,9 @@ enum class Stamp(
     val missionLevel: MissionLevel,
     @RawRes val lottie: Int
 ) {
-    LEVEL1(MissionLevel.of(1), R.raw.pinkstamps), LEVEL2(MissionLevel.of(2), R.raw.purplestamp), LEVEL3(
-        MissionLevel.of(3),
-        R.raw.greenstamp
-    );
+    LEVEL1(MissionLevel.of(1), R.raw.pinkstamps),
+    LEVEL2(MissionLevel.of(2), R.raw.purplestamp),
+    LEVEL3(MissionLevel.of(3), R.raw.greenstamp);
 
     val starColor: Color
         @Composable get() = when (this) {
