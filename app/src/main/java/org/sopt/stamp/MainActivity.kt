@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
-            //DestinationsNavHost(navGraph = NavGraphs.root)
+            DestinationsNavHost(navGraph = NavGraphs.root)
         }
     }
 }
