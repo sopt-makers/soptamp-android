@@ -158,7 +158,6 @@ fun MissionsGridComponent(
         items(missions) { missionUiModel ->
             MissionComponent(
                 mission = missionUiModel,
-                modifier = Modifier.padding(horizontal = 4.dp, vertical = 20.dp),
                 onClick = {
                     onMissionItemClick(missionUiModel.toArgs())
                 }
