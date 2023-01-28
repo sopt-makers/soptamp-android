@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -52,6 +51,7 @@ import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.error.Error
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.feature.destinations.MissionDetailScreenDestination
+import org.sopt.stamp.feature.destinations.RankingScreenDestination
 import org.sopt.stamp.feature.mission.MissionsState
 import org.sopt.stamp.feature.mission.MissionsViewModel
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
@@ -91,8 +91,9 @@ fun MissionListScreen(
             is MissionsState.Success -> MissionListScreen(
                 missionListUiModel = (state as MissionsState.Success).missionListUiModel,
                 menuTexts = MissionsFilter.getTitleOfMissionsList(),
-                onMenuClick = { filter -> missionsViewModel.fetchMissions(filter) },
-                onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) }
+                onMenuClick = { filter -> missionsViewModel.fetchMissions(filter = filter) },
+                onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) },
+                onFloatingButtonClick = {navigator.navigate(RankingScreenDestination)}
             )
         }
     }
@@ -103,7 +104,8 @@ fun MissionListScreen(
     missionListUiModel: MissionListUiModel,
     menuTexts: List<String>,
     onMenuClick: (String) -> Unit = {},
-    onMissionItemClick: (item: MissionNavArgs) -> Unit = {}
+    onMissionItemClick: (item: MissionNavArgs) -> Unit = {},
+    onFloatingButtonClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -116,7 +118,7 @@ fun MissionListScreen(
         floatingActionButton = {
             SoptampFloatingButton(
                 text = "랭킹 보기",
-                onClick = {}
+                onClick = { onFloatingButtonClick() }
             )
         },
         floatingActionButtonPosition = FabPosition.Center
@@ -125,28 +127,42 @@ fun MissionListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = 0.dp,
+                    top = 20.dp,
                     bottom = paddingValues.calculateBottomPadding(),
-                    start = 8.dp,
-                    end = 8.dp
+                    start = 16.dp,
+                    end = 16.dp
                 )
         ) {
             if (missionListUiModel.missionList.isEmpty()) {
                 MissionEmptyScreen(contentText = missionListUiModel.title)
+            } else {
+                MissionsGridComponent(
+                    missions = missionListUiModel.missionList,
+                    onMissionItemClick = { onMissionItemClick(it)}
+                )
             }
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2)
-            ) {
-                items(missionListUiModel.missionList) { missionUiModel ->
-                    MissionComponent(
-                        mission = missionUiModel,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 20.dp),
-                        onClick = {
-                            onMissionItemClick(missionUiModel.toArgs())
-                        }
-                    )
+        }
+    }
+}
+
+@Composable
+fun MissionsGridComponent(
+    missions: List<MissionUiModel>,
+    onMissionItemClick: (item: MissionNavArgs) -> Unit = {}
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.spacedBy(40.dp, Alignment.Top),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(missions) { missionUiModel ->
+            MissionComponent(
+                mission = missionUiModel,
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 20.dp),
+                onClick = {
+                    onMissionItemClick(missionUiModel.toArgs())
                 }
-            }
+            )
         }
     }
 }
@@ -269,19 +285,19 @@ fun PreviewMissionListScreen() {
                 id = 2,
                 title = "세미나 끝나고 뒷풀이 2시까지 달리기",
                 level = MissionLevel.of(1),
-                isCompleted = false
+                isCompleted = true
             ),
             MissionUiModel(
                 id = 3,
                 title = "세미나 끝나고 뒷풀이 3시까지 달리기",
                 level = MissionLevel.of(2),
-                isCompleted = false
+                isCompleted = true
             ),
             MissionUiModel(
                 id = 4,
                 title = "세미나 끝나고 뒷풀이 4시까지 달리기",
                 level = MissionLevel.of(3),
-                isCompleted = true
+                isCompleted = false
             ),
             MissionUiModel(
                 id = 5,

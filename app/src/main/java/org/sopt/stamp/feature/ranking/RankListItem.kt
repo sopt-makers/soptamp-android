@@ -18,11 +18,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
 
 @Composable
-fun RankListItem(item: RankerUiModel, isMyRanking: Boolean = false) {
+fun RankListItem(
+    item: RankerUiModel,
+    isMyRanking: Boolean = false,
+    onClickUser: (RankerUiModel) -> Unit = {}
+) {
     val itemPadding = PaddingValues(
         top = 19.dp,
         bottom = 16.dp,
@@ -30,14 +35,16 @@ fun RankListItem(item: RankerUiModel, isMyRanking: Boolean = false) {
         end = 15.dp
     )
     val backgroundModifier = if (isMyRanking) {
-        Modifier.background(
-            color = SoptTheme.colors.purple100,
-            shape = RoundedCornerShape(8.dp)
-        ).border(
-            width = 2.dp,
-            color = SoptTheme.colors.purple300,
-            shape = RoundedCornerShape(8.dp)
-        )
+        Modifier
+            .background(
+                color = SoptTheme.colors.purple100,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .border(
+                width = 2.dp,
+                color = SoptTheme.colors.purple300,
+                shape = RoundedCornerShape(8.dp)
+            )
     } else {
         Modifier.background(
             color = SoptTheme.colors.onSurface5,
@@ -47,6 +54,7 @@ fun RankListItem(item: RankerUiModel, isMyRanking: Boolean = false) {
     Row(
         modifier = backgroundModifier
             .fillMaxWidth()
+            .noRippleClickable { onClickUser(item) }
             .padding(itemPadding),
         horizontalArrangement = Arrangement.Center
     ) {
@@ -59,7 +67,7 @@ fun RankListItem(item: RankerUiModel, isMyRanking: Boolean = false) {
         RankerInformation(
             modifier = Modifier.weight(1f),
             user = item.nickname,
-            description = item.description
+            description = item.getDescription()
         )
         Spacer(modifier = Modifier.size(12.dp))
         RankScore(
@@ -74,7 +82,7 @@ fun RankListItem(item: RankerUiModel, isMyRanking: Boolean = false) {
 fun RankerInformation(
     modifier: Modifier = Modifier,
     user: String,
-    description: String?
+    description: String
 ) {
     Column(modifier) {
         Text(
@@ -87,7 +95,7 @@ fun RankerInformation(
         )
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = description ?: RankerUiModel.DEFAULT_DESCRIPTION,
+            text = description,
             style = SoptTheme.typography.caption1,
             color = SoptTheme.colors.onSurface70,
             maxLines = 1,

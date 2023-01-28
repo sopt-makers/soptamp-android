@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,9 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.LoginNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.feature.destinations.MissionListScreenDestination
+import org.sopt.stamp.feature.destinations.SignUpPageScreenDestination
 import org.sopt.stamp.feature.login.LoginAction
 import org.sopt.stamp.feature.login.SoptampLoginViewModel
 
@@ -35,8 +39,13 @@ import org.sopt.stamp.feature.login.SoptampLoginViewModel
 @Destination("page")
 @Composable
 fun LoginPageScreen(
-    viewModel: SoptampLoginViewModel = hiltViewModel()
+    viewModel: SoptampLoginViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator,
 ) {
+    val viewState = viewModel.viewState.collectAsState()
+    if (viewState.value.isComplete) {
+        navigator.navigate(MissionListScreenDestination())
+    }
     SoptTheme {
         Column(
             modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
@@ -101,7 +110,7 @@ fun LoginPageScreen(
             Text(
                 text = "회원가입",
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable(onClick = { }),
+                modifier = Modifier.clickable(onClick = { navigator.navigate(SignUpPageScreenDestination)}),
                 style = SoptTheme.typography.caption1
             )
         }
@@ -154,6 +163,6 @@ private fun LoginTextField(
 @Composable
 fun PreviewLoginScreen() {
     SoptTheme {
-        LoginPageScreen()
+        //LoginPageScreen()
     }
 }

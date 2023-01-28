@@ -27,13 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
+import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
 import org.sopt.stamp.feature.ranking.model.TopRankerDescriptionBubble
 
 @Composable
 fun TopRankerList(
-    topRanker: Triple<RankerUiModel, RankerUiModel, RankerUiModel>
+    topRanker: Triple<RankerUiModel, RankerUiModel, RankerUiModel>,
+    onClickTopRankerBubble: (RankerUiModel) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -46,14 +48,14 @@ fun TopRankerList(
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var onClickRankerState by remember { mutableStateOf(topRanker.first.rank) }
-        var onClickRankerDescriptionState by remember {
-            mutableStateOf(topRanker.first.description ?: RankerUiModel.DEFAULT_DESCRIPTION)
+        var onClickRankerState by remember {
+            mutableStateOf(topRanker.first)
         }
-        if (onClickRankerState > 0) {
+        if (onClickRankerState.rank > 0) {
             TopRankDescriptionBubble(
-                TopRankerDescriptionBubble.findBubbleByRank(onClickRankerState),
-                onClickRankerDescriptionState
+                bubble = TopRankerDescriptionBubble.findBubbleByRank(onClickRankerState.rank),
+                onClickRankerDescriptionState = onClickRankerState.getDescription(),
+                onClickItem = { onClickTopRankerBubble(onClickRankerState) }
             )
             Spacer(modifier = Modifier.size(8.dp))
         }
@@ -64,9 +66,8 @@ fun TopRankerList(
             ),
             verticalAlignment = Alignment.Bottom
         ) {
-            val onClickRanker = { rank: Int, description: String ->
-                onClickRankerState = rank
-                onClickRankerDescriptionState = description
+            val onClickRanker = { ranker: RankerUiModel ->
+                onClickRankerState = ranker
             }
             TopRankerItem(ranker = topRanker.second, 110.dp, onClickRanker)
             TopRankerItem(ranker = topRanker.first, 150.dp, onClickRanker)
@@ -76,8 +77,16 @@ fun TopRankerList(
 }
 
 @Composable
-fun TopRankDescriptionBubble(bubble: TopRankerDescriptionBubble, onClickRankerDescriptionState: String) {
-    Box {
+fun TopRankDescriptionBubble(
+    bubble: TopRankerDescriptionBubble,
+    onClickRankerDescriptionState: String,
+    onClickItem: () -> Unit = {}
+) {
+    Box(
+        modifier = Modifier.noRippleClickable {
+            onClickItem()
+        }
+    ) {
         Icon(
             modifier = Modifier.fillMaxWidth(),
             painter = painterResource(id = bubble.background),
@@ -85,12 +94,14 @@ fun TopRankDescriptionBubble(bubble: TopRankerDescriptionBubble, onClickRankerDe
             tint = bubble.backgroundColor
         )
         Row(
-            modifier = Modifier.fillMaxWidth().padding(
-                top = 3.dp,
-                bottom = 13.dp,
-                start = 24.dp,
-                end = 8.dp
-            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = 3.dp,
+                    bottom = 13.dp,
+                    start = 24.dp,
+                    end = 8.dp
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {

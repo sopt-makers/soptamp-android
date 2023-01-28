@@ -27,19 +27,18 @@ import org.sopt.stamp.feature.ranking.model.RankerUiModel
 fun TopRankerItem(
     ranker: RankerUiModel,
     height: Dp,
-    onClick: (Int, String) -> Unit = { _, _ -> }
+    onClick: (RankerUiModel) -> Unit = {},
 ) {
-    val (rank, userId, nickname, description, score) = ranker
     Column(
-        modifier = Modifier.noRippleClickable { onClick(rank, description ?: RankerUiModel.DEFAULT_DESCRIPTION) },
+        modifier = Modifier.noRippleClickable { onClick(ranker) },
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopRankBarOfRankText(rank = rank)
-        TopRankBarOfGraph(rank = rank, score = score, height = height)
+        TopRankBarOfRankText(rank = ranker.rank)
+        TopRankBarOfGraph(rank = ranker.rank, score = ranker.score, height = height)
         Spacer(modifier = Modifier.size(10.dp))
         Text(
-            text = nickname,
+            text = ranker.nickname,
             style = SoptTheme.typography.h3,
             color = Color.Black
         )

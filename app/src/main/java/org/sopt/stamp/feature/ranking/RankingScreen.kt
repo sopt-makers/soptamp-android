@@ -19,62 +19,82 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import kotlinx.coroutines.launch
 import org.sopt.stamp.R
+import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.button.SoptampFloatingButton
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
 import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
 import org.sopt.stamp.designsystem.component.layout.LoadingScreen
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.feature.destinations.MissionListScreenDestination
+import org.sopt.stamp.feature.destinations.UserMissionListScreenDestination
+import org.sopt.stamp.feature.ranking.model.RankerNavArg
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
 import org.sopt.stamp.feature.ranking.model.RankingListUiModel
+import org.sopt.stamp.feature.ranking.model.toArgs
+import org.sopt.stamp.util.toPx
 
+@MissionNavGraph
 @Destination("ranking")
 @Composable
 fun RankingScreen(
-    rankingViewModel: RankingViewModel = viewModel(),
+    rankingViewModel: RankingViewModel = hiltViewModel(),
+    resultNavigator: ResultBackNavigator<Boolean>,
     navigator: DestinationsNavigator,
 ) {
     val state by rankingViewModel.state.collectAsState()
-    when (state) {
-        RankingState.Loading -> LoadingScreen()
-        RankingState.Failure -> NetworkErrorDialog {
-            rankingViewModel.fetchRanking()
-        }
+    SoptTheme {
+        when (state) {
+            RankingState.Loading -> LoadingScreen()
+            RankingState.Failure -> NetworkErrorDialog {
+                rankingViewModel.fetchRanking()
+            }
 
-        is RankingState.Success -> RankingScreen(
-            rankingListUiModel = (state as RankingState.Success).uiModel,
-            userId = (state as RankingState.Success).userId
-        )
+            is RankingState.Success -> RankingScreen(
+                rankingListUiModel = (state as RankingState.Success).uiModel,
+                userId = (state as RankingState.Success).userId,
+                onClickBack = { resultNavigator.navigateBack() },
+                onClickUser = { ranker -> navigator.navigate(UserMissionListScreenDestination(ranker))}
+            )
+        }
     }
-    //back handler
 }
 
 @Composable
 fun RankingScreen(
     rankingListUiModel: RankingListUiModel,
-    userId: Int
+    userId: Int,
+    onClickBack: () -> Unit = {},
+    onClickUser: (RankerNavArg) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val scrollOffsetPx = (-257).dp.toPx()
     Scaffold(
-        topBar = { RankingHeader(title = "랭킹") },
+        topBar = {
+            RankingHeader(
+                title = "랭킹",
+                onClickBack = { onClickBack() }
+            )
+        },
         floatingActionButton = {
             SoptampFloatingButton(
-                text = "내 랭킹 보기",
-                onClick = {
-                    coroutineScope.launch {
-                        val currentUserIndex = rankingListUiModel.otherRankingList.withIndex()
-                            .find { it.value.userId == userId }
-                            ?.index ?: 0
-                        listState.animateScrollToItem(index = currentUserIndex)
-                    }
+                text = "내 랭킹 보기"
+            ) {
+                coroutineScope.launch {
+                    val currentUserIndex = rankingListUiModel.otherRankingList.withIndex()
+                        .find { it.value.userId == userId }
+                        ?.index
+                        ?: 0
+                    listState.animateScrollToItem(index = currentUserIndex, scrollOffset = scrollOffsetPx)
                 }
-            )
+            }
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
@@ -90,16 +110,30 @@ fun RankingScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(bottom = 70.dp)
         ) {
-            item { TopRankerList(rankingListUiModel.topRankingList) }
+            item {
+                TopRankerList(
+                    topRanker = rankingListUiModel.topRankingList,
+                    onClickTopRankerBubble = { ranker -> onClickUser(ranker.toArgs()) }
+                )
+            }
             items(rankingListUiModel.otherRankingList) { item ->
-                RankListItem(item, item.userId == userId)
+                RankListItem(
+                    item = item,
+                    isMyRanking = item.userId == userId,
+                    onClickUser = { ranker ->
+                        if (userId != ranker.userId) onClickUser(ranker.toArgs())
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun RankingHeader(title: String) {
+fun RankingHeader(
+    title: String,
+    onClickBack: () -> Unit = {}
+) {
     SoptTopAppBar(
         title = {
             Text(
@@ -110,7 +144,8 @@ fun RankingHeader(title: String) {
         },
         navigationIcon = {
             SoptampIconButton(
-                imageVector = ImageVector.vectorResource(id = R.drawable.arrow_letf)
+                imageVector = ImageVector.vectorResource(id = R.drawable.arrow_letf),
+                onClick = { onClickBack() }
             )
         }
     )

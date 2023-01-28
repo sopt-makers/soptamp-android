@@ -6,9 +6,10 @@ data class RankerUiModel(
     val rank: Int,
     val userId: Int,
     val nickname: String,
-    val description: String? = null,
+    private val description: String? = null,
     val score: Int
 ) {
+    fun getDescription() = description?: DEFAULT_DESCRIPTION
     fun isTopRank() = (rank <= STANDARD_TOP_RANK)
     fun isNotTopRank() = (rank > STANDARD_TOP_RANK)
 

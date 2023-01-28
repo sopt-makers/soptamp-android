@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -46,6 +47,7 @@ class SoptampLoginViewModel @Inject constructor(
                         _singleEvent.trySend(SingleEvent.LoginSuccess)
                         res.userId?.let { dataStore.setUserId(it) }
                         res.profileMessage?.let { dataStore.setProfileMessage(it) }
+                        updateLoginComplete()
                     }
                 }
             }
@@ -64,6 +66,14 @@ class SoptampLoginViewModel @Inject constructor(
         _viewState.update { prevState ->
             prevState.copy(
                 password = input
+            )
+        }
+    }
+
+    private fun updateLoginComplete() {
+        _viewState.update { prevState ->
+            prevState.copy(
+                isComplete = true
             )
         }
     }
