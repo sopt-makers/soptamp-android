@@ -46,7 +46,8 @@ fun NetworkErrorDialog(
         },
         buttons = {
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .background(color = Color(0xFFFF8080))
                     .noRippleClickable { onRetry() }
                     .padding(vertical = 15.dp),

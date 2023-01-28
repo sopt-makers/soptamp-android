@@ -21,7 +21,7 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.util.MultiFormFactorPreviews
 
 enum class ToolbarIconType(
-    @DrawableRes private val resId: Int = -1,
+    @DrawableRes private val resId: Int = -1
 ) {
     NONE,
     WRITE(R.drawable.ic_write),
@@ -42,7 +42,7 @@ fun Toolbar(
     title: @Composable (() -> Unit)? = null,
     iconOption: ToolbarIconType = ToolbarIconType.NONE,
     onBack: (() -> Unit)? = null,
-    onPressIcon: () -> Unit = {},
+    onPressIcon: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -61,7 +61,7 @@ fun Toolbar(
                     modifier = Modifier
                         .clickable(onClick = onBack)
                         .align(Alignment.CenterVertically)
-                        .padding(8.dp),
+                        .padding(8.dp)
                 )
             }
             title?.invoke()
@@ -94,7 +94,7 @@ private fun ToolbarPreview() {
                     )
                 },
                 iconOption = ToolbarIconType.WRITE,
-                onBack = {},
+                onBack = {}
             )
         }
     }

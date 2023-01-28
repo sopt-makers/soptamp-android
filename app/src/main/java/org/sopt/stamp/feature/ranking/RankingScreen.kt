@@ -32,7 +32,6 @@ import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
 import org.sopt.stamp.designsystem.component.layout.LoadingScreen
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
-import org.sopt.stamp.feature.destinations.MissionListScreenDestination
 import org.sopt.stamp.feature.destinations.UserMissionListScreenDestination
 import org.sopt.stamp.feature.ranking.model.RankerNavArg
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
@@ -46,7 +45,7 @@ import org.sopt.stamp.util.toPx
 fun RankingScreen(
     rankingViewModel: RankingViewModel = hiltViewModel(),
     resultNavigator: ResultBackNavigator<Boolean>,
-    navigator: DestinationsNavigator,
+    navigator: DestinationsNavigator
 ) {
     val state by rankingViewModel.state.collectAsState()
     SoptTheme {
@@ -60,7 +59,7 @@ fun RankingScreen(
                 rankingListUiModel = (state as RankingState.Success).uiModel,
                 userId = (state as RankingState.Success).userId,
                 onClickBack = { resultNavigator.navigateBack() },
-                onClickUser = { ranker -> navigator.navigate(UserMissionListScreenDestination(ranker))}
+                onClickUser = { ranker -> navigator.navigate(UserMissionListScreenDestination(ranker)) }
             )
         }
     }

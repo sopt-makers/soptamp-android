@@ -1,11 +1,11 @@
 package org.sopt.stamp.data.repository
 
-import javax.inject.Inject
 import org.sopt.stamp.data.error.ErrorData
 import org.sopt.stamp.data.mapper.toDomain
 import org.sopt.stamp.data.source.MissionsDataSource
 import org.sopt.stamp.domain.model.Mission
 import org.sopt.stamp.domain.repository.MissionsRepository
+import javax.inject.Inject
 
 internal class RemoteMissionsRepository @Inject constructor(
     private val remote: MissionsDataSource

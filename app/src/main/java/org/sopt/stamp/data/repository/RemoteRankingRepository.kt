@@ -1,11 +1,11 @@
 package org.sopt.stamp.data.repository
 
-import javax.inject.Inject
 import org.sopt.stamp.data.error.ErrorData
 import org.sopt.stamp.data.mapper.toDomain
 import org.sopt.stamp.data.source.RankingDataSource
 import org.sopt.stamp.domain.model.Rank
 import org.sopt.stamp.domain.repository.RankingRepository
+import javax.inject.Inject
 
 internal class RemoteRankingRepository @Inject constructor(
     private val remote: RankingDataSource

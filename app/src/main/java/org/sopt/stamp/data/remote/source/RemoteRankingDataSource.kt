@@ -1,12 +1,12 @@
 package org.sopt.stamp.data.remote.source
 
-import java.net.UnknownHostException
-import javax.inject.Inject
 import org.sopt.stamp.data.error.ErrorData
 import org.sopt.stamp.data.remote.api.RankService
 import org.sopt.stamp.data.remote.mapper.toData
 import org.sopt.stamp.data.remote.model.RankData
 import org.sopt.stamp.data.source.RankingDataSource
+import java.net.UnknownHostException
+import javax.inject.Inject
 
 internal class RemoteRankingDataSource @Inject constructor(
     private val rankService: RankService

@@ -273,7 +273,7 @@ fun MissionDetailPreview() {
         id = 1,
         title = "앱잼 팀원 다 함께 바다 보고 오기",
         level = MissionLevel.of(2),
-        isCompleted = false,
+        isCompleted = false
     )
     SoptTheme {
         MissionDetailScreen(args, EmptyResultBackNavigator(), hiltViewModel())

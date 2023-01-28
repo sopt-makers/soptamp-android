@@ -154,8 +154,7 @@ fun UserMissionListHeader(
 
 @Preview
 @Composable
-fun PreviewUserMissionListScreen(
-) {
+fun PreviewUserMissionListScreen() {
     SoptTheme {
         UserMissionListScreen(
             userName = "hello",

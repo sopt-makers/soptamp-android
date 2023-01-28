@@ -22,7 +22,7 @@ interface StampService {
     suspend fun modifyStamp(
         @Path("missionId") missionId: Int,
         @Part stampContent: RequestBody,
-        @Part imageUrl: List<MultipartBody.Part>? = null,
+        @Part imageUrl: List<MultipartBody.Part>? = null
     ): ModifyStampResponse
 
     @Multipart
@@ -30,6 +30,6 @@ interface StampService {
     suspend fun registerStamp(
         @Path("missionId") missionId: Int,
         @Part stampContent: RequestBody,
-        @Part imageUrl: List<MultipartBody.Part>? = null,
+        @Part imageUrl: List<MultipartBody.Part>? = null
     ): StampResponse
 }

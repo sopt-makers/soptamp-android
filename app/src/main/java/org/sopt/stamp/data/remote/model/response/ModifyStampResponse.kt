@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ModifyStampResponse(
-    val stampId: Int,
+    val stampId: Int
 )

@@ -21,7 +21,7 @@ data class PostUiState(
     val isSuccess: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val error: Throwable? = null,
+    val error: Throwable? = null
 ) {
     companion object {
         fun from(data: Archive) = PostUiState(

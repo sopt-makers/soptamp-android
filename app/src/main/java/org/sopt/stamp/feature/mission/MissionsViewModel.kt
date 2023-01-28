@@ -1,23 +1,18 @@
 package org.sopt.stamp.feature.mission
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.local.SoptampDataStore
 import org.sopt.stamp.domain.error.Error
-import org.sopt.stamp.domain.model.Mission
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.domain.repository.MissionsRepository
 import org.sopt.stamp.feature.mission.model.toUiModel
-import timber.log.Timber
+import javax.inject.Inject
 
 @HiltViewModel
 class MissionsViewModel @Inject constructor(
@@ -37,7 +32,7 @@ class MissionsViewModel @Inject constructor(
         filter: String? = null
     ) = viewModelScope.launch {
         _state.value = MissionsState.Loading
-        dataStore.userId.collect {signedUserId ->
+        dataStore.userId.collect { signedUserId ->
             fetchMissions(
                 userId = userId ?: signedUserId,
                 filter = filter?.let { MissionsFilter.findFilterOf(filter) } ?: MissionsFilter.ALL_MISSION
@@ -64,7 +59,5 @@ class MissionsViewModel @Inject constructor(
                     else -> throw throwable
                 }
             }
-
-
     }
 }

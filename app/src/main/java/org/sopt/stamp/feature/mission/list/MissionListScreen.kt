@@ -93,7 +93,7 @@ fun MissionListScreen(
                 menuTexts = MissionsFilter.getTitleOfMissionsList(),
                 onMenuClick = { filter -> missionsViewModel.fetchMissions(filter = filter) },
                 onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) },
-                onFloatingButtonClick = {navigator.navigate(RankingScreenDestination)}
+                onFloatingButtonClick = { navigator.navigate(RankingScreenDestination) }
             )
         }
     }
@@ -138,7 +138,7 @@ fun MissionListScreen(
             } else {
                 MissionsGridComponent(
                     missions = missionListUiModel.missionList,
-                    onMissionItemClick = { onMissionItemClick(it)}
+                    onMissionItemClick = { onMissionItemClick(it) }
                 )
             }
         }

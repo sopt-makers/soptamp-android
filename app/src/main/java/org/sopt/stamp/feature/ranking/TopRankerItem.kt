@@ -27,7 +27,7 @@ import org.sopt.stamp.feature.ranking.model.RankerUiModel
 fun TopRankerItem(
     ranker: RankerUiModel,
     height: Dp,
-    onClick: (RankerUiModel) -> Unit = {},
+    onClick: (RankerUiModel) -> Unit = {}
 ) {
     Column(
         modifier = Modifier.noRippleClickable { onClick(ranker) },

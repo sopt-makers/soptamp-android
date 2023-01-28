@@ -19,7 +19,9 @@ class RemoteUserDataSource @Inject constructor(
     ): UserResponse {
         val response = userService.signup(
             SignUpRequest(
-                nickname, email, password
+                nickname,
+                email,
+                password
             )
         )
         return UserResponse(

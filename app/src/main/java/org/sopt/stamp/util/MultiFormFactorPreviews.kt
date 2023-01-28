@@ -14,4 +14,4 @@ import androidx.compose.ui.tooling.preview.Preview
     showBackground = true,
     showSystemUi = true
 )
-annotation class MultiFormFactorPreviews()
+annotation class MultiFormFactorPreviews

@@ -29,5 +29,4 @@ class RankerNavArgsSerializer : DestinationsNavTypeSerializer<RankerNavArg> {
     override fun toRouteString(value: RankerNavArg): String {
         return "${value.userId}::${value.nickname}::${value.description}"
     }
-
 }

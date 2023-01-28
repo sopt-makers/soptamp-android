@@ -7,5 +7,5 @@ data class Archive(
     val contents: String,
     val images: List<String>,
     val userId: Int,
-    val missionId: Int,
+    val missionId: Int
 )

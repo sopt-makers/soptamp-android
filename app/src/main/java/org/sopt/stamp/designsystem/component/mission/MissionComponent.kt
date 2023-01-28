@@ -71,7 +71,6 @@ private fun TitleOfMission(missionTitle: String) {
             .fillMaxWidth()
             .padding(horizontal = 22.dp)
     )
-
 }
 
 @Preview(showBackground = true, backgroundColor = 0xff000000)

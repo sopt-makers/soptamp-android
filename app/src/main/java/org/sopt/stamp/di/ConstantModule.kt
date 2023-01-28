@@ -5,8 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.sopt.stamp.BuildConfig
-import org.sopt.stamp.di.constant.Strings
 import org.sopt.stamp.di.constant.Constant
+import org.sopt.stamp.di.constant.Strings
 import javax.inject.Singleton
 
 @Module
