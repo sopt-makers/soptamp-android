@@ -45,6 +45,7 @@ fun MissionComponent(
             CompletedStamp(
                 stamp = stamp,
                 modifier = Modifier.aspectRatio(1.3f)
+                    .padding(horizontal = 12.dp)
             )
         } else {
             LevelOfMission(stamp = stamp, spaceSize = 10.dp)
