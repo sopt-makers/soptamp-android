@@ -1,6 +1,6 @@
 package org.sopt.stamp.designsystem.component.mission
 
-import androidx.annotation.RawRes
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import org.sopt.stamp.R
@@ -9,11 +9,11 @@ import org.sopt.stamp.domain.MissionLevel
 
 enum class Stamp(
     val missionLevel: MissionLevel,
-    @RawRes val lottie: Int
+    @DrawableRes val lottieImage: Int
 ) {
-    LEVEL1(MissionLevel.of(1), R.raw.pinkstamps),
-    LEVEL2(MissionLevel.of(2), R.raw.purplestamp),
-    LEVEL3(MissionLevel.of(3), R.raw.greenstamp);
+    LEVEL1(MissionLevel.of(1), R.drawable.pinkstamp_image),
+    LEVEL2(MissionLevel.of(2), R.drawable.purplestamp_image),
+    LEVEL3(MissionLevel.of(3), R.drawable.greenstamp_image);
 
     val starColor: Color
         @Composable get() = when (this) {
