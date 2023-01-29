@@ -32,6 +32,7 @@ import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.domain.error.Error
+import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.feature.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.mission.MissionsState
 import org.sopt.stamp.feature.mission.MissionsViewModel
@@ -51,7 +52,10 @@ fun UserMissionListScreen(
 ) {
     val state by missionsViewModel.state.collectAsState()
 
-    missionsViewModel.fetchMissions(userId = args.userId)
+    missionsViewModel.fetchMissions(
+        userId = args.userId,
+        filter = MissionsFilter.COMPLETE_MISSION.title
+    )
 
     SoptTheme {
         when (state) {
