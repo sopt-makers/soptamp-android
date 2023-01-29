@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SoptampLoginViewModel @Inject constructor(
     private val userRepository: RemoteUserRepository,
-    private val dataStore: SoptampDataStore,
+    private val dataStore: SoptampDataStore
 ) : ViewModel(), LoginHandleAction {
 
     private val _viewState = MutableStateFlow(SoptampLoginViewState.init())
@@ -46,6 +46,7 @@ class SoptampLoginViewModel @Inject constructor(
                         _singleEvent.trySend(SingleEvent.LoginSuccess)
                         res.userId?.let { dataStore.setUserId(it) }
                         res.profileMessage?.let { dataStore.setProfileMessage(it) }
+                        updateLoginComplete()
                     }
                 }
             }
@@ -64,6 +65,14 @@ class SoptampLoginViewModel @Inject constructor(
         _viewState.update { prevState ->
             prevState.copy(
                 password = input
+            )
+        }
+    }
+
+    private fun updateLoginComplete() {
+        _viewState.update { prevState ->
+            prevState.copy(
+                isComplete = true
             )
         }
     }

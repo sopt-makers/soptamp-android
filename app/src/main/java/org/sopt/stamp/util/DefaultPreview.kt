@@ -8,4 +8,4 @@ import androidx.compose.ui.tooling.preview.Preview
     showBackground = true,
     backgroundColor = 0xFFFFFF
 )
-annotation class DefaultPreview()
+annotation class DefaultPreview

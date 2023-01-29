@@ -10,7 +10,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 @Composable
 fun CompletedStamp(
     stamp: Stamp,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     val completedStamp by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(stamp.lottie))
     LottieAnimation(

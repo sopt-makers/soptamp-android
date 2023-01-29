@@ -11,7 +11,7 @@ data class StampResponse(
     val contents: String,
     val images: List<String>? = null,
     val userId: Int,
-    val missionId: Int,
+    val missionId: Int
 ) {
     fun toDomain() = Archive(
         createdAt = createdAt,
@@ -20,6 +20,6 @@ data class StampResponse(
         contents = contents,
         images = images ?: emptyList(),
         userId = userId,
-        missionId = missionId,
+        missionId = missionId
     )
 }

@@ -1,6 +1,7 @@
 package org.sopt.stamp.feature.ranking
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,37 +18,63 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.model.RankerUiModel
 
 @Composable
-fun RankListItem(item: RankerUiModel) {
+fun RankListItem(
+    item: RankerUiModel,
+    isMyRanking: Boolean = false,
+    onClickUser: (RankerUiModel) -> Unit = {}
+) {
     val itemPadding = PaddingValues(
         top = 19.dp,
         bottom = 16.dp,
         start = 15.dp,
         end = 15.dp
     )
-    Row(
-        modifier = Modifier.fillMaxWidth()
+    val backgroundModifier = if (isMyRanking) {
+        Modifier
             .background(
-                color = SoptTheme.colors.onSurface5,
+                color = SoptTheme.colors.purple100,
                 shape = RoundedCornerShape(8.dp)
-            ).padding(itemPadding),
+            )
+            .border(
+                width = 2.dp,
+                color = SoptTheme.colors.purple300,
+                shape = RoundedCornerShape(8.dp)
+            )
+    } else {
+        Modifier.background(
+            color = SoptTheme.colors.onSurface5,
+            shape = RoundedCornerShape(8.dp)
+        )
+    }
+    Row(
+        modifier = backgroundModifier
+            .fillMaxWidth()
+            .noRippleClickable { onClickUser(item) }
+            .padding(itemPadding),
         horizontalArrangement = Arrangement.Center
     ) {
         RankNumber(
             modifier = Modifier.padding(horizontal = 17.dp),
-            rank = item.rank
+            rank = item.rank,
+            isMyRankNumber = isMyRanking
         )
         Spacer(modifier = Modifier.size(16.dp))
         RankerInformation(
             modifier = Modifier.weight(1f),
-            user = item.user,
-            description = item.description
+            user = item.nickname,
+            description = item.getDescription()
         )
         Spacer(modifier = Modifier.size(12.dp))
-        RankScore(rank = item.rank, score = item.score)
+        RankScore(
+            rank = item.rank,
+            score = item.score,
+            isMyRankScore = isMyRanking
+        )
     }
 }
 
@@ -55,7 +82,7 @@ fun RankListItem(item: RankerUiModel) {
 fun RankerInformation(
     modifier: Modifier = Modifier,
     user: String,
-    description: String?
+    description: String
 ) {
     Column(modifier) {
         Text(
@@ -68,7 +95,7 @@ fun RankerInformation(
         )
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = description ?: RankerUiModel.DEFAULT_DESCRIPTION,
+            text = description,
             style = SoptTheme.typography.caption1,
             color = SoptTheme.colors.onSurface70,
             maxLines = 1,
@@ -84,10 +111,12 @@ fun PreviewRankListItem() {
         RankListItem(
             item = RankerUiModel(
                 rank = 4,
-                user = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                userId = 1,
+                nickname = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
                 description = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
                 score = 300
-            )
+            ),
+            true
         )
     }
 }

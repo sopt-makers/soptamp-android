@@ -35,7 +35,10 @@ fun SignUpPageScreen(
     SoptTheme {
         Scaffold(topBar = { SoptTopAppBar(title = { Text(text = "회원가입") }) }) { paddingValues ->
             val defaultPadding = PaddingValues(
-                top = 0.dp, bottom = paddingValues.calculateBottomPadding(), start = 16.dp, end = 16.dp
+                top = 0.dp,
+                bottom = paddingValues.calculateBottomPadding(),
+                start = 16.dp,
+                end = 16.dp
             )
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -86,7 +89,8 @@ fun SignUpPageScreen(
                         .fillMaxWidth()
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0xFFC292FF), contentColor = Color(0xFFFFFFFF)
+                        backgroundColor = Color(0xFFC292FF),
+                        contentColor = Color(0xFFFFFFFF)
                     )
                 ) {
                     Text(text = "가입하기")
@@ -111,7 +115,7 @@ private fun SignUpInput(
         Text(text = inputTitle, modifier = Modifier.padding(bottom = 16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.Center
         ) {
             SignUpTextField(inputDesc, input, keyboardType, false, putInput)
             Box {
@@ -123,7 +127,8 @@ private fun SignUpInput(
                         .height(50.dp)
                         .padding(start = 4.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0xFFC292FF), contentColor = Color(0xFFFFFFFF)
+                        backgroundColor = Color(0xFFC292FF),
+                        contentColor = Color(0xFFFFFFFF)
                     )
                 ) {
                     Text(text = "확인")
@@ -166,7 +171,9 @@ private fun SignUpTextField(
     var modifier = Modifier
         .clip(RoundedCornerShape(10.dp))
         .border(
-            width = if (input.value.text.isEmpty()) 0.dp else 1.dp, color = Color(0xFFC292FF), shape = RoundedCornerShape(10.dp)
+            width = if (input.value.text.isEmpty()) 0.dp else 1.dp,
+            color = Color(0xFFC292FF),
+            shape = RoundedCornerShape(10.dp)
         )
     modifier = if (fillMaxWidth) modifier.fillMaxWidth() else modifier
 
@@ -182,15 +189,17 @@ private fun SignUpTextField(
             textColor = SoptTheme.colors.onSurface90,
             placeholderColor = SoptTheme.colors.onSurface60
         ),
-        visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else
-            VisualTransformation.None,
+        visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else {
+            VisualTransformation.None
+        },
         onValueChange = {
             input.value = it
             putInput(input.value.text)
         },
         placeholder = {
             Text(
-                text = inputDesc, style = SoptTheme.typography.caption1
+                text = inputDesc,
+                style = SoptTheme.typography.caption1
             )
         }
     )

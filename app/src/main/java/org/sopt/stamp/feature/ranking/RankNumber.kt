@@ -13,7 +13,8 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 @Composable
 fun RankNumber(
     modifier: Modifier = Modifier,
-    rank: Int
+    rank: Int,
+    isMyRankNumber: Boolean = false
 ) {
     val defaultRankSymbols = "-"
     Text(
@@ -21,7 +22,7 @@ fun RankNumber(
         fontFamily = MontserratBold,
         fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
-        color = getRankTextColor(rank),
+        color = if (isMyRankNumber) SoptTheme.colors.purple300 else getRankTextColor(rank),
         modifier = modifier
     )
 }

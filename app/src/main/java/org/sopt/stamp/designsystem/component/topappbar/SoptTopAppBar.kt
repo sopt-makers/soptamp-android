@@ -61,7 +61,8 @@ fun SoptTopAppBar(
             Spacer(modifier = Modifier.size(2.dp))
         }
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {

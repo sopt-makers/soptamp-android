@@ -13,10 +13,11 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
+private val Context.dataStore by preferencesDataStore(name = "pref")
+
 class SoptampDataStore @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    private val Context.dataStore by preferencesDataStore(name = "pref")
 
     /** USER_ID  */
     private val USER_ID = intPreferencesKey("user_id")

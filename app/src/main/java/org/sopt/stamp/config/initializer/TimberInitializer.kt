@@ -13,7 +13,7 @@ class TimberInitializer : Initializer<Unit> {
     }
 
     private class SOPTDebugTree : Timber.DebugTree() {
-        override fun createStackElementTag(element: StackTraceElement): String? {
+        override fun createStackElementTag(element: StackTraceElement): String {
             return "SOPT://${element.fileName}:${element.lineNumber}#${element.methodName}"
         }
     }
@@ -27,6 +27,7 @@ class TimberInitializer : Initializer<Unit> {
                     }
                     FirebaseCrashlytics.getInstance().recordException(newThrowable)
                 }
+
                 else -> FirebaseCrashlytics.getInstance().log("$tag | $message")
             }
         }

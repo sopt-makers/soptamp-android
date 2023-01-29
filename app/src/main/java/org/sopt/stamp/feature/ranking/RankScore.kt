@@ -16,8 +16,14 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 fun RankScore(
     modifier: Modifier = Modifier,
     rank: Int,
-    score: Int
+    score: Int,
+    isMyRankScore: Boolean = false
 ) {
+    val textColor = if (isMyRankScore) {
+        SoptTheme.colors.purple300
+    } else {
+        getRankTextColor(rank = rank)
+    }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.Bottom
@@ -27,14 +33,14 @@ fun RankScore(
             fontFamily = MontserratRegular,
             fontSize = 30.sp,
             fontWeight = FontWeight.W400,
-            color = getRankTextColor(rank)
+            color = textColor
         )
         Text(
             text = "점",
             fontFamily = PretendardMedium,
             fontSize = 12.sp,
             fontWeight = FontWeight.W400,
-            color = getRankTextColor(rank)
+            color = textColor
         )
     }
 }

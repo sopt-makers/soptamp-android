@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,9 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.LoginNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.feature.destinations.MissionListScreenDestination
+import org.sopt.stamp.feature.destinations.SignUpPageScreenDestination
 import org.sopt.stamp.feature.login.LoginAction
 import org.sopt.stamp.feature.login.SoptampLoginViewModel
 
@@ -35,13 +39,19 @@ import org.sopt.stamp.feature.login.SoptampLoginViewModel
 @Destination("page")
 @Composable
 fun LoginPageScreen(
-    viewModel: SoptampLoginViewModel = hiltViewModel()
+    viewModel: SoptampLoginViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
 ) {
+    val viewState = viewModel.viewState.collectAsState()
+    if (viewState.value.isComplete) {
+        navigator.navigate(MissionListScreenDestination())
+    }
     SoptTheme {
         Column(
-            modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             val username = remember { mutableStateOf(TextFieldValue()) }
             val password = remember { mutableStateOf(TextFieldValue()) }
 
@@ -56,7 +66,9 @@ fun LoginPageScreen(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 LoginTextField(
-                    inputDesc = "이메일을 입력해주세요", input = username, fillMaxWidth = true,
+                    inputDesc = "이메일을 입력해주세요",
+                    input = username,
+                    fillMaxWidth = true,
                     keyboardType = KeyboardType.Email,
                     putInput = { input ->
                         viewModel.handleAction(LoginAction.PutEmail(input))
@@ -64,7 +76,9 @@ fun LoginPageScreen(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 LoginTextField(
-                    inputDesc = "비밀번호를 입력해주세요", input = password, fillMaxWidth = true,
+                    inputDesc = "비밀번호를 입력해주세요",
+                    input = password,
+                    fillMaxWidth = true,
                     keyboardType = KeyboardType.Password,
                     putInput = { input ->
                         viewModel.handleAction(LoginAction.PutPassword(input))
@@ -90,7 +104,8 @@ fun LoginPageScreen(
                         .fillMaxWidth()
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0xFFC292FF), contentColor = Color(0xFFFFFFFF)
+                        backgroundColor = Color(0xFFC292FF),
+                        contentColor = Color(0xFFFFFFFF)
                     )
                 ) {
                     Text(text = "로그인")
@@ -101,7 +116,7 @@ fun LoginPageScreen(
             Text(
                 text = "회원가입",
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable(onClick = { }),
+                modifier = Modifier.clickable(onClick = { navigator.navigate(SignUpPageScreenDestination) }),
                 style = SoptTheme.typography.caption1
             )
         }
@@ -119,7 +134,9 @@ private fun LoginTextField(
     var modifier = Modifier
         .clip(RoundedCornerShape(10.dp))
         .border(
-            width = if (input.value.text.isEmpty()) 0.dp else 1.dp, color = Color(0xFFC292FF), shape = RoundedCornerShape(10.dp)
+            width = if (input.value.text.isEmpty()) 0.dp else 1.dp,
+            color = Color(0xFFC292FF),
+            shape = RoundedCornerShape(10.dp)
         )
     modifier = if (fillMaxWidth) modifier.fillMaxWidth() else modifier
 
@@ -135,8 +152,9 @@ private fun LoginTextField(
             textColor = SoptTheme.colors.onSurface90,
             placeholderColor = SoptTheme.colors.onSurface60
         ),
-        visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else
-            VisualTransformation.None,
+        visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else {
+            VisualTransformation.None
+        },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         onValueChange = {
             input.value = it
@@ -144,7 +162,8 @@ private fun LoginTextField(
         },
         placeholder = {
             Text(
-                text = inputDesc, style = SoptTheme.typography.caption1
+                text = inputDesc,
+                style = SoptTheme.typography.caption1
             )
         }
     )
@@ -154,6 +173,6 @@ private fun LoginTextField(
 @Composable
 fun PreviewLoginScreen() {
     SoptTheme {
-        LoginPageScreen()
+        // LoginPageScreen()
     }
 }

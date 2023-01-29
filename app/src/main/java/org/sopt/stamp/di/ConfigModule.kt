@@ -27,6 +27,7 @@ object ConfigModule {
     fun providerLoggingInterceptor(): Interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
+
     @Provides
     @Singleton
     fun provideSerializer() = Json {
@@ -37,7 +38,7 @@ object ConfigModule {
     @Provides
     @Singleton
     fun provideHttpClient(
-        @Logging loggingInterceptor: Interceptor,
+        @Logging loggingInterceptor: Interceptor
     ) = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .addNetworkInterceptor(FlipperOkhttpInterceptor(App.networkFlipperPlugin))
