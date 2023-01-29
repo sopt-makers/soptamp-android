@@ -121,7 +121,8 @@ fun TopRankDescriptionBubble(
             )
             SoptampIconButton(
                 imageVector = ImageVector.vectorResource(id = R.drawable.right_forward),
-                tint = Color.White
+                tint = Color.White,
+                onClick = { onClickItem() }
             )
         }
     }
