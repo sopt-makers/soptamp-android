@@ -69,6 +69,8 @@ fun MissionListScreen(
 ) {
     val state by missionsViewModel.state.collectAsState()
 
+    missionsViewModel.fetchMissions()
+
     resultRecipient.onNavResult { result ->
         when (result) {
             is NavResult.Canceled -> Unit

@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import org.sopt.stamp.designsystem.style.MontserratBold
@@ -23,7 +24,8 @@ fun RankNumber(
         fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
         color = if (isMyRankNumber) SoptTheme.colors.purple300 else getRankTextColor(rank),
-        modifier = modifier
+        modifier = modifier,
+        textAlign = TextAlign.Center
     )
 }
 
@@ -36,6 +38,14 @@ fun PreviewRankNumber() {
             RankNumber(rank = 2)
             RankNumber(rank = 3)
             RankNumber(rank = 4)
+            RankNumber(rank = 5)
+            RankNumber(rank = 6)
+            RankNumber(rank = 7)
+            RankNumber(rank = 8)
+            RankNumber(rank = 9)
+            RankNumber(rank = 10)
+            RankNumber(rank = 11)
+            RankNumber(rank = 12)
         }
     }
 }

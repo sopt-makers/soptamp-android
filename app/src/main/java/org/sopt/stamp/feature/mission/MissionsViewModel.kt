@@ -23,10 +23,6 @@ class MissionsViewModel @Inject constructor(
     private val _state: MutableStateFlow<MissionsState> = MutableStateFlow(MissionsState.Loading)
     val state: StateFlow<MissionsState> = _state.asStateFlow()
 
-    init {
-        fetchMissions()
-    }
-
     fun fetchMissions(
         userId: Int? = null,
         filter: String? = null

@@ -3,6 +3,7 @@ package org.sopt.stamp.feature.ranking
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,8 +33,8 @@ fun RankListItem(
     val itemPadding = PaddingValues(
         top = 19.dp,
         bottom = 16.dp,
-        start = 15.dp,
-        end = 15.dp
+        start = 14.dp,
+        end = 14.dp
     )
     val backgroundModifier = if (isMyRanking) {
         Modifier
@@ -56,25 +58,38 @@ fun RankListItem(
             .fillMaxWidth()
             .noRippleClickable { onClickUser(item) }
             .padding(itemPadding),
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        RankNumber(
-            modifier = Modifier.padding(horizontal = 17.dp),
-            rank = item.rank,
-            isMyRankNumber = isMyRanking
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        RankerInformation(
-            modifier = Modifier.weight(1f),
-            user = item.nickname,
-            description = item.getDescription()
-        )
-        Spacer(modifier = Modifier.size(12.dp))
-        RankScore(
-            rank = item.rank,
-            score = item.score,
-            isMyRankScore = isMyRanking
-        )
+        Box(
+            modifier = Modifier.weight(0.18f)
+        ) {
+            RankNumber(
+                modifier = Modifier.align(Alignment.Center),
+                rank = item.rank,
+                isMyRankNumber = isMyRanking
+            )
+        }
+        Spacer(modifier = Modifier.weight(0.05f))
+        Box(
+            modifier = Modifier.weight(0.53f)
+        ) {
+            RankerInformation(
+                user = item.nickname,
+                description = item.getDescription()
+            )
+        }
+        Spacer(modifier = Modifier.weight(0.04f))
+        Box(
+            modifier = Modifier.weight(0.2f)
+        ) {
+            RankScore(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                rank = item.rank,
+                score = item.score,
+                isMyRankScore = isMyRanking
+            )
+        }
     }
 }
 
@@ -108,15 +123,39 @@ fun RankerInformation(
 @Composable
 fun PreviewRankListItem() {
     SoptTheme {
-        RankListItem(
-            item = RankerUiModel(
-                rank = 4,
-                userId = 1,
-                nickname = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
-                description = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
-                score = 300
-            ),
-            true
-        )
+        Column(Modifier.padding(horizontal = 16.dp)) {
+            RankListItem(
+                item = RankerUiModel(
+                    rank = 4,
+                    userId = 1,
+                    nickname = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                    description = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                    score = 300
+                ),
+                true
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+            RankListItem(
+                item = RankerUiModel(
+                    rank = 10,
+                    userId = 1,
+                    nickname = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                    description = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                    score = 340
+                ),
+                false
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+            RankListItem(
+                item = RankerUiModel(
+                    rank = 140,
+                    userId = 1,
+                    nickname = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                    description = "일이삼사오육칠팔구십일이삼사오육칠팔구십",
+                    score = 945
+                ),
+                false
+            )
+        }
     }
 }
