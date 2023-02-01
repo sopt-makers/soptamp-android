@@ -254,7 +254,7 @@ fun MissionDetailScreen(
                 onClick = viewModel::onSubmit,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 32.dp),
+                    .padding(bottom = 24.dp, top = 12.dp),
                 enabled = isSubmitEnabled,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -264,9 +264,9 @@ fun MissionDetailScreen(
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 Text(
-                    text = "미션 완료",
+                    text = "제출",
                     style = SoptTheme.typography.h2,
-                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else Color.White
+                    color = SoptTheme.colors.onSurface70
                 )
             }
         }
