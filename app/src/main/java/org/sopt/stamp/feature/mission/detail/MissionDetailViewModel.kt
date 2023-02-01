@@ -82,6 +82,7 @@ class MissionDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val currentState = uiState.value
             val (id, imageUri, content) = currentState
+            Timber.d("Pass Here $currentState")
             uiState.update {
                 it.copy(isError = false, error = null, isLoading = true)
             }
