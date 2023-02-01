@@ -201,13 +201,13 @@ fun MissionDetailScreen(
     val content by viewModel.content.collectAsState("")
     val imageModel by viewModel.imageModel.collectAsState(ImageModel.Empty)
     val isSuccess by viewModel.isSuccess.collectAsState(false)
+    val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
 
     LaunchedEffect(id) {
         viewModel.initMissionState(id)
     }
     LaunchedEffect(isSuccess) {
         if (isSuccess) {
-            // TODO by Nunu 로티 애니메이션 뷰 보여줘야됨
             resultNavigator.navigateBack(true)
         }
     }
@@ -249,7 +249,7 @@ fun MissionDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp, top = 12.dp),
-                enabled = false,
+                enabled = isSubmitEnabled,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = SoptTheme.colors.mint300,
@@ -258,7 +258,7 @@ fun MissionDetailScreen(
             ) {
                 Text(
                     text = "제출",
-                    style = SoptTheme.typography.caption1,
+                    style = SoptTheme.typography.h2,
                     color = SoptTheme.colors.onSurface70
                 )
             }
