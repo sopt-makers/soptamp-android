@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
@@ -253,18 +254,19 @@ fun MissionDetailScreen(
                 onClick = viewModel::onSubmit,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp, top = 12.dp),
+                    .padding(bottom = 32.dp),
                 enabled = isSubmitEnabled,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = getRankTextColor(rank = level.value),
                     disabledBackgroundColor = getRankTextColor(rank = level.value).copy(alpha = 0.8f)
-                )
+                ),
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 Text(
-                    text = "제출",
+                    text = "미션 완료",
                     style = SoptTheme.typography.h2,
-                    color = SoptTheme.colors.onSurface70
+                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else Color.White
                 )
             }
         }
