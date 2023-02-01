@@ -260,8 +260,7 @@ fun MissionDetailScreen(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = getRankTextColor(rank = level.value),
                     disabledBackgroundColor = getRankTextColor(rank = level.value).copy(alpha = 0.8f)
-                ),
-                contentPadding = PaddingValues(vertical = 16.dp)
+                )
             ) {
                 Text(
                     text = "제출",
