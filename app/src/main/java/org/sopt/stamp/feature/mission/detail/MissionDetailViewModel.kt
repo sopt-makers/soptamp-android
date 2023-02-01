@@ -99,4 +99,25 @@ class MissionDetailViewModel @Inject constructor(
                 }
         }
     }
+
+    fun onDelete() {
+        viewModelScope.launch {
+            val currentState = uiState.value
+            val (id) = currentState
+            uiState.update {
+                it.copy(isError = false, error = null, isLoading = true)
+            }
+            repository.deleteMission(id)
+                .onSuccess {
+                    uiState.update {
+                        it.copy(isLoading = false, isSuccess = true)
+                    }
+                }.onFailure { error ->
+                    Timber.e(error)
+                    uiState.update {
+                        it.copy(isLoading = false, isError = true, error = error)
+                    }
+                }
+        }
+    }
 }
