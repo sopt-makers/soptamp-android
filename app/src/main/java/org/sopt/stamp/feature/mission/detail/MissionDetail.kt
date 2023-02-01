@@ -49,6 +49,7 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
+import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
@@ -70,7 +71,11 @@ private fun HeaderView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            RatingBar(icon = R.drawable.ic_star, stars = stars)
+            RatingBar(
+                icon = R.drawable.ic_star,
+                stars = stars,
+                selectedColor = getRankTextColor(rank = stars)
+            )
             Text(
                 text = title,
                 style = SoptTheme.typography.sub1,
@@ -252,8 +257,8 @@ fun MissionDetailScreen(
                 enabled = isSubmitEnabled,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = SoptTheme.colors.mint300,
-                    disabledBackgroundColor = SoptTheme.colors.mint300.copy(alpha = 0.8f)
+                    backgroundColor = getRankTextColor(rank = level.value),
+                    disabledBackgroundColor = getRankTextColor(rank = level.value).copy(alpha = 0.8f)
                 )
             ) {
                 Text(
