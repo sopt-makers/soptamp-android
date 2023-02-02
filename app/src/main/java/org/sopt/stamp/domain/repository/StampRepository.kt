@@ -19,4 +19,8 @@ interface StampRepository {
         imageUri: ImageModel,
         content: String
     ): Result<Unit>
+
+    suspend fun deleteMission(
+        missionId: Int
+    ): Result<Unit>
 }

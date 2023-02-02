@@ -45,16 +45,16 @@ class StampRepositoryImpl @Inject constructor(
         }
         return runCatching {
             service.registerStamp(
-                missionId,
-                contentRequestBody,
-                imageRequestBody
+                missionId = missionId,
+                stampContent = contentRequestBody,
+                imageUrl = imageRequestBody
             )
         }
     }
 
     override suspend fun getMissionContent(missionId: Int): Result<Archive> {
         return runCatching {
-            service.retrieveStamp(missionId).toDomain()
+            service.retrieveStamp(missionId = missionId).toDomain()
         }
     }
 
@@ -84,5 +84,9 @@ class StampRepositoryImpl @Inject constructor(
                 imageRequestBody
             )
         }
+    }
+
+    override suspend fun deleteMission(missionId: Int): Result<Unit> {
+        return runCatching { service.deleteStamp(missionId) }
     }
 }

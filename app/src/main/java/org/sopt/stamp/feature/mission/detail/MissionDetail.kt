@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
@@ -49,6 +50,7 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
+import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
@@ -70,7 +72,11 @@ private fun HeaderView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            RatingBar(icon = R.drawable.ic_star, stars = stars)
+            RatingBar(
+                icon = R.drawable.ic_star,
+                stars = stars,
+                selectedColor = getRankTextColor(rank = stars)
+            )
             Text(
                 text = title,
                 style = SoptTheme.typography.sub1,
@@ -201,13 +207,13 @@ fun MissionDetailScreen(
     val content by viewModel.content.collectAsState("")
     val imageModel by viewModel.imageModel.collectAsState(ImageModel.Empty)
     val isSuccess by viewModel.isSuccess.collectAsState(false)
+    val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
 
     LaunchedEffect(id) {
         viewModel.initMissionState(id)
     }
     LaunchedEffect(isSuccess) {
         if (isSuccess) {
-            // TODO by Nunu 로티 애니메이션 뷰 보여줘야됨
             resultNavigator.navigateBack(true)
         }
     }
@@ -248,18 +254,19 @@ fun MissionDetailScreen(
                 onClick = viewModel::onSubmit,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp, top = 12.dp),
-                enabled = false,
+                    .padding(bottom = 32.dp),
+                enabled = isSubmitEnabled,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = SoptTheme.colors.mint300,
-                    disabledBackgroundColor = SoptTheme.colors.mint300.copy(alpha = 0.8f)
-                )
+                    backgroundColor = getRankTextColor(rank = level.value),
+                    disabledBackgroundColor = getRankTextColor(rank = level.value).copy(alpha = 0.8f)
+                ),
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 Text(
-                    text = "제출",
-                    style = SoptTheme.typography.caption1,
-                    color = SoptTheme.colors.onSurface70
+                    text = "미션 완료",
+                    style = SoptTheme.typography.h2,
+                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else Color.White
                 )
             }
         }
