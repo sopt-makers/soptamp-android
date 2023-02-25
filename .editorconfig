@@ -2,4 +2,4 @@
 max_line_length = 140
 
 [*.{kt, kts}]
-disabled_rules = import-ordering, no-wildcard-imports, final-newline
+ktlint_disabled_rules = import-ordering, no-wildcard-imports, final-newline
