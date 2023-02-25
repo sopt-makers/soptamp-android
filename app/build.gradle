@@ -117,4 +117,7 @@ ktlint {
     coloredOutput = true
     verbose = true
     outputToConsole = true
+    filter {
+        exclude { projectDir.toURI().relativize(it.file.toURI()).path.contains("/generated/") }
+    }
 }
