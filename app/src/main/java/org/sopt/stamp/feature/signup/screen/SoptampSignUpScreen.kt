@@ -189,7 +189,9 @@ private fun SignUpTextField(
             textColor = SoptTheme.colors.onSurface90,
             placeholderColor = SoptTheme.colors.onSurface60
         ),
-        visualTransformation = if (keyboardType == KeyboardType.Password) PasswordVisualTransformation() else {
+        visualTransformation = if (keyboardType == KeyboardType.Password) {
+            PasswordVisualTransformation()
+        } else {
             VisualTransformation.None
         },
         onValueChange = {
