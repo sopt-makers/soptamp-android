@@ -51,6 +51,7 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
+import org.sopt.stamp.feature.ranking.getRankBackgroundColor
 import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
 
@@ -269,7 +270,7 @@ fun MissionDetailScreen(
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = getRankTextColor(level.value),
-                    disabledBackgroundColor = getRankTextColor(level.value).copy(alpha = 0.8f)
+                    disabledBackgroundColor = getRankBackgroundColor(level.value)
                 ),
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
