@@ -9,7 +9,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
-import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.NavGraphs
 
 @AndroidEntryPoint

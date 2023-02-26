@@ -239,11 +239,11 @@ fun MissionDetailScreen(
                     Text(
                         text = "미션",
                         style = SoptTheme.typography.h2,
-                        modifier = Modifier.padding(start = 2.dp),
+                        modifier = Modifier.padding(start = 4.dp),
                         color = SoptTheme.colors.onSurface
                     )
                 },
-                iconOption = if (isCompleted) ToolbarIconType.NONE else ToolbarIconType.WRITE,
+                iconOption = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE,
                 onBack = {
                     resultNavigator.navigateBack()
                 }
