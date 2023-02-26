@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
@@ -283,6 +284,6 @@ fun MissionDetailPreview() {
         isCompleted = false
     )
     SoptTheme {
-        MissionDetailScreen(args, EmptyResultBackNavigator(), hiltViewModel())
+        MissionDetailScreen(args, EmptyResultBackNavigator(), viewModel())
     }
 }
