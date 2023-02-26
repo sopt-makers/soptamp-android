@@ -165,22 +165,29 @@ private fun Memo(
 ) {
     val isEmpty = remember(value) { value.isEmpty() }
 
+    val modifier = Modifier
+        .fillMaxWidth()
+        .padding(14.dp)
+        .defaultMinSize(minHeight = 132.dp)
+        .clip(RoundedCornerShape(10.dp))
+
+    val modifierWithBorder = if (isEmpty) {
+        modifier
+    } else {
+        modifier.border(
+            width = 1.dp,
+            color = borderColor,
+            shape = RoundedCornerShape(10.dp)
+        )
+    }
+
     TextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(14.dp)
-            .defaultMinSize(minHeight = 132.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .border(
-                width = if (isEmpty) 0.dp else 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(10.dp)
-            ),
+        modifier = modifierWithBorder,
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = if (isEmpty) SoptTheme.colors.onSurface5 else Color.White,
+            backgroundColor = if (isEmpty) SoptTheme.colors.onSurface5 else SoptTheme.colors.white,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             textColor = SoptTheme.colors.onSurface90,
@@ -221,7 +228,9 @@ fun MissionDetailScreen(
 
     SoptTheme {
         SoptColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SoptTheme.colors.white)
         ) {
             Toolbar(
                 modifier = Modifier.padding(bottom = 10.dp),
@@ -248,7 +257,7 @@ fun MissionDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 ImageContent(imageModel, viewModel::onChangeImage)
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(content, viewModel::onChangeContent, SoptTheme.colors.mint300)
+                Memo(content, viewModel::onChangeContent, getRankTextColor(level.value))
             }
 
             Button(
@@ -259,15 +268,15 @@ fun MissionDetailScreen(
                 enabled = isSubmitEnabled,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = getRankTextColor(rank = level.value),
-                    disabledBackgroundColor = getRankTextColor(rank = level.value).copy(alpha = 0.8f)
+                    backgroundColor = getRankTextColor(level.value),
+                    disabledBackgroundColor = getRankTextColor(level.value).copy(alpha = 0.8f)
                 ),
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 Text(
                     text = "미션 완료",
                     style = SoptTheme.typography.h2,
-                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else Color.White
+                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else SoptTheme.colors.white
                 )
             }
         }
