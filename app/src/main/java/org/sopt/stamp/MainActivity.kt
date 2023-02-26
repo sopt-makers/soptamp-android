@@ -15,7 +15,7 @@ import org.sopt.stamp.feature.NavGraphs
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
             val systemUiController = rememberSystemUiController()
