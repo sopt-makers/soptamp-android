@@ -92,7 +92,7 @@ private fun ImageContent(
     imageModel: ImageModel,
     onChangeImage: (images: ImageModel) -> Unit
 ) {
-    val isImageEmpty = remember(imageModel) { imageModel is ImageModel.Empty }
+    val isImageEmpty = remember(imageModel) { imageModel.isEmpty() }
     val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
         onChangeImage(ImageModel.Local(it))
     }
