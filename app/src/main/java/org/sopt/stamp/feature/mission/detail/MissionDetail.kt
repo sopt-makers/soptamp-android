@@ -233,8 +233,10 @@ fun MissionDetailScreen(
         spec = LottieCompositionSpec.RawRes(lottieResId)
     )
     val progress by animateLottieCompositionAsState(
-        composition = lottieComposition
+        composition = lottieComposition,
+        isPlaying = isSuccess
     )
+
     LaunchedEffect(id) {
         viewModel.initMissionState(id)
     }
