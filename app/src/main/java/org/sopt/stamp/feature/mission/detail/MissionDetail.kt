@@ -36,10 +36,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultBackNavigator
+import kotlinx.coroutines.delay
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
@@ -50,6 +56,7 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
+import org.sopt.stamp.feature.ranking.getRankBackgroundColor
 import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
 
@@ -91,7 +98,7 @@ private fun ImageContent(
     imageModel: ImageModel,
     onChangeImage: (images: ImageModel) -> Unit
 ) {
-    val isImageEmpty = remember(imageModel) { imageModel is ImageModel.Empty }
+    val isImageEmpty = remember(imageModel) { imageModel.isEmpty() }
     val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
         onChangeImage(ImageModel.Local(it))
     }
@@ -105,52 +112,52 @@ private fun ImageContent(
                 shape = RoundedCornerShape(10.dp)
             )
     ) {
-        if (isImageEmpty) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = SoptTheme.colors.onSurface5,
-                        shape = RoundedCornerShape(10.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = SoptTheme.colors.onSurface5,
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .clickable {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                    .clickable {
-                        photoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    },
-                contentAlignment = Alignment.Center
-            ) {
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            if (isImageEmpty) {
                 Text(
                     text = "달성 사진을 올려주세요",
                     style = SoptTheme.typography.sub2,
                     color = SoptTheme.colors.onSurface50
                 )
-            }
-        } else {
-            when (imageModel) {
-                is ImageModel.Local -> {
-                    AsyncImage(
-                        model = imageModel.uri[0],
-                        contentDescription = "",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+            } else {
+                when (imageModel) {
+                    is ImageModel.Local -> {
+                        AsyncImage(
+                            model = imageModel.uri[0],
+                            contentDescription = "",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(10.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
 
-                is ImageModel.Remote -> {
-                    AsyncImage(
-                        model = imageModel.url[0],
-                        contentDescription = "",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                    is ImageModel.Remote -> {
+                        AsyncImage(
+                            model = imageModel.url[0],
+                            contentDescription = "",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(10.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
 
-                else -> throw IllegalStateException("예외처리 했으므로 여긴 안 통과함")
+                    else -> throw IllegalStateException("예외처리 했으므로 여긴 안 통과함")
+                }
             }
         }
     }
@@ -164,22 +171,29 @@ private fun Memo(
 ) {
     val isEmpty = remember(value) { value.isEmpty() }
 
+    val modifier = Modifier
+        .fillMaxWidth()
+        .padding(14.dp)
+        .defaultMinSize(minHeight = 132.dp)
+        .clip(RoundedCornerShape(10.dp))
+
+    val modifierWithBorder = if (isEmpty) {
+        modifier
+    } else {
+        modifier.border(
+            width = 1.dp,
+            color = borderColor,
+            shape = RoundedCornerShape(10.dp)
+        )
+    }
+
     TextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(14.dp)
-            .defaultMinSize(minHeight = 132.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .border(
-                width = if (isEmpty) 0.dp else 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(10.dp)
-            ),
+        modifier = modifierWithBorder,
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = if (isEmpty) SoptTheme.colors.onSurface5 else Color.White,
+            backgroundColor = if (isEmpty) SoptTheme.colors.onSurface5 else SoptTheme.colors.white,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             textColor = SoptTheme.colors.onSurface90,
@@ -208,19 +222,36 @@ fun MissionDetailScreen(
     val imageModel by viewModel.imageModel.collectAsState(ImageModel.Empty)
     val isSuccess by viewModel.isSuccess.collectAsState(false)
     val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
+    val lottieResId = remember(level) {
+        when (level.value) {
+            1 -> R.raw.purplestamp
+            2 -> R.raw.pinkstamps
+            else -> R.raw.greenstamp
+        }
+    }
+    val lottieComposition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(lottieResId)
+    )
+    val progress by animateLottieCompositionAsState(
+        composition = lottieComposition,
+        isPlaying = isSuccess
+    )
 
     LaunchedEffect(id) {
         viewModel.initMissionState(id)
     }
-    LaunchedEffect(isSuccess) {
-        if (isSuccess) {
+    LaunchedEffect(isSuccess, progress) {
+        if (progress >= 0.99f && isSuccess) {
+            delay(500L)
             resultNavigator.navigateBack(true)
         }
     }
 
     SoptTheme {
         SoptColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SoptTheme.colors.white)
         ) {
             Toolbar(
                 modifier = Modifier.padding(bottom = 10.dp),
@@ -228,11 +259,11 @@ fun MissionDetailScreen(
                     Text(
                         text = "미션",
                         style = SoptTheme.typography.h2,
-                        modifier = Modifier.padding(start = 2.dp),
+                        modifier = Modifier.padding(start = 4.dp),
                         color = SoptTheme.colors.onSurface
                     )
                 },
-                iconOption = if (isCompleted) ToolbarIconType.NONE else ToolbarIconType.WRITE,
+                iconOption = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE,
                 onBack = {
                     resultNavigator.navigateBack()
                 }
@@ -247,7 +278,7 @@ fun MissionDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 ImageContent(imageModel, viewModel::onChangeImage)
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(content, viewModel::onChangeContent, SoptTheme.colors.mint300)
+                Memo(content, viewModel::onChangeContent, getRankTextColor(level.value))
             }
 
             Button(
@@ -258,15 +289,28 @@ fun MissionDetailScreen(
                 enabled = isSubmitEnabled,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = getRankTextColor(rank = level.value),
-                    disabledBackgroundColor = getRankTextColor(rank = level.value).copy(alpha = 0.8f)
+                    backgroundColor = getRankTextColor(level.value),
+                    disabledBackgroundColor = getRankBackgroundColor(level.value)
                 ),
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 Text(
                     text = "미션 완료",
                     style = SoptTheme.typography.h2,
-                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else Color.White
+                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else SoptTheme.colors.white
+                )
+            }
+        }
+        if (isSuccess) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.55f)),
+                contentAlignment = Alignment.Center
+            ) {
+                LottieAnimation(
+                    composition = lottieComposition,
+                    progress = { progress }
                 )
             }
         }
@@ -283,6 +327,6 @@ fun MissionDetailPreview() {
         isCompleted = false
     )
     SoptTheme {
-        MissionDetailScreen(args, EmptyResultBackNavigator(), hiltViewModel())
+        MissionDetailScreen(args, EmptyResultBackNavigator(), viewModel())
     }
 }

@@ -47,12 +47,12 @@ class MissionDetailViewModel @Inject constructor(
     val content = uiState.map { it.content }
     val imageModel = uiState.map { it.imageUri }
     val isSubmitEnabled = content.combine(imageModel) { content, image ->
-        content.isNotEmpty() && image !is ImageModel.Empty
+        content.isNotEmpty() && !image.isEmpty()
     }
 
     fun initMissionState(id: Int) {
         viewModelScope.launch {
-            uiState.update { it.copy(id = id, isError = false, error = null, isLoading = true) }
+            uiState.update { it.copy(id = id, isError = false, error = null, isLoading = true, isSuccess = false) }
             repository.getMissionContent(id)
                 .onSuccess {
                     val result = PostUiState.from(it).copy(id = id)
@@ -93,7 +93,7 @@ class MissionDetailViewModel @Inject constructor(
                 }.onFailure { error ->
                     Timber.e(error)
                     uiState.update {
-                        it.copy(isLoading = false, isError = true, error = error)
+                        it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
                     }
                 }
         }
