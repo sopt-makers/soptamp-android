@@ -38,9 +38,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultBackNavigator
+import kotlinx.coroutines.delay
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
@@ -107,52 +112,52 @@ private fun ImageContent(
                 shape = RoundedCornerShape(10.dp)
             )
     ) {
-        if (isImageEmpty) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = SoptTheme.colors.onSurface5,
-                        shape = RoundedCornerShape(10.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = SoptTheme.colors.onSurface5,
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .clickable {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                    .clickable {
-                        photoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    },
-                contentAlignment = Alignment.Center
-            ) {
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            if (isImageEmpty) {
                 Text(
                     text = "달성 사진을 올려주세요",
                     style = SoptTheme.typography.sub2,
                     color = SoptTheme.colors.onSurface50
                 )
-            }
-        } else {
-            when (imageModel) {
-                is ImageModel.Local -> {
-                    AsyncImage(
-                        model = imageModel.uri[0],
-                        contentDescription = "",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+            } else {
+                when (imageModel) {
+                    is ImageModel.Local -> {
+                        AsyncImage(
+                            model = imageModel.uri[0],
+                            contentDescription = "",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(10.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
 
-                is ImageModel.Remote -> {
-                    AsyncImage(
-                        model = imageModel.url[0],
-                        contentDescription = "",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                    is ImageModel.Remote -> {
+                        AsyncImage(
+                            model = imageModel.url[0],
+                            contentDescription = "",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(10.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
 
-                else -> throw IllegalStateException("예외처리 했으므로 여긴 안 통과함")
+                    else -> throw IllegalStateException("예외처리 했으므로 여긴 안 통과함")
+                }
             }
         }
     }
@@ -217,12 +222,25 @@ fun MissionDetailScreen(
     val imageModel by viewModel.imageModel.collectAsState(ImageModel.Empty)
     val isSuccess by viewModel.isSuccess.collectAsState(false)
     val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
-
+    val lottieResId = remember(level) {
+        when (level.value) {
+            1 -> R.raw.purplestamp
+            2 -> R.raw.pinkstamps
+            else -> R.raw.greenstamp
+        }
+    }
+    val lottieComposition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(lottieResId)
+    )
+    val progress by animateLottieCompositionAsState(
+        composition = lottieComposition
+    )
     LaunchedEffect(id) {
         viewModel.initMissionState(id)
     }
-    LaunchedEffect(isSuccess) {
-        if (isSuccess) {
+    LaunchedEffect(isSuccess, progress) {
+        if (progress >= 0.99f && isSuccess) {
+            delay(500L)
             resultNavigator.navigateBack(true)
         }
     }
@@ -278,6 +296,19 @@ fun MissionDetailScreen(
                     text = "미션 완료",
                     style = SoptTheme.typography.h2,
                     color = if (level.value == 3) SoptTheme.colors.onSurface70 else SoptTheme.colors.white
+                )
+            }
+        }
+        if (isSuccess) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.55f)),
+                contentAlignment = Alignment.Center
+            ) {
+                LottieAnimation(
+                    composition = lottieComposition,
+                    progress = { progress }
                 )
             }
         }
