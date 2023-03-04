@@ -41,7 +41,7 @@ mavericks = "3.0.1"
 google-services = "4.3.15"
 crashlytics = "2.9.4"
 firebase = "31.2.3"
-ktlint = "11.2.0"
+ktlint = "11.3.1"
 lottie = "6.0.0"
 
 [libraries]
