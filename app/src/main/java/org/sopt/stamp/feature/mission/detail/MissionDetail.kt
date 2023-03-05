@@ -56,44 +56,12 @@ import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
+import org.sopt.stamp.feature.mission.detail.component.Header
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.feature.ranking.getRankBackgroundColor
 import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
-
-@Composable
-private fun HeaderView(
-    title: String,
-    stars: Int
-) {
-    Surface(
-        modifier = Modifier
-            .background(
-                color = SoptTheme.colors.onSurface5,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .fillMaxWidth()
-            .padding(vertical = 12.dp)
-    ) {
-        Column(
-            modifier = Modifier.background(SoptTheme.colors.onSurface5),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            RatingBar(
-                icon = R.drawable.ic_star,
-                stars = stars,
-                selectedColor = getRankTextColor(rank = stars)
-            )
-            Text(
-                text = title,
-                style = SoptTheme.typography.sub1,
-                color = SoptTheme.colors.onSurface90
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -277,7 +245,7 @@ fun MissionDetailScreen(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                HeaderView(
+                Header(
                     title = title,
                     stars = level.value
                 )
