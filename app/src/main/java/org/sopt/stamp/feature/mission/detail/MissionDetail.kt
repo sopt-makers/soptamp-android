@@ -1,7 +1,6 @@
 package org.sopt.stamp.feature.mission.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -18,13 +17,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -42,6 +38,7 @@ import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.feature.mission.detail.component.Header
 import org.sopt.stamp.feature.mission.detail.component.ImageContent
 import org.sopt.stamp.feature.mission.detail.component.Memo
+import org.sopt.stamp.feature.mission.detail.component.PostSubmissionBadge
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.feature.ranking.getRankBackgroundColor
@@ -141,17 +138,10 @@ fun MissionDetailScreen(
             }
         }
         if (isSuccess) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.55f)),
-                contentAlignment = Alignment.Center
-            ) {
-                LottieAnimation(
-                    composition = lottieComposition,
-                    progress = { progress }
-                )
-            }
+            PostSubmissionBadge(
+                composition = lottieComposition,
+                progress = progress
+            )
         }
     }
 }
