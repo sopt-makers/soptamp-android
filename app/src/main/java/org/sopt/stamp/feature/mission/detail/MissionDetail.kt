@@ -5,14 +5,12 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,8 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,6 +50,7 @@ import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
 import org.sopt.stamp.feature.mission.detail.component.Header
+import org.sopt.stamp.feature.mission.detail.component.Memo
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.feature.ranking.getRankBackgroundColor
@@ -132,52 +129,6 @@ private fun ImageContent(
             }
         }
     }
-}
-
-@Composable
-private fun Memo(
-    value: String,
-    onValueChange: (String) -> Unit,
-    borderColor: Color
-) {
-    val isEmpty = remember(value) { value.isEmpty() }
-
-    val modifier = Modifier
-        .fillMaxWidth()
-        .padding(14.dp)
-        .defaultMinSize(minHeight = 132.dp)
-        .clip(RoundedCornerShape(10.dp))
-
-    val modifierWithBorder = if (isEmpty) {
-        modifier
-    } else {
-        modifier.border(
-            width = 1.dp,
-            color = borderColor,
-            shape = RoundedCornerShape(10.dp)
-        )
-    }
-
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifierWithBorder,
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = if (isEmpty) SoptTheme.colors.onSurface5 else SoptTheme.colors.white,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            textColor = SoptTheme.colors.onSurface90,
-            placeholderColor = SoptTheme.colors.onSurface60
-        ),
-        textStyle = SoptTheme.typography.caption1,
-        placeholder = {
-            Text(
-                text = "메모를 작성해 주세요.",
-                style = SoptTheme.typography.caption1
-            )
-        }
-    )
 }
 
 @MissionNavGraph
