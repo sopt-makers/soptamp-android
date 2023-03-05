@@ -6,7 +6,6 @@ sealed interface ImageModel {
     data class Remote(val url: List<String>) : ImageModel {
         override fun isEmpty() = url.isEmpty()
         override val size = url.size
-
     }
 
     data class Local(val uri: List<Uri>) : ImageModel {
