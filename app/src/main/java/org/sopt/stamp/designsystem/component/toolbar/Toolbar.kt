@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.R
+import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.util.MultiFormFactorPreviews
 
@@ -74,7 +75,7 @@ fun Toolbar(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "Back Button",
                     modifier = Modifier
-                        .clickable(onClick = onBack)
+                        .noRippleClickable(onClick = onBack)
                         .align(Alignment.CenterVertically)
                         .padding(8.dp)
                 )

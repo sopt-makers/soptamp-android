@@ -67,6 +67,7 @@ import org.sopt.stamp.domain.error.Error
 import org.sopt.stamp.domain.model.MissionsFilter
 import org.sopt.stamp.feature.destinations.MissionDetailScreenDestination
 import org.sopt.stamp.feature.destinations.RankingScreenDestination
+import org.sopt.stamp.feature.destinations.SettingScreenDestination
 import org.sopt.stamp.feature.mission.MissionsState
 import org.sopt.stamp.feature.mission.MissionsViewModel
 import org.sopt.stamp.feature.mission.model.MissionListUiModel
@@ -110,7 +111,8 @@ fun MissionListScreen(
                 menuTexts = MissionsFilter.getTitleOfMissionsList(),
                 onMenuClick = { filter -> missionsViewModel.fetchMissions(filter = filter) },
                 onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) },
-                onFloatingButtonClick = { navigator.navigate(RankingScreenDestination) }
+                onFloatingButtonClick = { navigator.navigate(RankingScreenDestination) },
+                onSettingButtonClick = { navigator.navigate(SettingScreenDestination) }
             )
         }
     }
@@ -122,14 +124,16 @@ fun MissionListScreen(
     menuTexts: List<String>,
     onMenuClick: (String) -> Unit = {},
     onMissionItemClick: (item: MissionNavArgs) -> Unit = {},
-    onFloatingButtonClick: () -> Unit = {}
+    onFloatingButtonClick: () -> Unit = {},
+    onSettingButtonClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             MissionListHeader(
                 title = missionListUiModel.title,
                 menuTexts = menuTexts,
-                onMenuClick = { onMenuClick(it) }
+                onMenuClick = { onMenuClick(it) },
+                onSettingButtonClick = { onSettingButtonClick() }
             )
         },
         floatingActionButton = {
@@ -207,7 +211,8 @@ fun MissionEmptyScreen(contentText: String) {
 fun MissionListHeader(
     title: String,
     menuTexts: List<String>,
-    onMenuClick: (String) -> Unit = {}
+    onMenuClick: (String) -> Unit = {},
+    onSettingButtonClick: () -> Unit = {}
 ) {
     var currentText by remember { mutableStateOf(title) }
     SoptTopAppBar(
@@ -220,6 +225,13 @@ fun MissionListHeader(
                     onMenuClick(selectedMenuText)
                 }
             )
+        },
+        actions = {
+            SoptampIconButton(
+                imageVector = ImageVector.vectorResource(id = R.drawable.setting)
+            ) {
+                onSettingButtonClick()
+            }
         }
     )
 }
