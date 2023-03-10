@@ -20,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,10 +64,11 @@ fun MissionDetailScreen(
     val toolbarIconType by viewModel.toolbarIconType.collectAsState(ToolbarIconType.NONE)
     val isEditable by viewModel.isEditable.collectAsState(true)
     val createdAt by viewModel.createdAt.collectAsState("")
+    val isDeleteSuccess by viewModel.isDeleteSuccess.collectAsState(false)
     val lottieResId = remember(level) {
         when (level.value) {
-            1 -> R.raw.purplestamp
-            2 -> R.raw.pinkstamps
+            1 -> R.raw.pinkstamps
+            2 -> R.raw.purplestamp
             else -> R.raw.greenstamp
         }
     }
@@ -88,6 +88,9 @@ fun MissionDetailScreen(
             delay(500L)
             resultNavigator.navigateBack(true)
         }
+    }
+    LaunchedEffect(isDeleteSuccess) {
+        resultNavigator.navigateBack(true)
     }
 
     SoptTheme {

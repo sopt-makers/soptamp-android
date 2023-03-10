@@ -89,6 +89,6 @@ class StampRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteMission(missionId: Int): Result<Unit> {
-        return runCatching { service.deleteStamp(missionId) }
+        return runCatching { service.deleteStamp(missionId = missionId) }
     }
 }

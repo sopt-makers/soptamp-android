@@ -22,6 +22,7 @@ data class PostUiState(
     val imageUri: ImageModel = ImageModel.Empty,
     val content: String = "",
     val createdAt: String = "",
+    val stampId: Int = -1,
     val isSuccess: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
@@ -62,6 +63,7 @@ class MissionDetailViewModel @Inject constructor(
     }
     val createdAt = uiState.map { it.createdAt }
         .filter { it.isNotEmpty() }
+    val isDeleteSuccess = uiState.map { it.isDeleteSuccess }
 
     fun initMissionState(id: Int, isCompleted: Boolean) {
         viewModelScope.launch {
@@ -77,7 +79,7 @@ class MissionDetailViewModel @Inject constructor(
             repository.getMissionContent(id)
                 .onSuccess {
                     val result = PostUiState.from(it).copy(
-                        id = id,
+                        stampId = it.id,
                         isCompleted = isCompleted,
                         toolbarIconType = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE,
                         createdAt = it.createdAt ?: ""

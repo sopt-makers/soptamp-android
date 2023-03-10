@@ -39,5 +39,8 @@ interface StampService {
     ): StampResponse
 
     @DELETE("stamp/{missionId}")
-    suspend fun deleteStamp(@Path("missionId") missionId: Int)
+    suspend fun deleteStamp(
+        @Header("userId") userId: Int = 158,
+        @Path("missionId") missionId: Int
+    )
 }
