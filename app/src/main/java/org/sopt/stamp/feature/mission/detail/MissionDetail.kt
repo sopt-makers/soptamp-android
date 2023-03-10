@@ -59,6 +59,7 @@ fun MissionDetailScreen(
     val isSuccess by viewModel.isSuccess.collectAsState(false)
     val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
     val toolbarIconType by viewModel.toolbarIconType.collectAsState(ToolbarIconType.NONE)
+    val isEditable by viewModel.isEditable.collectAsState(true)
     val lottieResId = remember(level) {
         when (level.value) {
             1 -> R.raw.purplestamp
@@ -74,8 +75,8 @@ fun MissionDetailScreen(
         isPlaying = isSuccess
     )
 
-    LaunchedEffect(id) {
-        viewModel.initMissionState(id)
+    LaunchedEffect(Unit) {
+        viewModel.initMissionState(id, isCompleted)
     }
     LaunchedEffect(isSuccess, progress) {
         if (progress >= 0.99f && isSuccess) {
@@ -112,29 +113,31 @@ fun MissionDetailScreen(
                     stars = level.value
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                ImageContent(imageModel, viewModel::onChangeImage)
+                ImageContent(imageModel, viewModel::onChangeImage, isEditable)
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(content, viewModel::onChangeContent, getRankTextColor(level.value))
+                Memo(content, viewModel::onChangeContent, getRankTextColor(level.value), isEditable)
             }
 
-            Button(
-                onClick = viewModel::onSubmit,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp),
-                enabled = isSubmitEnabled,
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = getRankTextColor(level.value),
-                    disabledBackgroundColor = getRankBackgroundColor(level.value)
-                ),
-                contentPadding = PaddingValues(vertical = 16.dp)
-            ) {
-                Text(
-                    text = "미션 완료",
-                    style = SoptTheme.typography.h2,
-                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else SoptTheme.colors.white
-                )
+            if (isEditable) {
+                Button(
+                    onClick = viewModel::onSubmit,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp),
+                    enabled = isSubmitEnabled,
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = getRankTextColor(level.value),
+                        disabledBackgroundColor = getRankBackgroundColor(level.value)
+                    ),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                ) {
+                    Text(
+                        text = "미션 완료",
+                        style = SoptTheme.typography.h2,
+                        color = if (level.value == 3) SoptTheme.colors.onSurface70 else SoptTheme.colors.white
+                    )
+                }
             }
         }
         if (isSuccess) {

@@ -25,6 +25,7 @@ data class PostUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val error: Throwable? = null,
+    val isCompleted: Boolean = false,
     val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE
 ) {
     companion object {
@@ -52,14 +53,33 @@ class MissionDetailViewModel @Inject constructor(
     val isSubmitEnabled = content.combine(imageModel) { content, image ->
         content.isNotEmpty() && !image.isEmpty()
     }
+    val isCompleted = uiState.map { it.isCompleted }
     val toolbarIconType = uiState.map { it.toolbarIconType }
+    val isEditable = isCompleted.combine(toolbarIconType) { isCompleted, toolbarIcon ->
+        if (!isCompleted) {
+            return@combine true
+        }
+        return@combine toolbarIcon != ToolbarIconType.WRITE
+    }
 
-    fun initMissionState(id: Int) {
+    fun initMissionState(id: Int, isCompleted: Boolean) {
         viewModelScope.launch {
-            uiState.update { it.copy(id = id, isError = false, error = null, isLoading = true, isSuccess = false) }
+            uiState.update {
+                it.copy(
+                    id = id,
+                    isError = false,
+                    error = null,
+                    isLoading = true,
+                    isSuccess = false
+                )
+            }
             repository.getMissionContent(id)
                 .onSuccess {
-                    val result = PostUiState.from(it).copy(id = id)
+                    val result = PostUiState.from(it).copy(
+                        id = id,
+                        isCompleted = isCompleted,
+                        toolbarIconType = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE
+                    )
                     uiState.update { result }
                 }.onFailure { error ->
                     Timber.e(error)
@@ -87,9 +107,11 @@ class MissionDetailViewModel @Inject constructor(
             ToolbarIconType.WRITE -> {
                 onChangeToolbarState(ToolbarIconType.DELETE)
             }
+
             ToolbarIconType.DELETE -> {
                 onDelete()
             }
+
             ToolbarIconType.NONE -> {}
         }
     }
