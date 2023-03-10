@@ -83,16 +83,14 @@ class MissionDetailViewModel @Inject constructor(
     }
 
     fun onPressToolbarIcon() {
-        when(uiState.value.toolbarIconType) {
+        when (uiState.value.toolbarIconType) {
             ToolbarIconType.WRITE -> {
                 onChangeToolbarState(ToolbarIconType.DELETE)
             }
             ToolbarIconType.DELETE -> {
                 onDelete()
             }
-            ToolbarIconType.NONE -> {
-
-            }
+            ToolbarIconType.NONE -> {}
         }
     }
 
