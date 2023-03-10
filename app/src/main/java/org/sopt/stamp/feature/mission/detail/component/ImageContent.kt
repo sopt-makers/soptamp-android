@@ -33,7 +33,9 @@ fun ImageContent(
 ) {
     val isImageEmpty = remember(imageModel) { imageModel.isEmpty() }
     val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
-        onChangeImage(ImageModel.Local(it))
+        if (it.isNotEmpty()) {
+            onChangeImage(ImageModel.Local(it))
+        }
     }
     val pageCount = remember(imageModel) { imageModel.size }
 
