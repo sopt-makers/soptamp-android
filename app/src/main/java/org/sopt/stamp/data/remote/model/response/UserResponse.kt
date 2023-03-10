@@ -5,7 +5,7 @@ import org.sopt.stamp.domain.model.User
 
 @Serializable
 data class UserResponse(
-    val userId: Int? = -1,
+    val userId: Int? = 1,
     val message: String? = "",
     val statusCode: Int? = -1,
     val profileMessage: String? = ""

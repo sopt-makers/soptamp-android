@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
+import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.domain.model.Archive
 import org.sopt.stamp.domain.repository.StampRepository
 import org.sopt.stamp.feature.mission.model.ImageModel
@@ -19,10 +20,12 @@ data class PostUiState(
     val id: Int = -1,
     val imageUri: ImageModel = ImageModel.Empty,
     val content: String = "",
+    val createdAt: String = "",
     val isSuccess: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val error: Throwable? = null
+    val error: Throwable? = null,
+    val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE
 ) {
     companion object {
         fun from(data: Archive) = PostUiState(
@@ -49,6 +52,7 @@ class MissionDetailViewModel @Inject constructor(
     val isSubmitEnabled = content.combine(imageModel) { content, image ->
         content.isNotEmpty() && !image.isEmpty()
     }
+    val toolbarIconType = uiState.map { it.toolbarIconType }
 
     fun initMissionState(id: Int) {
         viewModelScope.launch {
@@ -72,6 +76,24 @@ class MissionDetailViewModel @Inject constructor(
         }
     }
 
+    private fun onChangeToolbarState(toolbarIconType: ToolbarIconType) {
+        uiState.update {
+            it.copy(toolbarIconType = toolbarIconType)
+        }
+    }
+
+    fun onPressToolbarIcon() {
+        when (uiState.value.toolbarIconType) {
+            ToolbarIconType.WRITE -> {
+                onChangeToolbarState(ToolbarIconType.DELETE)
+            }
+            ToolbarIconType.DELETE -> {
+                onDelete()
+            }
+            ToolbarIconType.NONE -> {}
+        }
+    }
+
     fun onChangeImage(imageModel: ImageModel) {
         uiState.update {
             it.copy(imageUri = imageModel)
@@ -85,21 +107,24 @@ class MissionDetailViewModel @Inject constructor(
             uiState.update {
                 it.copy(isError = false, error = null, isLoading = true)
             }
-            repository.completeMission(id, imageUri, content)
-                .onSuccess {
-                    uiState.update {
-                        it.copy(isLoading = false, isSuccess = true)
-                    }
-                }.onFailure { error ->
-                    Timber.e(error)
-                    uiState.update {
-                        it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
-                    }
+            repository.completeMission(
+                missionId = id,
+                content = content,
+                imageUri = imageUri
+            ).onSuccess {
+                uiState.update {
+                    it.copy(isLoading = false, isSuccess = true)
                 }
+            }.onFailure { error ->
+                Timber.e(error)
+                uiState.update {
+                    it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
+                }
+            }
         }
     }
 
-    fun onDelete() {
+    private fun onDelete() {
         viewModelScope.launch {
             val currentState = uiState.value
             val (id) = currentState

@@ -16,7 +16,7 @@ import retrofit2.http.Path
 interface StampService {
     @GET("stamp/{missionId}")
     suspend fun retrieveStamp(
-        @Header("userId") userId: Int = -1,
+        @Header("userId") userId: Int = 158,
         @Path("missionId") missionId: Int
     ): StampResponse
 
@@ -31,10 +31,10 @@ interface StampService {
     @Multipart
     @POST("stamp/{missionId}")
     suspend fun registerStamp(
-        @Header("userId") userId: Int = -1,
+        @Header("userId") userId: Int = 158,
         @Path("missionId") missionId: Int,
         @Part("stampContent") stampContent: RequestBody,
-        @Part imageUrl: List<MultipartBody.Part>? = null
+        @Part imgUrl: List<MultipartBody.Part>? = null
     ): StampResponse
 
     @DELETE("stamp/{missionId}")
