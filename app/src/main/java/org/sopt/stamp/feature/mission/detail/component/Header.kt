@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.component.ratingbar.RatingBar
+import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
@@ -21,12 +22,17 @@ import org.sopt.stamp.util.DefaultPreview
 @Composable
 fun Header(
     title: String,
-    stars: Int
+    stars: Int,
+    toolbarIconType: ToolbarIconType
 ) {
     Surface(
         modifier = Modifier
             .background(
-                color = SoptTheme.colors.onSurface5,
+                color = if (toolbarIconType == ToolbarIconType.WRITE) {
+                    getRankTextColor(stars).copy(alpha = 0.1F)
+                } else {
+                    SoptTheme.colors.onSurface5
+                },
                 shape = RoundedCornerShape(10.dp)
             )
             .fillMaxWidth()
@@ -55,6 +61,6 @@ fun Header(
 @Composable
 private fun HeaderPreview() {
     SoptTheme {
-        Header(title = "오늘은 무슨 일을 할까?", stars = 2)
+        Header(title = "오늘은 무슨 일을 할까?", stars = 2, ToolbarIconType.WRITE)
     }
 }

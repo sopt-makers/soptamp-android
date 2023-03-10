@@ -1,8 +1,10 @@
 package org.sopt.stamp.feature.mission.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -35,6 +38,7 @@ import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
+import org.sopt.stamp.feature.mission.detail.component.DeleteStampDialog
 import org.sopt.stamp.feature.mission.detail.component.Header
 import org.sopt.stamp.feature.mission.detail.component.ImageContent
 import org.sopt.stamp.feature.mission.detail.component.Memo
@@ -59,10 +63,14 @@ fun MissionDetailScreen(
     val isSuccess by viewModel.isSuccess.collectAsState(false)
     val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
     val toolbarIconType by viewModel.toolbarIconType.collectAsState(ToolbarIconType.NONE)
+    val isEditable by viewModel.isEditable.collectAsState(true)
+    val createdAt by viewModel.createdAt.collectAsState("")
+    val isDeleteSuccess by viewModel.isDeleteSuccess.collectAsState(false)
+    val isDeleteDialogVisible by viewModel.isDeleteDialogVisible.collectAsState(false)
     val lottieResId = remember(level) {
         when (level.value) {
-            1 -> R.raw.purplestamp
-            2 -> R.raw.pinkstamps
+            1 -> R.raw.pinkstamps
+            2 -> R.raw.purplestamp
             else -> R.raw.greenstamp
         }
     }
@@ -74,14 +82,17 @@ fun MissionDetailScreen(
         isPlaying = isSuccess
     )
 
-    LaunchedEffect(id) {
-        viewModel.initMissionState(id)
+    LaunchedEffect(Unit) {
+        viewModel.initMissionState(id, isCompleted)
     }
     LaunchedEffect(isSuccess, progress) {
         if (progress >= 0.99f && isSuccess) {
             delay(500L)
             resultNavigator.navigateBack(true)
         }
+    }
+    LaunchedEffect(isDeleteSuccess) {
+        resultNavigator.navigateBack(true)
     }
 
     SoptTheme {
@@ -109,38 +120,63 @@ fun MissionDetailScreen(
             ) {
                 Header(
                     title = title,
-                    stars = level.value
+                    stars = level.value,
+                    toolbarIconType
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                ImageContent(imageModel, viewModel::onChangeImage)
+                ImageContent(imageModel, viewModel::onChangeImage, isEditable)
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(content, viewModel::onChangeContent, getRankTextColor(level.value))
+                Memo(content, viewModel::onChangeContent, getRankTextColor(level.value), isEditable)
+                if (!isEditable) {
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = createdAt,
+                            style = SoptTheme.typography.caption4.copy(fontSize = 10.sp),
+                            color = SoptTheme.colors.onSurface60
+                        )
+                    }
+                }
             }
 
-            Button(
-                onClick = viewModel::onSubmit,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp),
-                enabled = isSubmitEnabled,
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = getRankTextColor(level.value),
-                    disabledBackgroundColor = getRankBackgroundColor(level.value)
-                ),
-                contentPadding = PaddingValues(vertical = 16.dp)
-            ) {
-                Text(
-                    text = "미션 완료",
-                    style = SoptTheme.typography.h2,
-                    color = if (level.value == 3) SoptTheme.colors.onSurface70 else SoptTheme.colors.white
-                )
+            if (isEditable) {
+                Button(
+                    onClick = { viewModel.onSubmit() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp),
+                    enabled = isSubmitEnabled,
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = getRankTextColor(level.value),
+                        disabledBackgroundColor = getRankBackgroundColor(level.value)
+                    ),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                ) {
+                    Text(
+                        text = "미션 완료",
+                        style = SoptTheme.typography.h2,
+                        color = if (level.value == 3) SoptTheme.colors.onSurface70 else SoptTheme.colors.white
+                    )
+                }
             }
         }
         if (isSuccess) {
             PostSubmissionBadge(
                 composition = lottieComposition,
                 progress = progress
+            )
+        }
+        if (isDeleteDialogVisible) {
+            DeleteStampDialog(
+                onCancel = {
+                    viewModel.onChangeDeleteDialogVisibility(false)
+                },
+                onDelete = {
+                    viewModel.onDelete()
+                }
             )
         }
     }

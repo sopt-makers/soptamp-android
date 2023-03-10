@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.designsystem.style.White
 import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
 
@@ -22,7 +24,8 @@ import org.sopt.stamp.util.DefaultPreview
 fun Memo(
     value: String,
     onValueChange: (String) -> Unit,
-    borderColor: Color
+    borderColor: Color,
+    isEditable: Boolean
 ) {
     val isEmpty = remember(value) { value.isEmpty() }
 
@@ -32,14 +35,24 @@ fun Memo(
         .defaultMinSize(minHeight = 132.dp)
         .clip(RoundedCornerShape(10.dp))
 
-    val modifierWithBorder = if (isEmpty) {
-        modifier
-    } else {
-        modifier.border(
-            width = 1.dp,
-            color = borderColor,
-            shape = RoundedCornerShape(10.dp)
-        )
+    val modifierWithBorder = remember(isEmpty, isEditable) {
+        if (isEmpty || !isEditable) {
+            modifier
+        } else {
+            modifier.border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(10.dp)
+            )
+        }
+    }
+
+    val backgroundColor = remember(isEmpty, isEditable) {
+        if (isEmpty || !isEditable) {
+            Gray50
+        } else {
+            White
+        }
     }
 
     TextField(
@@ -48,9 +61,10 @@ fun Memo(
         modifier = modifierWithBorder,
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = if (isEmpty) SoptTheme.colors.onSurface5 else SoptTheme.colors.white,
+            backgroundColor = backgroundColor,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
             textColor = SoptTheme.colors.onSurface90,
             placeholderColor = SoptTheme.colors.onSurface60
         ),
@@ -60,7 +74,8 @@ fun Memo(
                 text = "메모를 작성해 주세요.",
                 style = SoptTheme.typography.caption1
             )
-        }
+        },
+        enabled = isEditable
     )
 }
 
@@ -69,9 +84,10 @@ fun Memo(
 private fun MemoPreview() {
     SoptTheme {
         Memo(
-            value = "",
+            value = "안돼",
             onValueChange = {},
-            borderColor = getRankTextColor(2)
+            borderColor = getRankTextColor(2),
+            true
         )
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
@@ -21,11 +22,15 @@ data class PostUiState(
     val imageUri: ImageModel = ImageModel.Empty,
     val content: String = "",
     val createdAt: String = "",
+    val stampId: Int = -1,
     val isSuccess: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val error: Throwable? = null,
-    val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE
+    val isCompleted: Boolean = false,
+    val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE,
+    val isDeleteSuccess: Boolean = false,
+    val isDeleteDialogVisible: Boolean = false
 ) {
     companion object {
         fun from(data: Archive) = PostUiState(
@@ -52,14 +57,35 @@ class MissionDetailViewModel @Inject constructor(
     val isSubmitEnabled = content.combine(imageModel) { content, image ->
         content.isNotEmpty() && !image.isEmpty()
     }
+    val isCompleted = uiState.map { it.isCompleted }
     val toolbarIconType = uiState.map { it.toolbarIconType }
+    val isEditable = toolbarIconType.map {
+        it != ToolbarIconType.WRITE
+    }
+    val createdAt = uiState.map { it.createdAt }
+        .filter { it.isNotEmpty() }
+    val isDeleteSuccess = uiState.map { it.isDeleteSuccess }
+    val isDeleteDialogVisible = uiState.map { it.isDeleteDialogVisible }
 
-    fun initMissionState(id: Int) {
+    fun initMissionState(id: Int, isCompleted: Boolean) {
         viewModelScope.launch {
-            uiState.update { it.copy(id = id, isError = false, error = null, isLoading = true, isSuccess = false) }
+            uiState.update {
+                it.copy(
+                    id = id,
+                    isError = false,
+                    error = null,
+                    isLoading = true,
+                    isSuccess = false
+                )
+            }
             repository.getMissionContent(id)
                 .onSuccess {
-                    val result = PostUiState.from(it).copy(id = id)
+                    val result = PostUiState.from(it).copy(
+                        stampId = it.id,
+                        isCompleted = isCompleted,
+                        toolbarIconType = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE,
+                        createdAt = it.createdAt ?: ""
+                    )
                     uiState.update { result }
                 }.onFailure { error ->
                     Timber.e(error)
@@ -87,9 +113,11 @@ class MissionDetailViewModel @Inject constructor(
             ToolbarIconType.WRITE -> {
                 onChangeToolbarState(ToolbarIconType.DELETE)
             }
+
             ToolbarIconType.DELETE -> {
-                onDelete()
+                onChangeDeleteDialogVisibility(true)
             }
+
             ToolbarIconType.NONE -> {}
         }
     }
@@ -100,6 +128,12 @@ class MissionDetailViewModel @Inject constructor(
         }
     }
 
+    fun onChangeDeleteDialogVisibility(value: Boolean) {
+        uiState.update {
+            it.copy(isDeleteDialogVisible = value)
+        }
+    }
+
     fun onSubmit() {
         viewModelScope.launch {
             val currentState = uiState.value
@@ -107,24 +141,41 @@ class MissionDetailViewModel @Inject constructor(
             uiState.update {
                 it.copy(isError = false, error = null, isLoading = true)
             }
-            repository.completeMission(
-                missionId = id,
-                content = content,
-                imageUri = imageUri
-            ).onSuccess {
-                uiState.update {
-                    it.copy(isLoading = false, isSuccess = true)
+            if (uiState.value.isCompleted) {
+                repository.modifyMission(
+                    missionId = id,
+                    content = content,
+                    imageUri = imageUri
+                ).onSuccess {
+                    uiState.update {
+                        it.copy(isLoading = false, isSuccess = true)
+                    }
+                }.onFailure { error ->
+                    Timber.e(error)
+                    uiState.update {
+                        it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
+                    }
                 }
-            }.onFailure { error ->
-                Timber.e(error)
-                uiState.update {
-                    it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
+            } else {
+                repository.completeMission(
+                    missionId = id,
+                    content = content,
+                    imageUri = imageUri
+                ).onSuccess {
+                    uiState.update {
+                        it.copy(isLoading = false, isSuccess = true)
+                    }
+                }.onFailure { error ->
+                    Timber.e(error)
+                    uiState.update {
+                        it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
+                    }
                 }
             }
         }
     }
 
-    private fun onDelete() {
+    fun onDelete() {
         viewModelScope.launch {
             val currentState = uiState.value
             val (id) = currentState
@@ -134,7 +185,7 @@ class MissionDetailViewModel @Inject constructor(
             repository.deleteMission(id)
                 .onSuccess {
                     uiState.update {
-                        it.copy(isLoading = false, isSuccess = true)
+                        it.copy(isLoading = false, isDeleteSuccess = true)
                     }
                 }.onFailure { error ->
                     Timber.e(error)

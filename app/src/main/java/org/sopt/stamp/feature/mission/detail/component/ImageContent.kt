@@ -28,11 +28,14 @@ import org.sopt.stamp.feature.mission.model.ImageModel
 @Composable
 fun ImageContent(
     imageModel: ImageModel,
-    onChangeImage: (images: ImageModel) -> Unit
+    onChangeImage: (images: ImageModel) -> Unit,
+    isEditable: Boolean
 ) {
     val isImageEmpty = remember(imageModel) { imageModel.isEmpty() }
     val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
-        onChangeImage(ImageModel.Local(it))
+        if (it.isNotEmpty()) {
+            onChangeImage(ImageModel.Local(it))
+        }
     }
     val pageCount = remember(imageModel) { imageModel.size }
 
@@ -54,9 +57,11 @@ fun ImageContent(
                         shape = RoundedCornerShape(10.dp)
                     )
                     .clickable {
-                        photoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
+                        if (isEditable) {
+                            photoPickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        }
                     },
                 contentAlignment = Alignment.Center
             ) {
