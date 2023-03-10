@@ -38,6 +38,7 @@ import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
+import org.sopt.stamp.feature.mission.detail.component.DeleteStampDialog
 import org.sopt.stamp.feature.mission.detail.component.Header
 import org.sopt.stamp.feature.mission.detail.component.ImageContent
 import org.sopt.stamp.feature.mission.detail.component.Memo
@@ -65,6 +66,7 @@ fun MissionDetailScreen(
     val isEditable by viewModel.isEditable.collectAsState(true)
     val createdAt by viewModel.createdAt.collectAsState("")
     val isDeleteSuccess by viewModel.isDeleteSuccess.collectAsState(false)
+    val isDeleteDialogVisible by viewModel.isDeleteDialogVisible.collectAsState(false)
     val lottieResId = remember(level) {
         when (level.value) {
             1 -> R.raw.pinkstamps
@@ -165,6 +167,16 @@ fun MissionDetailScreen(
             PostSubmissionBadge(
                 composition = lottieComposition,
                 progress = progress
+            )
+        }
+        if (isDeleteDialogVisible) {
+            DeleteStampDialog(
+                onCancel = {
+                    viewModel.onChangeDeleteDialogVisibility(false)
+                },
+                onDelete = {
+                    viewModel.onDelete()
+                }
             )
         }
     }

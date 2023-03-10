@@ -29,7 +29,8 @@ data class PostUiState(
     val error: Throwable? = null,
     val isCompleted: Boolean = false,
     val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE,
-    val isDeleteSuccess: Boolean = false
+    val isDeleteSuccess: Boolean = false,
+    val isDeleteDialogVisible: Boolean = false
 ) {
     companion object {
         fun from(data: Archive) = PostUiState(
@@ -64,6 +65,7 @@ class MissionDetailViewModel @Inject constructor(
     val createdAt = uiState.map { it.createdAt }
         .filter { it.isNotEmpty() }
     val isDeleteSuccess = uiState.map { it.isDeleteSuccess }
+    val isDeleteDialogVisible = uiState.map { it.isDeleteDialogVisible }
 
     fun initMissionState(id: Int, isCompleted: Boolean) {
         viewModelScope.launch {
@@ -113,7 +115,7 @@ class MissionDetailViewModel @Inject constructor(
             }
 
             ToolbarIconType.DELETE -> {
-                onDelete()
+                onChangeDeleteDialogVisibility(true)
             }
 
             ToolbarIconType.NONE -> {}
@@ -123,6 +125,12 @@ class MissionDetailViewModel @Inject constructor(
     fun onChangeImage(imageModel: ImageModel) {
         uiState.update {
             it.copy(imageUri = imageModel)
+        }
+    }
+
+    fun onChangeDeleteDialogVisibility(value: Boolean) {
+        uiState.update {
+            it.copy(isDeleteDialogVisible = value)
         }
     }
 
@@ -167,7 +175,7 @@ class MissionDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onDelete() {
+    fun onDelete() {
         viewModelScope.launch {
             val currentState = uiState.value
             val (id) = currentState
