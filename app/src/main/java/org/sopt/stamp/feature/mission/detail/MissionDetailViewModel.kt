@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
@@ -26,7 +27,8 @@ data class PostUiState(
     val isError: Boolean = false,
     val error: Throwable? = null,
     val isCompleted: Boolean = false,
-    val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE
+    val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE,
+    val isDeleteSuccess: Boolean = false
 ) {
     companion object {
         fun from(data: Archive) = PostUiState(
@@ -58,6 +60,8 @@ class MissionDetailViewModel @Inject constructor(
     val isEditable = toolbarIconType.map {
         it != ToolbarIconType.WRITE
     }
+    val createdAt = uiState.map { it.createdAt }
+        .filter { it.isNotEmpty() }
 
     fun initMissionState(id: Int, isCompleted: Boolean) {
         viewModelScope.launch {
@@ -75,7 +79,8 @@ class MissionDetailViewModel @Inject constructor(
                     val result = PostUiState.from(it).copy(
                         id = id,
                         isCompleted = isCompleted,
-                        toolbarIconType = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE
+                        toolbarIconType = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE,
+                        createdAt = it.createdAt ?: ""
                     )
                     uiState.update { result }
                 }.onFailure { error ->
@@ -170,7 +175,7 @@ class MissionDetailViewModel @Inject constructor(
             repository.deleteMission(id)
                 .onSuccess {
                     uiState.update {
-                        it.copy(isLoading = false, isSuccess = true)
+                        it.copy(isLoading = false, isDeleteSuccess = true)
                     }
                 }.onFailure { error ->
                     Timber.e(error)

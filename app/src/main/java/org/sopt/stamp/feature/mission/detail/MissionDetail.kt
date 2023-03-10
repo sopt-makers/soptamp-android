@@ -1,8 +1,10 @@
 package org.sopt.stamp.feature.mission.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +20,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -60,6 +64,7 @@ fun MissionDetailScreen(
     val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
     val toolbarIconType by viewModel.toolbarIconType.collectAsState(ToolbarIconType.NONE)
     val isEditable by viewModel.isEditable.collectAsState(true)
+    val createdAt by viewModel.createdAt.collectAsState("")
     val lottieResId = remember(level) {
         when (level.value) {
             1 -> R.raw.purplestamp
@@ -110,12 +115,25 @@ fun MissionDetailScreen(
             ) {
                 Header(
                     title = title,
-                    stars = level.value
+                    stars = level.value,
+                    toolbarIconType
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 ImageContent(imageModel, viewModel::onChangeImage, isEditable)
                 Spacer(modifier = Modifier.height(12.dp))
                 Memo(content, viewModel::onChangeContent, getRankTextColor(level.value), isEditable)
+                if (!isEditable) {
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = createdAt,
+                            style = SoptTheme.typography.caption4.copy(fontSize = 10.sp),
+                            color = SoptTheme.colors.onSurface60
+                        )
+                    }
+                }
             }
 
             if (isEditable) {
