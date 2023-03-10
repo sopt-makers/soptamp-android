@@ -120,7 +120,7 @@ fun MissionDetailScreen(
 
             if (isEditable) {
                 Button(
-                    onClick = viewModel::onSubmit,
+                    onClick = { viewModel.onSubmit() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 32.dp),

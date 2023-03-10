@@ -55,11 +55,8 @@ class MissionDetailViewModel @Inject constructor(
     }
     val isCompleted = uiState.map { it.isCompleted }
     val toolbarIconType = uiState.map { it.toolbarIconType }
-    val isEditable = isCompleted.combine(toolbarIconType) { isCompleted, toolbarIcon ->
-        if (!isCompleted) {
-            return@combine true
-        }
-        return@combine toolbarIcon != ToolbarIconType.WRITE
+    val isEditable = toolbarIconType.map {
+        it != ToolbarIconType.WRITE
     }
 
     fun initMissionState(id: Int, isCompleted: Boolean) {
@@ -129,18 +126,35 @@ class MissionDetailViewModel @Inject constructor(
             uiState.update {
                 it.copy(isError = false, error = null, isLoading = true)
             }
-            repository.completeMission(
-                missionId = id,
-                content = content,
-                imageUri = imageUri
-            ).onSuccess {
-                uiState.update {
-                    it.copy(isLoading = false, isSuccess = true)
+            if (uiState.value.isCompleted) {
+                repository.modifyMission(
+                    missionId = id,
+                    content = content,
+                    imageUri = imageUri
+                ).onSuccess {
+                    uiState.update {
+                        it.copy(isLoading = false, isSuccess = true)
+                    }
+                }.onFailure { error ->
+                    Timber.e(error)
+                    uiState.update {
+                        it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
+                    }
                 }
-            }.onFailure { error ->
-                Timber.e(error)
-                uiState.update {
-                    it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
+            } else {
+                repository.completeMission(
+                    missionId = id,
+                    content = content,
+                    imageUri = imageUri
+                ).onSuccess {
+                    uiState.update {
+                        it.copy(isLoading = false, isSuccess = true)
+                    }
+                }.onFailure { error ->
+                    Timber.e(error)
+                    uiState.update {
+                        it.copy(isLoading = false, isError = true, error = error, isSuccess = false)
+                    }
                 }
             }
         }

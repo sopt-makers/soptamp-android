@@ -23,9 +23,10 @@ interface StampService {
     @Multipart
     @PUT("stamp/{missionId}")
     suspend fun modifyStamp(
+        @Header("userId") userId: Int = 158,
         @Path("missionId") missionId: Int,
-        @Part stampContent: RequestBody,
-        @Part imageUrl: List<MultipartBody.Part>? = null
+        @Part("stampContent") stampContent: RequestBody,
+        @Part imgUrl: List<MultipartBody.Part>? = null
     ): ModifyStampResponse
 
     @Multipart

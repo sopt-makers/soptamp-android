@@ -81,9 +81,9 @@ class StampRepositoryImpl @Inject constructor(
         }
         return runCatching {
             service.modifyStamp(
-                missionId,
-                contentRequestBody,
-                imageRequestBody
+                missionId = missionId,
+                stampContent = contentRequestBody,
+                imgUrl = imageRequestBody
             )
         }
     }

@@ -35,7 +35,7 @@ fun Memo(
         .defaultMinSize(minHeight = 132.dp)
         .clip(RoundedCornerShape(10.dp))
 
-    val modifierWithBorder = remember(isEmpty) {
+    val modifierWithBorder = remember(isEmpty, isEditable) {
         if (isEmpty || !isEditable) {
             modifier
         } else {
