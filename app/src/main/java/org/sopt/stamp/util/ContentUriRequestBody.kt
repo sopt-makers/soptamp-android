@@ -35,7 +35,7 @@ class ContentUriRequestBody(
         }
     }
 
-    fun getFileName() = fileName
+    private fun getFileName() = fileName
 
     override fun contentLength(): Long = size
 
@@ -48,5 +48,5 @@ class ContentUriRequestBody(
         }
     }
 
-    fun toFormData() = MultipartBody.Part.createFormData("image", getFileName(), this)
+    fun toFormData(name: String) = MultipartBody.Part.createFormData(name, getFileName(), this)
 }

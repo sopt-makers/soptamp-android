@@ -2,6 +2,7 @@ package org.sopt.stamp.data.repository
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -21,7 +22,8 @@ class StampRepositoryImpl @Inject constructor(
 ) : StampRepository {
     @Serializable
     private data class Content(
-        val content: String
+        @SerialName("contents")
+        val contents: String
     )
 
     override suspend fun completeMission(
@@ -37,7 +39,7 @@ class StampRepositoryImpl @Inject constructor(
                 imageUri.uri.map {
                     ContentUriRequestBody(context, it)
                 }.map {
-                    it.toFormData()
+                    it.toFormData("imgUrl")
                 }
             }
 
@@ -47,7 +49,7 @@ class StampRepositoryImpl @Inject constructor(
             service.registerStamp(
                 missionId = missionId,
                 stampContent = contentRequestBody,
-                imageUrl = imageRequestBody
+                imgUrl = imageRequestBody
             )
         }
     }
@@ -71,7 +73,7 @@ class StampRepositoryImpl @Inject constructor(
                 imageUri.uri.map {
                     ContentUriRequestBody(context, it)
                 }.map {
-                    it.toFormData()
+                    it.toFormData("imgUrl")
                 }
             }
 

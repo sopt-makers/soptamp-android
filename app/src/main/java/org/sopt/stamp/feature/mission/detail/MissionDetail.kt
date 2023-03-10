@@ -58,6 +58,7 @@ fun MissionDetailScreen(
     val imageModel by viewModel.imageModel.collectAsState(ImageModel.Empty)
     val isSuccess by viewModel.isSuccess.collectAsState(false)
     val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
+    val toolbarIconType by viewModel.toolbarIconType.collectAsState(ToolbarIconType.NONE)
     val lottieResId = remember(level) {
         when (level.value) {
             1 -> R.raw.purplestamp
@@ -99,10 +100,9 @@ fun MissionDetailScreen(
                         color = SoptTheme.colors.onSurface
                     )
                 },
-                iconOption = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE,
-                onBack = {
-                    resultNavigator.navigateBack()
-                }
+                iconOption = toolbarIconType,
+                onBack = { resultNavigator.navigateBack() },
+                onPressIcon = { viewModel.onPressToolbarIcon() }
             )
             Column(
                 modifier = Modifier.weight(1f)
