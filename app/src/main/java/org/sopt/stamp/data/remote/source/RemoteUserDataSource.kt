@@ -18,6 +18,8 @@ package org.sopt.stamp.data.remote.source
 import org.sopt.stamp.data.remote.api.UserService
 import org.sopt.stamp.data.remote.model.request.LoginRequest
 import org.sopt.stamp.data.remote.model.request.SignUpRequest
+import org.sopt.stamp.data.remote.model.request.UpdateNicknameRequest
+import org.sopt.stamp.data.remote.model.request.UpdatePasswordRequest
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import org.sopt.stamp.data.source.UserDataSource
 import javax.inject.Inject
@@ -73,5 +75,17 @@ class RemoteUserDataSource @Inject constructor(
             response.body()?.message,
             response.code()
         )
+    }
+
+    override suspend fun withdraw(userId: Int) {
+        userService.withdraw(userId)
+    }
+
+    override suspend fun updatePassword(userId: Int, new: String) {
+        userService.updatePassword(userId, UpdatePasswordRequest(new))
+    }
+
+    override suspend fun updateNickname(userId: Int, new: String) {
+        userService.updateNickname(userId, UpdateNicknameRequest(new))
     }
 }

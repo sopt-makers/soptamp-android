@@ -29,4 +29,14 @@ class SoptampDataStore @Inject constructor(
     var profileMessage: String
         get() = dataStore.getString("profile_message", "") ?: "String"
         set(value) = dataStore.edit { putString("profile_message", value) }
+
+    var nickname: String
+        get() = dataStore.getString("nickname", "") ?: "String"
+        set(value) = dataStore.edit { putString("nickname", value) }
+
+    fun clear() {
+        userId = -1
+        profileMessage = ""
+        nickname = ""
+    }
 }

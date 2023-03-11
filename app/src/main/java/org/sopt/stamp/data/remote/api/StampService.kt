@@ -58,4 +58,9 @@ interface StampService {
         @Header("userId") userId: Int = 158,
         @Path("missionId") missionId: Int
     )
+
+    @DELETE("stamp/all")
+    suspend fun deleteAllStamps(
+        @Header("userId") userId: Int = 158
+    )
 }
