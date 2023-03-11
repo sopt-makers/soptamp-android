@@ -22,5 +22,6 @@ import javax.inject.Qualifier
 annotation class Strings(val value: Constant)
 
 enum class Constant {
-    SOPTAMP_API_KEY
+    SOPTAMP_API_KEY,
+    SOPTAMP_DATA_STORE;
 }

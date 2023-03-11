@@ -15,11 +15,16 @@
  */
 package org.sopt.stamp.di
 
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -28,6 +33,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.sopt.stamp.App
+import org.sopt.stamp.BuildConfig
 import org.sopt.stamp.di.constant.Constant
 import org.sopt.stamp.di.constant.Strings
 import retrofit2.Retrofit
@@ -71,4 +77,21 @@ object ConfigModule {
         .client(client)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(
+        @ApplicationContext context: Context,
+        @Strings(Constant.SOPTAMP_DATA_STORE) fileName: String
+    ): SharedPreferences = if (BuildConfig.DEBUG) {
+        context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+    } else {
+        EncryptedSharedPreferences.create(
+            fileName,
+            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+            context,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
 }

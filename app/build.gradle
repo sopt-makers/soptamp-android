@@ -31,6 +31,7 @@ android {
         }
 
         buildConfigField "String", "SOPTAMP_API_KEY", properties["apiKey"]
+        buildConfigField "String", "SOPTAMP_DATA_STORE_KEY", properties["dataStoreKey"]
     }
 
     buildTypes {
