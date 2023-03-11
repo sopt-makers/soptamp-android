@@ -87,7 +87,6 @@ fun DoubleOptionDialog(
                     )
                 }
             }
-            
             Row(
                 modifier = Modifier.background(
                     color = Color.Transparent,
