@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import org.sopt.stamp.designsystem.style.SoptTheme
 
 @Composable
-fun SectionHeader(
+fun Header(
     modifier: Modifier = Modifier,
     title: String
 ) {

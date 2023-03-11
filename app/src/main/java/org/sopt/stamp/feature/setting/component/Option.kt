@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -37,13 +38,14 @@ import org.sopt.stamp.util.DefaultPreview
 fun Option(
     modifier: Modifier = Modifier,
     title: String,
-    @DrawableRes iconResId: Int = -1,
-    onPress: () -> Unit = {}
+    titleTextColor: Color,
+    @DrawableRes iconResId: Int,
+    onPress: () -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp)
+            .padding(vertical = 12.dp)
             .noRippleClickable { onPress() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -51,7 +53,7 @@ fun Option(
         Text(
             text = title,
             style = SoptTheme.typography.sub1,
-            color = SoptTheme.colors.onSurface90
+            color = titleTextColor
         )
         if (iconResId != -1) {
             SoptampIconButton(
@@ -68,7 +70,8 @@ private fun OptionPreview() {
         Option(
             modifier = Modifier,
             title = "비밀번호 변경하기",
-            iconResId = R.drawable.arrow_right
+            iconResId = R.drawable.arrow_right,
+            titleTextColor = SoptTheme.colors.onSurface90
         ) {}
     }
 }
