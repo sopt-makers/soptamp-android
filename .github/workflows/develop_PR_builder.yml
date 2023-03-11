@@ -47,6 +47,9 @@ jobs:
       - name: Lint Check
         run: ./gradlew ktlintCheck
 
+      - name: Spotless Apply
+        run: ./gradlew build
+
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
 
