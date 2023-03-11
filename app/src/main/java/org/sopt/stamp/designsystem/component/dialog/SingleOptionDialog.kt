@@ -33,11 +33,11 @@ import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.SoptTheme
 
 @Composable
-fun NetworkErrorDialog(
-    onRetry: () -> Unit
+fun SingleOptionDialog(
+    onConfirm: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = { onRetry() },
+        onDismissRequest = { onConfirm() },
         title = {
             Box(
                 contentAlignment = Alignment.Center,
@@ -64,7 +64,7 @@ fun NetworkErrorDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = Color(0xFFFF8080))
-                    .noRippleClickable { onRetry() }
+                    .noRippleClickable { onConfirm() }
                     .padding(vertical = 15.dp),
                 contentAlignment = Alignment.Center
             ) {
