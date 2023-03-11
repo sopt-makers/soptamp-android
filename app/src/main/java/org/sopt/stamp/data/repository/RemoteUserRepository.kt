@@ -15,13 +15,15 @@
  */
 package org.sopt.stamp.data.repository
 
+import org.sopt.stamp.data.local.SoptampDataStore
 import org.sopt.stamp.data.source.UserDataSource
 import org.sopt.stamp.domain.model.User
 import org.sopt.stamp.domain.repository.UserRepository
 import javax.inject.Inject
 
 class RemoteUserRepository @Inject constructor(
-    private val remote: UserDataSource
+    private val remote: UserDataSource,
+    private val local: SoptampDataStore
 ) : UserRepository {
     override suspend fun signup(
         nickname: String,
@@ -36,4 +38,36 @@ class RemoteUserRepository @Inject constructor(
     override suspend fun checkEmail(email: String): User = remote.checkEmail(email).toUser()
 
     override suspend fun login(email: String, password: String): User = remote.login(email, password).toUser()
+    override suspend fun logout(): Result<Unit> = runCatching { local.clear() }
+
+    override suspend fun withdraw(userId: Int): Result<Unit> = runCatching {
+        remote.withdraw(userId)
+    }.onSuccess {
+        local.clear()
+    }
+
+    override suspend fun updateProfileMessage(
+        userId: Int,
+        profileMessage: String
+    ): Result<Unit> = runCatching {
+        remote.updateNickname(userId, profileMessage)
+    }.onSuccess {
+        local.profileMessage = profileMessage
+    }
+
+    override suspend fun updatePassword(
+        userId: Int,
+        password: String
+    ): Result<Unit> = runCatching {
+        remote.updatePassword(userId, password)
+    }
+
+    override suspend fun updateNickname(
+        userId: Int,
+        nickname: String
+    ): Result<Unit> = runCatching {
+        remote.updateNickname(userId, nickname)
+    }.onSuccess {
+        local.nickname = nickname
+    }
 }
