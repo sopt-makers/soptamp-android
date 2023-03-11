@@ -1,5 +1,7 @@
+root = true
+
 [*]
 max_line_length = 140
 
 [*.{kt, kts}]
-ktlint_disabled_rules = import-ordering, no-wildcard-imports, final-newline
+disabled_rules = import-ordering, no-wildcard-imports, final-newline, no-semi

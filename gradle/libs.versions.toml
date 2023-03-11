@@ -43,6 +43,7 @@ crashlytics = "2.9.4"
 firebase = "31.2.3"
 ktlint = "11.3.1"
 lottie = "6.0.0"
+spotless = "6.16.0"
 
 [libraries]
 agp = { module = "com.android.tools.build:gradle", version.ref = "gradleplugin" }
@@ -157,3 +158,4 @@ crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlyti
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspplugin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
