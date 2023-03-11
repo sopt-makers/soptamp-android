@@ -158,7 +158,7 @@ fun RankingHeader(
         },
         navigationIcon = {
             SoptampIconButton(
-                imageVector = ImageVector.vectorResource(id = R.drawable.arrow_letf),
+                imageVector = ImageVector.vectorResource(id = R.drawable.arrow_left),
                 onClick = { onClickBack() }
             )
         }
