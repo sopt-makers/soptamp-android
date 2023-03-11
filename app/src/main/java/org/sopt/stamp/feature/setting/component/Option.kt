@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.feature.setting.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +37,7 @@ import org.sopt.stamp.util.DefaultPreview
 fun Option(
     modifier: Modifier = Modifier,
     title: String,
+    @DrawableRes iconResId: Int = -1,
     onPress: () -> Unit = {}
 ) {
     Row(
@@ -51,9 +53,11 @@ fun Option(
             style = SoptTheme.typography.sub1,
             color = SoptTheme.colors.onSurface90
         )
-        SoptampIconButton(
-            imageVector = ImageVector.vectorResource(id = R.drawable.arrow_right)
-        )
+        if (iconResId != -1) {
+            SoptampIconButton(
+                imageVector = ImageVector.vectorResource(id = iconResId)
+            )
+        }
     }
 }
 
@@ -63,7 +67,8 @@ private fun OptionPreview() {
     SoptTheme {
         Option(
             modifier = Modifier,
-            title = "비밀번호 변경하기"
+            title = "비밀번호 변경하기",
+            iconResId = R.drawable.arrow_right
         ) {}
     }
 }
