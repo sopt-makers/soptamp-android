@@ -45,14 +45,12 @@ class RankingViewModel @Inject constructor(
         rankingRepository.getRanking()
             .mapCatching { it.toUiModel() }
             .onSuccess { ranking -> onSuccessStateChange(ranking) }
-            .onFailure { throwable ->
+            .onFailure {
                 _state.value = RankingState.Failure
             }
     }
 
-    private suspend fun onSuccessStateChange(ranking: RankingListUiModel) {
-        dataStore.userId.collect { userId ->
-            _state.value = RankingState.Success(ranking, userId)
-        }
+    private fun onSuccessStateChange(ranking: RankingListUiModel) {
+        _state.value = RankingState.Success(ranking, dataStore.userId)
     }
 }

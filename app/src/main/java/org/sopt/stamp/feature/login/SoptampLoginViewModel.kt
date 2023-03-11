@@ -59,8 +59,8 @@ class SoptampLoginViewModel @Inject constructor(
                     }
                     if (res.statusCode == 200) {
                         _singleEvent.trySend(SingleEvent.LoginSuccess)
-                        res.userId?.let { dataStore.setUserId(it) }
-                        res.profileMessage?.let { dataStore.setProfileMessage(it) }
+                        res.userId?.let { dataStore.userId = it }
+                        res.profileMessage?.let { dataStore.profileMessage = it }
                         updateLoginComplete()
                     }
                 }

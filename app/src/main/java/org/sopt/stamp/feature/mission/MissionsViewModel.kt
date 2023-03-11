@@ -43,12 +43,10 @@ class MissionsViewModel @Inject constructor(
         filter: String? = null
     ) = viewModelScope.launch {
         _state.value = MissionsState.Loading
-        dataStore.userId.collect { signedUserId ->
-            fetchMissions(
-                userId = userId ?: signedUserId,
-                filter = filter?.let { MissionsFilter.findFilterOf(filter) } ?: MissionsFilter.ALL_MISSION
-            )
-        }
+        fetchMissions(
+            userId = userId ?: dataStore.userId,
+            filter = filter?.let { MissionsFilter.findFilterOf(filter) } ?: MissionsFilter.ALL_MISSION
+        )
     }
 
     private suspend fun fetchMissions(userId: Int, filter: MissionsFilter) {
