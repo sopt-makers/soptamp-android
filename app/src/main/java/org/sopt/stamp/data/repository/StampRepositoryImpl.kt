@@ -106,4 +106,8 @@ class StampRepositoryImpl @Inject constructor(
     override suspend fun deleteMission(missionId: Int): Result<Unit> {
         return runCatching { service.deleteStamp(missionId = missionId) }
     }
+
+    override suspend fun deleteAllStamps(userId: Int): Result<Unit> {
+        return runCatching { service.deleteAllStamps(userId) }
+    }
 }

@@ -35,7 +35,7 @@ interface StampRepository {
         content: String
     ): Result<Unit>
 
-    suspend fun deleteMission(
-        missionId: Int
-    ): Result<Unit>
+    suspend fun deleteMission(missionId: Int): Result<Unit>
+
+    suspend fun deleteAllStamps(userId: Int): Result<Unit>
 }
