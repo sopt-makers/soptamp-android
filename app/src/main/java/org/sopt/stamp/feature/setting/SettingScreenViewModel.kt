@@ -13,24 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.feature.setting.component
+package org.sopt.stamp.feature.setting
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import org.sopt.stamp.designsystem.style.SoptTheme
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-@Composable
-fun Header(
-    modifier: Modifier,
-    title: String
-) {
-    Text(
-        text = title,
-        style = SoptTheme.typography.caption1,
-        color = SoptTheme.colors.onSurface50,
-        modifier = modifier.padding(bottom = 4.dp)
-    )
-}
+@HiltViewModel
+class SettingScreenViewModel @Inject constructor() : ViewModel()
