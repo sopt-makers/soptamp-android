@@ -32,7 +32,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.ramcosta.composedestinations.annotation.Destination
@@ -64,11 +66,13 @@ fun WithdrawalScreen(
         }
     }
     LaunchedEffect(error) {
-        Toast.makeText(
-            context,
-            "서버 요청에 실패했습니다. 다시 시도해 주세요.",
-            Toast.LENGTH_SHORT
-        ).show()
+        if (error != null) {
+            Toast.makeText(
+                context,
+                "서버 요청에 실패했습니다. 다시 시도해 주세요.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     SoptTheme {
@@ -96,8 +100,12 @@ fun WithdrawalScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "회원 탈퇴를 신청하시면 해당 이메일은 즉시 탈퇴 처리됩니다.\n\n탈퇴 처리 시 계정 내에서 입력했던 정보 (미션 정보 등)는 영구적으로 삭제되며, 복구가 어렵습니다.",
-                style = SoptTheme.typography.caption1,
-                color = SoptTheme.colors.onSurface60
+                style = SoptTheme.typography.caption1
+                    .copy(
+                        fontSize = 13.sp,
+                        lineBreak = LineBreak.Paragraph
+                    ),
+                color = SoptTheme.colors.onSurface60,
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(
