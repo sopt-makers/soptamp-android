@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.feature.setting
+package org.sopt.stamp.feature.setting.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,7 +35,7 @@ data class EditIntroductionUiState(
 )
 
 @HiltViewModel
-class EditIntroductionViewModel @Inject constructor(
+class UpdateProfileViewModel @Inject constructor(
     private val updateProfileUseCase: UpdateProfileUseCase
 ) : ViewModel() {
     private val uiState = MutableStateFlow(EditIntroductionUiState())

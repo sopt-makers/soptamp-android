@@ -53,7 +53,7 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeStampRepository
 import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.domain.usecase.GetUserIdUseCase
-import org.sopt.stamp.feature.destinations.EditIntroductionScreenDestination
+import org.sopt.stamp.feature.destinations.UpdateProfileScreenDestination
 import org.sopt.stamp.feature.setting.component.Section
 import org.sopt.stamp.feature.setting.model.SectionUiModel
 import org.sopt.stamp.util.DefaultPreview
@@ -63,7 +63,7 @@ import org.sopt.stamp.util.DefaultPreview
 @Composable
 fun SettingScreen(
     navigator: DestinationsNavigator,
-    editIntroductionResultRecipient: ResultRecipient<EditIntroductionScreenDestination, Boolean>,
+    updateProfileResultRecipient: ResultRecipient<UpdateProfileScreenDestination, Boolean>,
     viewModel: SettingScreenViewModel = hiltViewModel()
 ) {
     val myInfoSectionItems = remember {
@@ -73,7 +73,7 @@ fun SettingScreen(
                 title = "한 마디 편집",
                 optionIconResId = R.drawable.arrow_right
             ) {
-                navigator.navigate(EditIntroductionScreenDestination)
+                navigator.navigate(UpdateProfileScreenDestination)
             },
             SectionUiModel.Spacer,
             SectionUiModel.Option(
@@ -284,7 +284,7 @@ private data class AlertDialogModel(
 private fun SettingScreenPreview() {
     SettingScreen(
         navigator = EmptyDestinationsNavigator,
-        editIntroductionResultRecipient = EmptyResultRecipient(),
+        updateProfileResultRecipient = EmptyResultRecipient(),
         viewModel = SettingScreenViewModel(
             FakeUserRepository,
             FakeStampRepository,

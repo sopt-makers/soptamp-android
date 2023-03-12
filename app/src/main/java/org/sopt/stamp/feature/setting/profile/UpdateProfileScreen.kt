@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.feature.setting
+package org.sopt.stamp.feature.setting.profile
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -65,9 +65,9 @@ import org.sopt.stamp.util.addFocusCleaner
 @SettingNavGraph
 @Destination("introduction")
 @Composable
-fun EditIntroductionScreen(
+fun UpdateProfileScreen(
     resultNavigator: ResultBackNavigator<Boolean>,
-    viewModel: EditIntroductionViewModel = hiltViewModel()
+    viewModel: UpdateProfileViewModel = hiltViewModel()
 ) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
@@ -183,9 +183,9 @@ fun EditIntroductionScreen(
 @DefaultPreview
 @Composable
 private fun EditIntroductionScreenPreview() {
-    EditIntroductionScreen(
+    UpdateProfileScreen(
         resultNavigator = EmptyResultBackNavigator(),
-        viewModel = EditIntroductionViewModel(
+        viewModel = UpdateProfileViewModel(
             UpdateProfileUseCase(
                 FakeUserRepository,
                 GetUserIdUseCase(FakeUserRepository)
