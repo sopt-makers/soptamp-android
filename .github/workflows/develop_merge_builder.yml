@@ -39,7 +39,10 @@ jobs:
       - name: Add Network Base Url
         env:
           API_KEY: ${{ secrets.API_KEY }}
-        run: echo apiKey=\"$API_KEY\" >> ./local.properties
+          DATA_STORE_KEY: ${{ secrets.API_KEY }}
+        run: |
+          echo apiKey=\"$API_KEY\" >> ./local.properties
+          echo dataStoreKey=\"$DATA_STORE_KEY\" >> ./local.properties
 
       - name: Access Firebase Service
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
