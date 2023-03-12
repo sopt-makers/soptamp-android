@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.domain.usecase
+package org.sopt.stamp.domain.usecase.user
 
 import org.sopt.stamp.domain.repository.UserRepository
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import javax.inject.Inject
 
-class GetUserIdUseCase @Inject constructor(
-    private val repository: UserRepository
+class UpdateProfileUseCase @Inject constructor(
+    private val repository: UserRepository,
+    private val getUserIdUseCase: GetUserIdUseCase
 ) {
-    operator fun invoke() = repository.fetchUserId()
+    suspend operator fun invoke(introduction: String): Result<Unit> = runCatching {
+        return repository.updateProfileMessage(getUserIdUseCase(), introduction)
+    }
 }

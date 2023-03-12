@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.feature.setting
+package org.sopt.stamp.feature.setting.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.sopt.stamp.domain.usecase.UpdateProfileUseCase
+import org.sopt.stamp.domain.usecase.user.UpdateProfileUseCase
 import javax.inject.Inject
 
 data class EditIntroductionUiState(
@@ -35,7 +35,7 @@ data class EditIntroductionUiState(
 )
 
 @HiltViewModel
-class EditIntroductionViewModel @Inject constructor(
+class UpdateProfileViewModel @Inject constructor(
     private val updateProfileUseCase: UpdateProfileUseCase
 ) : ViewModel() {
     private val uiState = MutableStateFlow(EditIntroductionUiState())

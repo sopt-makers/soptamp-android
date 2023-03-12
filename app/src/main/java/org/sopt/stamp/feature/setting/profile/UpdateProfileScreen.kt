@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.feature.setting
+package org.sopt.stamp.feature.setting.profile
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -57,17 +57,17 @@ import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.Purple300
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeUserRepository
-import org.sopt.stamp.domain.usecase.GetUserIdUseCase
-import org.sopt.stamp.domain.usecase.UpdateProfileUseCase
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
+import org.sopt.stamp.domain.usecase.user.UpdateProfileUseCase
 import org.sopt.stamp.util.DefaultPreview
 import org.sopt.stamp.util.addFocusCleaner
 
 @SettingNavGraph
 @Destination("introduction")
 @Composable
-fun EditIntroductionScreen(
+fun UpdateProfileScreen(
     resultNavigator: ResultBackNavigator<Boolean>,
-    viewModel: EditIntroductionViewModel = hiltViewModel()
+    viewModel: UpdateProfileViewModel = hiltViewModel()
 ) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
@@ -171,7 +171,7 @@ fun EditIntroductionScreen(
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 Text(
-                    text = "미션 완료",
+                    text = "저장",
                     style = SoptTheme.typography.h2,
                     color = SoptTheme.colors.white
                 )
@@ -183,9 +183,9 @@ fun EditIntroductionScreen(
 @DefaultPreview
 @Composable
 private fun EditIntroductionScreenPreview() {
-    EditIntroductionScreen(
+    UpdateProfileScreen(
         resultNavigator = EmptyResultBackNavigator(),
-        viewModel = EditIntroductionViewModel(
+        viewModel = UpdateProfileViewModel(
             UpdateProfileUseCase(
                 FakeUserRepository,
                 GetUserIdUseCase(FakeUserRepository)
