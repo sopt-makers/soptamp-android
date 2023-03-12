@@ -23,8 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -57,83 +59,91 @@ fun LoginPageScreen(
     viewModel: SoptampLoginViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    val viewState = viewModel.viewState.collectAsState()
-    if (viewState.value.isComplete) {
-        navigator.navigate(MissionListScreenDestination())
+    val viewState by viewModel.viewState.collectAsState()
+    LaunchedEffect(viewState) {
+        if (viewState.isComplete) {
+            navigator.navigate(MissionListScreenDestination())
+        }
     }
-    SoptTheme {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            val username = remember { mutableStateOf(TextFieldValue()) }
-            val password = remember { mutableStateOf(TextFieldValue()) }
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_soptamp),
-                contentDescription = "soptamp logo",
-                modifier = Modifier.padding(vertical = 72.dp)
-            )
-
+    LaunchedEffect(Unit) {
+        viewModel.onAutoLogin()
+    }
+    
+    if (!viewState.isComplete) {
+        SoptTheme {
             Column(
-                horizontalAlignment = Alignment.End
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                LoginTextField(
-                    inputDesc = "이메일을 입력해주세요",
-                    input = username,
-                    fillMaxWidth = true,
-                    keyboardType = KeyboardType.Email,
-                    putInput = { input ->
-                        viewModel.handleAction(LoginAction.PutEmail(input))
-                    }
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                LoginTextField(
-                    inputDesc = "비밀번호를 입력해주세요",
-                    input = password,
-                    fillMaxWidth = true,
-                    keyboardType = KeyboardType.Password,
-                    putInput = { input ->
-                        viewModel.handleAction(LoginAction.PutPassword(input))
-                    }
+                val username = remember { mutableStateOf(TextFieldValue()) }
+                val password = remember { mutableStateOf(TextFieldValue()) }
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_soptamp),
+                    contentDescription = "soptamp logo",
+                    modifier = Modifier.padding(vertical = 72.dp)
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "계정찾기",
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.clickable(onClick = { }),
-                    style = SoptTheme.typography.caption3,
-                    color = SoptTheme.colors.onSurface50
-                )
-            }
-
-            Spacer(modifier = Modifier.height(56.dp))
-            Box {
-                Button(
-                    onClick = { viewModel.handleAction(LoginAction.Login) },
-                    shape = RoundedCornerShape(9.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0xFFC292FF),
-                        contentColor = Color(0xFFFFFFFF)
-                    )
+                Column(
+                    horizontalAlignment = Alignment.End
                 ) {
-                    Text(text = "로그인")
-                }
-            }
+                    Spacer(modifier = Modifier.height(20.dp))
+                    LoginTextField(
+                        inputDesc = "이메일을 입력해주세요",
+                        input = username,
+                        fillMaxWidth = true,
+                        keyboardType = KeyboardType.Email,
+                        putInput = { input ->
+                            viewModel.handleAction(LoginAction.PutEmail(input))
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    LoginTextField(
+                        inputDesc = "비밀번호를 입력해주세요",
+                        input = password,
+                        fillMaxWidth = true,
+                        keyboardType = KeyboardType.Password,
+                        putInput = { input ->
+                            viewModel.handleAction(LoginAction.PutPassword(input))
+                        }
+                    )
 
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = "회원가입",
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable(onClick = { navigator.navigate(SignUpPageScreenDestination) }),
-                style = SoptTheme.typography.caption1
-            )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "계정찾기",
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.clickable(onClick = { }),
+                        style = SoptTheme.typography.caption3,
+                        color = SoptTheme.colors.onSurface50
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(56.dp))
+                Box {
+                    Button(
+                        onClick = { viewModel.handleAction(LoginAction.Login) },
+                        shape = RoundedCornerShape(9.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFFC292FF),
+                            contentColor = Color(0xFFFFFFFF)
+                        )
+                    ) {
+                        Text(text = "로그인")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "회원가입",
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.clickable(onClick = { navigator.navigate(SignUpPageScreenDestination) }),
+                    style = SoptTheme.typography.caption1
+                )
+            }
         }
     }
 }

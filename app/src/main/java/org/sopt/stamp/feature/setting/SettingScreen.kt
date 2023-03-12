@@ -137,7 +137,7 @@ fun SettingScreen(
                 )
                 .padding(horizontal = 16.dp)
         ) {
-            viewModel.onClearAllStamps()
+            viewModel.onShowDialog(SettingScreenAction.CLEAR_ALL_STAMP)
         }
     )
 
@@ -155,13 +155,13 @@ fun SettingScreen(
             viewModel.onLogout()
         }
     )
+    val uiState by viewModel.uiState.collectAsState(null)
+    val context = LocalContext.current
 
     SoptTheme {
         SoptColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            val uiState by viewModel.uiState.collectAsState(null)
-            val context = LocalContext.current
 
             LaunchedEffect(uiState) {
                 when (uiState) {
@@ -220,14 +220,14 @@ fun SettingScreen(
                     textDecoration = TextDecoration.Underline
                 )
             }
-            if (uiState is SettingUiState.Dialog) {
-                AlertDialog(
-                    action = (uiState as SettingUiState.Dialog).action,
-                    onLogout = { viewModel.onLogout() },
-                    onClearStamps = { viewModel.onClearAllStamps() },
-                    onDismiss = { viewModel.onDismiss() }
-                )
-            }
+        }
+        if (uiState is SettingUiState.Dialog) {
+            AlertDialog(
+                action = (uiState as SettingUiState.Dialog).action,
+                onLogout = { viewModel.onLogout() },
+                onClearStamps = { viewModel.onClearAllStamps() },
+                onDismiss = { viewModel.onDismiss() }
+            )
         }
     }
 }
@@ -243,7 +243,7 @@ private fun AlertDialog(
         when (action) {
             SettingScreenAction.LOGOUT -> {
                 AlertDialogModel(
-                    "미션을 초기화 하시겠습니까?",
+                    "로그아웃을 하시겠습니까?",
                     "사진, 메모가 삭제되고\n전체 미션이 미완료상태로 초기화됩니다.",
                     { onDismiss() },
                     { onLogout() }
@@ -252,9 +252,10 @@ private fun AlertDialog(
 
             SettingScreenAction.CLEAR_ALL_STAMP -> {
                 AlertDialogModel(
-                    title = "달성한 미션을 삭제하시겠습니까?",
-                    onCancel = { onDismiss() },
-                    onConfirm = { onClearStamps() }
+                    "미션을 초기화 하시겠습니까?",
+                    "사진, 메모가 삭제되고\n전체 미션이 미완료상태로 초기화됩니다.",
+                    { onDismiss() },
+                    { onClearStamps() }
                 )
             }
         }

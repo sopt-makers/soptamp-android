@@ -48,7 +48,6 @@ class SettingScreenViewModel @Inject constructor(
     val uiState = _uiState.asSharedFlow()
     fun onClearAllStamps() {
         viewModelScope.launch {
-            _uiState.tryEmit(SettingUiState.Dialog(SettingScreenAction.CLEAR_ALL_STAMP))
             stampRepository.deleteAllStamps(getUserIdUseCase())
                 .onSuccess {
                     _uiState.emit(SettingUiState.Success(SettingScreenAction.CLEAR_ALL_STAMP))
@@ -61,7 +60,6 @@ class SettingScreenViewModel @Inject constructor(
 
     fun onLogout() {
         viewModelScope.launch {
-            _uiState.tryEmit(SettingUiState.Dialog(SettingScreenAction.LOGOUT))
             userRepository.logout()
                 .onSuccess {
                     _uiState.emit(SettingUiState.Success(SettingScreenAction.LOGOUT))
@@ -70,6 +68,10 @@ class SettingScreenViewModel @Inject constructor(
                     _uiState.emit(SettingUiState.Failure(it))
                 }
         }
+    }
+
+    fun onShowDialog(action: SettingScreenAction) {
+        _uiState.tryEmit(SettingUiState.Dialog(action))
     }
 
     fun onDismiss() {
