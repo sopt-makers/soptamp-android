@@ -83,7 +83,7 @@ fun LoginPageScreen(
 
                 Image(
                     painter = painterResource(id = R.drawable.ic_soptamp),
-                    contentDescription = "soptamp logo",
+                    contentDescription = "soptamp logo"
                 )
                 Spacer(modifier = Modifier.height(72.dp))
                 Column(
