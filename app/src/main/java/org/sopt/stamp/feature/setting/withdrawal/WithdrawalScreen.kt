@@ -107,7 +107,7 @@ fun WithdrawalScreen(
                         fontSize = 13.sp,
                         lineBreak = LineBreak.Paragraph
                     ),
-                color = SoptTheme.colors.onSurface60,
+                color = SoptTheme.colors.onSurface60
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(

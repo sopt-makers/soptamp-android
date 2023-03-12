@@ -84,7 +84,6 @@ class UpdateNicknameViewModel @Inject constructor(
                         }
                 }
         }
-
     }
 
     fun onUpdateNickname(new: String) {
