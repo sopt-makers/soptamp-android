@@ -40,13 +40,12 @@ import com.jakewharton.processphoenix.ProcessPhoenix
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import com.ramcosta.composedestinations.result.EmptyResultRecipient
-import com.ramcosta.composedestinations.result.ResultRecipient
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.SettingNavGraph
 import org.sopt.stamp.designsystem.component.dialog.DoubleOptionDialog
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
+import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.Access300
 import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.SoptTheme
@@ -54,6 +53,7 @@ import org.sopt.stamp.domain.fake.FakeStampRepository
 import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import org.sopt.stamp.feature.destinations.UpdateProfileScreenDestination
+import org.sopt.stamp.feature.destinations.WithdrawalScreenDestination
 import org.sopt.stamp.feature.setting.component.Section
 import org.sopt.stamp.feature.setting.model.SectionUiModel
 import org.sopt.stamp.util.DefaultPreview
@@ -63,7 +63,6 @@ import org.sopt.stamp.util.DefaultPreview
 @Composable
 fun SettingScreen(
     navigator: DestinationsNavigator,
-    updateProfileResultRecipient: ResultRecipient<UpdateProfileScreenDestination, Boolean>,
     viewModel: SettingScreenViewModel = hiltViewModel()
 ) {
     val myInfoSectionItems = remember {
@@ -218,6 +217,11 @@ fun SettingScreen(
             ) {
                 Text(
                     text = "탈퇴하기",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .noRippleClickable {
+                            navigator.navigate(WithdrawalScreenDestination)
+                        },
                     style = SoptTheme.typography.caption1,
                     color = SoptTheme.colors.onSurface40,
                     textDecoration = TextDecoration.Underline
@@ -246,10 +250,9 @@ private fun AlertDialog(
         when (action) {
             SettingScreenAction.LOGOUT -> {
                 AlertDialogModel(
-                    "로그아웃을 하시겠습니까?",
-                    "사진, 메모가 삭제되고\n전체 미션이 미완료상태로 초기화됩니다.",
-                    { onDismiss() },
-                    { onLogout() }
+                    title = "로그아웃을 하시겠습니까?",
+                    onCancel = { onDismiss() },
+                    onConfirm = { onLogout() }
                 )
             }
 
@@ -284,7 +287,6 @@ private data class AlertDialogModel(
 private fun SettingScreenPreview() {
     SettingScreen(
         navigator = EmptyDestinationsNavigator,
-        updateProfileResultRecipient = EmptyResultRecipient(),
         viewModel = SettingScreenViewModel(
             FakeUserRepository,
             FakeStampRepository,
