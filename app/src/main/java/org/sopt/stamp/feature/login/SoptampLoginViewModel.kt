@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.local.SoptampDataStore
 import org.sopt.stamp.data.repository.RemoteUserRepository
-import org.sopt.stamp.domain.usecase.AutoLoginUseCase
+import org.sopt.stamp.domain.usecase.auth.AutoLoginUseCase
 import javax.inject.Inject
 
 @HiltViewModel

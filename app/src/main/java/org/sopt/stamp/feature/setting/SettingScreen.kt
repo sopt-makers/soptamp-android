@@ -52,7 +52,7 @@ import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeStampRepository
 import org.sopt.stamp.domain.fake.FakeUserRepository
-import org.sopt.stamp.domain.usecase.GetUserIdUseCase
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import org.sopt.stamp.feature.destinations.UpdateProfileScreenDestination
 import org.sopt.stamp.feature.setting.component.Section
 import org.sopt.stamp.feature.setting.model.SectionUiModel

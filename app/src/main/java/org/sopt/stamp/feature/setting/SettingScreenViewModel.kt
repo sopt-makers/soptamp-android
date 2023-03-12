@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.sopt.stamp.domain.repository.StampRepository
 import org.sopt.stamp.domain.repository.UserRepository
-import org.sopt.stamp.domain.usecase.GetUserIdUseCase
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import timber.log.Timber
 import javax.inject.Inject
 

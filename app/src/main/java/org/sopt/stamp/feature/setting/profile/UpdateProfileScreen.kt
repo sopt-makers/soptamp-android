@@ -57,8 +57,8 @@ import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.Purple300
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeUserRepository
-import org.sopt.stamp.domain.usecase.GetUserIdUseCase
-import org.sopt.stamp.domain.usecase.UpdateProfileUseCase
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
+import org.sopt.stamp.domain.usecase.user.UpdateProfileUseCase
 import org.sopt.stamp.util.DefaultPreview
 import org.sopt.stamp.util.addFocusCleaner
 
