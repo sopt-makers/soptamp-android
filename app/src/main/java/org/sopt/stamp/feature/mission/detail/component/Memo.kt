@@ -38,6 +38,7 @@ import org.sopt.stamp.util.DefaultPreview
 @Composable
 fun Memo(
     value: String,
+    placeHolder: String,
     onValueChange: (String) -> Unit,
     borderColor: Color,
     isEditable: Boolean
@@ -86,7 +87,7 @@ fun Memo(
         textStyle = SoptTheme.typography.caption1,
         placeholder = {
             Text(
-                text = "메모를 작성해 주세요.",
+                text = placeHolder,
                 style = SoptTheme.typography.caption1
             )
         },
@@ -102,7 +103,8 @@ private fun MemoPreview() {
             value = "안돼",
             onValueChange = {},
             borderColor = getRankTextColor(2),
-            true
+            placeHolder = "",
+            isEditable = true
         )
     }
 }

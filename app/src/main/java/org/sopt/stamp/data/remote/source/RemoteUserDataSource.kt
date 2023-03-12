@@ -15,17 +15,20 @@
  */
 package org.sopt.stamp.data.remote.source
 
+import org.sopt.stamp.data.remote.api.RankService
 import org.sopt.stamp.data.remote.api.UserService
 import org.sopt.stamp.data.remote.model.request.LoginRequest
 import org.sopt.stamp.data.remote.model.request.SignUpRequest
 import org.sopt.stamp.data.remote.model.request.UpdateNicknameRequest
 import org.sopt.stamp.data.remote.model.request.UpdatePasswordRequest
+import org.sopt.stamp.data.remote.model.request.UpdateProfileMessageRequest
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import org.sopt.stamp.data.source.UserDataSource
 import javax.inject.Inject
 
-class RemoteUserDataSource @Inject constructor(
-    private val userService: UserService
+internal class RemoteUserDataSource @Inject constructor(
+    private val userService: UserService,
+    private val rankService: RankService
 ) : UserDataSource {
     override suspend fun signup(
         nickname: String,
@@ -87,5 +90,9 @@ class RemoteUserDataSource @Inject constructor(
 
     override suspend fun updateNickname(userId: Int, new: String) {
         userService.updateNickname(userId, UpdateNicknameRequest(new))
+    }
+
+    override suspend fun updateProfileMessage(userId: Int, new: String) {
+        rankService.updateProfileMessage(userId, UpdateProfileMessageRequest(new))
     }
 }

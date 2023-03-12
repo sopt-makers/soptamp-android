@@ -50,7 +50,7 @@ class RemoteUserRepository @Inject constructor(
         userId: Int,
         profileMessage: String
     ): Result<Unit> = runCatching {
-        remote.updateNickname(userId, profileMessage)
+        remote.updateProfileMessage(userId, profileMessage)
     }.onSuccess {
         local.profileMessage = profileMessage
     }
