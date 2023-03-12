@@ -44,9 +44,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.LoginNavGraph
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.domain.fake.FakeUserRepository
+import org.sopt.stamp.domain.usecase.auth.AutoLoginUseCase
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import org.sopt.stamp.feature.destinations.MissionListScreenDestination
 import org.sopt.stamp.feature.destinations.SignUpPageScreenDestination
 import org.sopt.stamp.feature.login.LoginAction
@@ -59,9 +63,9 @@ fun LoginPageScreen(
     viewModel: SoptampLoginViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    val viewState by viewModel.viewState.collectAsState()
-    LaunchedEffect(viewState) {
-        if (viewState.isComplete) {
+    val uiState by viewModel.uiState.collectAsState()
+    LaunchedEffect(uiState) {
+        if (uiState.isComplete) {
             navigator.navigate(MissionListScreenDestination())
         }
     }
@@ -69,7 +73,7 @@ fun LoginPageScreen(
         viewModel.onAutoLogin()
     }
 
-    if (!viewState.isComplete) {
+    if (!uiState.isComplete) {
         SoptTheme {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -200,6 +204,12 @@ private fun LoginTextField(
 @Composable
 fun PreviewLoginScreen() {
     SoptTheme {
-        // LoginPageScreen()
+        LoginPageScreen(
+            viewModel = SoptampLoginViewModel(
+                FakeUserRepository,
+                AutoLoginUseCase(GetUserIdUseCase(FakeUserRepository))
+            ),
+            navigator = EmptyDestinationsNavigator
+        )
     }
 }

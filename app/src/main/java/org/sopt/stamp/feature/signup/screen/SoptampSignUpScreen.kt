@@ -38,6 +38,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import org.sopt.stamp.config.navigation.SignUpNavGraph
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.feature.signup.SignUpAction
 import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 
@@ -48,13 +49,13 @@ fun SignUpPageScreen(
     viewModel: SoptampSignUpViewModel = hiltViewModel()
 ) {
     SoptTheme {
-        Scaffold(topBar = { SoptTopAppBar(title = { Text(text = "회원가입") }) }) { paddingValues ->
-            val defaultPadding = PaddingValues(
-                top = 0.dp,
-                bottom = paddingValues.calculateBottomPadding(),
-                start = 16.dp,
-                end = 16.dp
-            )
+        Scaffold(
+            topBar = {
+                SoptTopAppBar(
+                    title = { Text(text = "회원가입") }
+                )
+            }
+        ) { padding ->
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.Center,
@@ -226,6 +227,8 @@ private fun SignUpTextField(
 @Composable
 fun PreviewSignUpScreen() {
     SoptTheme {
-        SignUpPageScreen()
+        SignUpPageScreen(
+            viewModel = SoptampSignUpViewModel(FakeUserRepository)
+        )
     }
 }

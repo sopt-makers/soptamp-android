@@ -43,6 +43,7 @@ object FakeUserRepository : UserRepository {
     override suspend fun updatePassword(userId: Int, password: String) = runCatching {}
 
     override suspend fun updateNickname(userId: Int, nickname: String) = runCatching {}
+    override fun updateLocalUserInfo(userId: Int, profileMessage: String) = Unit
 
     override fun fetchUserId() = 1
 }

@@ -21,7 +21,7 @@ import org.sopt.stamp.domain.model.User
 import org.sopt.stamp.domain.repository.UserRepository
 import javax.inject.Inject
 
-class RemoteUserRepository @Inject constructor(
+class UserRepositoryImpl @Inject constructor(
     private val remote: UserDataSource,
     private val local: SoptampDataStore
 ) : UserRepository {
@@ -69,6 +69,13 @@ class RemoteUserRepository @Inject constructor(
         remote.updateNickname(userId, nickname)
     }.onSuccess {
         local.nickname = nickname
+    }
+
+    override fun updateLocalUserInfo(userId: Int, profileMessage: String) {
+        local.apply {
+            this.userId = userId
+            this.profileMessage = profileMessage
+        }
     }
 
     override fun fetchUserId() = local.userId

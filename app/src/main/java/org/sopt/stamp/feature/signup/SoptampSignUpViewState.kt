@@ -16,13 +16,9 @@
 package org.sopt.stamp.feature.signup
 
 data class SoptampSignUpViewState(
-    val nickname: String?,
-    val email: String?,
-    val password: String?,
-    val passwordConfirm: String?,
-    val errorMessage: String?
-) {
-    companion object {
-        fun init() = SoptampSignUpViewState(null, null, null, null, null)
-    }
-}
+    val nickname: String? = null,
+    val email: String? = null,
+    val password: String? = null,
+    val passwordConfirm: String? = null,
+    val errorMessage: String? = null
+)

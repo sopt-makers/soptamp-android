@@ -22,19 +22,19 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.sopt.stamp.data.repository.RemoteUserRepository
+import org.sopt.stamp.domain.repository.UserRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class SoptampSignUpViewModel @Inject constructor(
-    private val userRepository: RemoteUserRepository
+    private val userRepository: UserRepository
 ) : ViewModel(), SignUpHandleAction {
-    private val _viewState = MutableStateFlow(SoptampSignUpViewState.init())
-    val viewState = _viewState.asStateFlow()
+    private val _uiState = MutableStateFlow(SoptampSignUpViewState())
+    val uiState = _uiState.asStateFlow()
 
-    private val _singleEvent = Channel<SingleEvent>(Channel.BUFFERED)
-    val singleEvent = _singleEvent.receiveAsFlow()
+    private val _uiEvent = Channel<SingleEvent>(Channel.BUFFERED)
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     override fun handleAction(action: SignUpAction) {
         when (action) {
@@ -52,21 +52,21 @@ class SoptampSignUpViewModel @Inject constructor(
     private fun signUp() {
         viewModelScope.launch {
             userRepository.signup(
-                viewState.value.nickname.orEmpty(),
-                viewState.value.email.orEmpty(),
-                viewState.value.password.orEmpty(),
+                uiState.value.nickname.orEmpty(),
+                uiState.value.email.orEmpty(),
+                uiState.value.password.orEmpty(),
                 "android",
                 "null"
             ).let { res ->
                 res.message.let {
-                    _viewState.update { prevState ->
+                    _uiState.update { prevState ->
                         prevState.copy(
                             errorMessage = it
                         )
                     }
                 }
                 if (res.statusCode == 200) {
-                    _singleEvent.trySend(SingleEvent.SignUpSuccess)
+                    _uiEvent.trySend(SingleEvent.SignUpSuccess)
                 }
             }
         }
@@ -74,14 +74,14 @@ class SoptampSignUpViewModel @Inject constructor(
 
     private fun checkNickname() {
         viewModelScope.launch {
-            viewState.value.nickname?.let {
+            uiState.value.nickname?.let {
                 runCatching {
                     userRepository.checkNickname(it)
                 }.onSuccess {
-                    _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
+                    _uiEvent.trySend(SingleEvent.CheckNicknameSuccess)
                 }.onFailure { error ->
                     Timber.e(error)
-                    _viewState.update { state ->
+                    _uiState.update { state ->
                         state.copy(errorMessage = error.message)
                     }
                 }
@@ -91,17 +91,17 @@ class SoptampSignUpViewModel @Inject constructor(
 
     private fun checkEmail() {
         viewModelScope.launch {
-            viewState.value.email?.let {
+            uiState.value.email?.let {
                 userRepository.checkEmail(it).let { res ->
                     res.message.let {
-                        _viewState.update { prevState ->
+                        _uiState.update { prevState ->
                             prevState.copy(
                                 errorMessage = it
                             )
                         }
                     }
                     if (res.statusCode == 200) {
-                        _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
+                        _uiEvent.trySend(SingleEvent.CheckEmailSuccess)
                     }
                 }
             }
@@ -110,18 +110,18 @@ class SoptampSignUpViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class)
     private fun checkPassword() {
-        viewState.debounce(200)
+        uiState.debounce(200)
             .onEach { state ->
                 if (!state.password.isNullOrBlank() && !state.passwordConfirm.isNullOrBlank() &&
                     (state.password == state.passwordConfirm)
                 ) {
-                    _viewState.update { prevState ->
+                    _uiState.update { prevState ->
                         prevState.copy(
                             errorMessage = ""
                         )
                     }
                 } else {
-                    _viewState.update { prevState ->
+                    _uiState.update { prevState ->
                         prevState.copy(
                             errorMessage = ""
                         )
@@ -131,7 +131,7 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun putNickname(input: String) {
-        _viewState.update { prevState ->
+        _uiState.update { prevState ->
             prevState.copy(
                 nickname = input
             )
@@ -139,7 +139,7 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun putEmail(input: String) {
-        _viewState.update { prevState ->
+        _uiState.update { prevState ->
             prevState.copy(
                 email = input
             )
@@ -147,7 +147,7 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun putPassword(input: String) {
-        _viewState.update { prevState ->
+        _uiState.update { prevState ->
             prevState.copy(
                 password = input
             )
@@ -156,7 +156,7 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun putPasswordConfirm(input: String) {
-        _viewState.update { prevState ->
+        _uiState.update { prevState ->
             prevState.copy(
                 passwordConfirm = input
             )

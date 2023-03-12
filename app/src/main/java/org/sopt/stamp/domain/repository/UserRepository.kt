@@ -27,5 +27,6 @@ interface UserRepository {
     suspend fun updateProfileMessage(userId: Int, profileMessage: String): Result<Unit>
     suspend fun updatePassword(userId: Int, password: String): Result<Unit>
     suspend fun updateNickname(userId: Int, nickname: String): Result<Unit>
+    fun updateLocalUserInfo(userId: Int, profileMessage: String)
     fun fetchUserId(): Int
 }
