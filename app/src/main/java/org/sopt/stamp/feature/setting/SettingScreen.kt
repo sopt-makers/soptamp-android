@@ -52,6 +52,7 @@ import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeStampRepository
 import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
+import org.sopt.stamp.feature.destinations.UpdateNicknameScreenDestination
 import org.sopt.stamp.feature.destinations.UpdateProfileScreenDestination
 import org.sopt.stamp.feature.destinations.WithdrawalScreenDestination
 import org.sopt.stamp.feature.setting.component.Section
@@ -92,7 +93,7 @@ fun SettingScreen(
                     )
                     .padding(horizontal = 16.dp)
             ) {
-                // TODO by Nunu 닉네임 변경 화면으로 넘어가기
+                navigator.navigate(UpdateNicknameScreenDestination)
             }
         )
     }

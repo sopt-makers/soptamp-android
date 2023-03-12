@@ -16,6 +16,7 @@
 package org.sopt.stamp.feature.setting.withdrawal
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -78,6 +79,7 @@ fun WithdrawalScreen(
     SoptTheme {
         SoptColumn(
             modifier = Modifier.fillMaxSize()
+                .background(SoptTheme.colors.white)
         ) {
             Toolbar(
                 modifier = Modifier.padding(bottom = 10.dp),
