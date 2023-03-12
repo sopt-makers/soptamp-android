@@ -162,7 +162,6 @@ fun SettingScreen(
         SoptColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-
             LaunchedEffect(uiState) {
                 when (uiState) {
                     is SettingUiState.Success -> {
