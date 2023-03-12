@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.feature.mission.detail.component
+package org.sopt.stamp.designsystem.component.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,14 +31,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
-fun DeleteStampDialog(
-    onDelete: () -> Unit,
+fun DoubleOptionDialog(
+    title: String,
+    subTitle: String = "",
+    onConfirm: () -> Unit,
     onCancel: () -> Unit
 ) {
     Box(
@@ -57,7 +61,7 @@ fun DeleteStampDialog(
                     shape = RoundedCornerShape(10.dp)
                 )
         ) {
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 30.dp)
@@ -65,13 +69,23 @@ fun DeleteStampDialog(
                         color = SoptTheme.colors.white,
                         shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
                     ),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "달성한 미션을 삭제하시겠습니까?",
+                    text = title,
                     style = SoptTheme.typography.sub1,
                     color = SoptTheme.colors.onSurface90
                 )
+                if (subTitle.isNotBlank()) {
+                    Text(
+                        text = subTitle,
+                        modifier = Modifier.padding(top = 6.dp),
+                        style = SoptTheme.typography.caption3,
+                        color = SoptTheme.colors.onSurface50,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
             Row(
                 modifier = Modifier.background(
@@ -104,7 +118,7 @@ fun DeleteStampDialog(
                             color = SoptTheme.colors.error200,
                             shape = RoundedCornerShape(bottomEnd = 10.dp)
                         )
-                        .clickable { onDelete() }
+                        .clickable { onConfirm() }
                 ) {
                     Text(
                         text = "삭제",
@@ -120,8 +134,13 @@ fun DeleteStampDialog(
 
 @DefaultPreview
 @Composable
-fun DeleteStampDialog() {
+fun DoubleOptionDialogPreview() {
     SoptTheme {
-        DeleteStampDialog(onDelete = { }, onCancel = { })
+        DoubleOptionDialog(
+            title = "미션을 초기화 하시겠습니까?",
+            subTitle = " 사진, 메모가 삭제되고\n전체 미션이 미완료상태로 초기화됩니다.",
+            onConfirm = { },
+            onCancel = { }
+        )
     }
 }

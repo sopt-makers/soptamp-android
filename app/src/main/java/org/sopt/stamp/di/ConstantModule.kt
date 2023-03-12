@@ -31,4 +31,9 @@ object ConstantModule {
     @Singleton
     @Strings(Constant.SOPTAMP_API_KEY)
     fun provideBaseUrl() = BuildConfig.SOPTAMP_API_KEY
+
+    @Provides
+    @Singleton
+    @Strings(Constant.SOPTAMP_DATA_STORE)
+    fun provideSoptampDataStoreKey() = BuildConfig.SOPTAMP_DATA_STORE_KEY
 }

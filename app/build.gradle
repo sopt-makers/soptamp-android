@@ -31,6 +31,7 @@ android {
         }
 
         buildConfigField "String", "SOPTAMP_API_KEY", properties["apiKey"]
+        buildConfigField "String", "SOPTAMP_DATA_STORE_KEY", properties["dataStoreKey"]
     }
 
     buildTypes {
@@ -88,7 +89,7 @@ dependencies {
     implementation libs.retrofit.kotlin.serialization.converter
     implementation libs.timber
     implementation libs.coil.compose
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation libs.process.phoenix
 
     implementation libs.bundles.compose
 

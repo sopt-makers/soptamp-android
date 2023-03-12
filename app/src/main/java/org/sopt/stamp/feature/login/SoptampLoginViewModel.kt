@@ -26,12 +26,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.local.SoptampDataStore
 import org.sopt.stamp.data.repository.RemoteUserRepository
+import org.sopt.stamp.domain.usecase.AutoLoginUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SoptampLoginViewModel @Inject constructor(
     private val userRepository: RemoteUserRepository,
-    private val dataStore: SoptampDataStore
+    private val dataStore: SoptampDataStore,
+    private val autoLoginUseCase: AutoLoginUseCase
 ) : ViewModel(), LoginHandleAction {
 
     private val _viewState = MutableStateFlow(SoptampLoginViewState.init())
@@ -48,6 +50,13 @@ class SoptampLoginViewModel @Inject constructor(
         }
     }
 
+    fun onAutoLogin() {
+        val result = autoLoginUseCase()
+        if (result) {
+            updateLoginComplete()
+        }
+    }
+
     private fun login() {
         viewModelScope.launch {
             userRepository.login(viewState.value.email.orEmpty(), viewState.value.password.orEmpty()).let { res ->
@@ -59,8 +68,8 @@ class SoptampLoginViewModel @Inject constructor(
                     }
                     if (res.statusCode == 200) {
                         _singleEvent.trySend(SingleEvent.LoginSuccess)
-                        res.userId?.let { dataStore.setUserId(it) }
-                        res.profileMessage?.let { dataStore.setProfileMessage(it) }
+                        res.userId?.let { dataStore.userId = it }
+                        res.profileMessage?.let { dataStore.profileMessage = it }
                         updateLoginComplete()
                     }
                 }

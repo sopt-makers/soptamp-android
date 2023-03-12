@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.data.source
+package org.sopt.stamp.domain.usecase
 
-import org.sopt.stamp.data.remote.model.response.UserResponse
+import javax.inject.Inject
 
-interface UserDataSource {
-    suspend fun signup(nickname: String, email: String, password: String, osType: String, clientToken: String): UserResponse
-    suspend fun checkNickname(nickname: String): UserResponse
-    suspend fun checkEmail(email: String): UserResponse
-    suspend fun login(email: String, password: String): UserResponse
-    suspend fun withdraw(userId: Int)
-    suspend fun updatePassword(userId: Int, new: String)
-    suspend fun updateNickname(userId: Int, new: String)
+class AutoLoginUseCase @Inject constructor(
+    private val getUserIdUseCase: GetUserIdUseCase
+) {
+    operator fun invoke() = getUserIdUseCase() != -1
 }

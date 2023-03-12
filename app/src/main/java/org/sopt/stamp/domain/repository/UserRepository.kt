@@ -22,4 +22,10 @@ interface UserRepository {
     suspend fun checkNickname(nickname: String): User
     suspend fun checkEmail(email: String): User
     suspend fun login(email: String, password: String): User
+    suspend fun logout(): Result<Unit>
+    suspend fun withdraw(userId: Int): Result<Unit>
+    suspend fun updateProfileMessage(userId: Int, profileMessage: String): Result<Unit>
+    suspend fun updatePassword(userId: Int, password: String): Result<Unit>
+    suspend fun updateNickname(userId: Int, nickname: String): Result<Unit>
+    fun fetchUserId(): Int
 }

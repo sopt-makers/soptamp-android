@@ -13,29 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.domain.repository
+package org.sopt.stamp.domain.fake
 
 import org.sopt.stamp.domain.model.Archive
+import org.sopt.stamp.domain.repository.StampRepository
 import org.sopt.stamp.feature.mission.model.ImageModel
 
-interface StampRepository {
-    suspend fun completeMission(
+object FakeStampRepository : StampRepository {
+    private val fakeArchive = Archive(
+        id = 1,
+        contents = "",
+        images = listOf(""),
+        userId = 1,
+        missionId = 1
+    )
+
+    override suspend fun completeMission(
         missionId: Int,
         imageUri: ImageModel,
         content: String
-    ): Result<Unit>
+    ): Result<Unit> = runCatching { }
 
-    suspend fun getMissionContent(
-        missionId: Int
-    ): Result<Archive>
+    override suspend fun getMissionContent(missionId: Int) = runCatching { fakeArchive }
 
-    suspend fun modifyMission(
+    override suspend fun modifyMission(
         missionId: Int,
         imageUri: ImageModel,
         content: String
-    ): Result<Unit>
+    ) = runCatching { }
 
-    suspend fun deleteMission(missionId: Int): Result<Unit>
+    override suspend fun deleteMission(missionId: Int) = runCatching { }
 
-    suspend fun deleteAllStamps(userId: Int): Result<Unit>
+    override suspend fun deleteAllStamps(userId: Int) = runCatching { }
 }

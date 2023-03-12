@@ -53,7 +53,7 @@ import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
-import org.sopt.stamp.feature.mission.detail.component.DeleteStampDialog
+import org.sopt.stamp.designsystem.component.dialog.DoubleOptionDialog
 import org.sopt.stamp.feature.mission.detail.component.Header
 import org.sopt.stamp.feature.mission.detail.component.ImageContent
 import org.sopt.stamp.feature.mission.detail.component.Memo
@@ -185,11 +185,12 @@ fun MissionDetailScreen(
             )
         }
         if (isDeleteDialogVisible) {
-            DeleteStampDialog(
+            DoubleOptionDialog(
+                title = "달성한 미션을 삭제하시겠습니까?",
                 onCancel = {
                     viewModel.onChangeDeleteDialogVisibility(false)
                 },
-                onDelete = {
+                onConfirm = {
                     viewModel.onDelete()
                 }
             )

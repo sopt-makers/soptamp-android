@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.feature.setting
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -26,21 +27,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.SettingNavGraph
+import org.sopt.stamp.designsystem.component.dialog.DoubleOptionDialog
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.style.Access300
 import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.domain.fake.FakeStampRepository
+import org.sopt.stamp.domain.fake.FakeUserRepository
+import org.sopt.stamp.domain.usecase.GetUserIdUseCase
 import org.sopt.stamp.feature.setting.component.Section
 import org.sopt.stamp.feature.setting.model.SectionUiModel
 import org.sopt.stamp.util.DefaultPreview
@@ -127,7 +137,7 @@ fun SettingScreen(
                 )
                 .padding(horizontal = 16.dp)
         ) {
-            // TODO by Nunu 스탬프 초기화하기
+            viewModel.onShowDialog(SettingScreenAction.CLEAR_ALL_STAMP)
         }
     )
 
@@ -142,14 +152,41 @@ fun SettingScreen(
                 )
                 .padding(horizontal = 16.dp)
         ) {
-            // TODO by Nunu 로그아웃하기
+            viewModel.onLogout()
         }
     )
+    val uiState by viewModel.uiState.collectAsState(null)
+    val context = LocalContext.current
 
     SoptTheme {
         SoptColumn(
             modifier = Modifier.fillMaxSize()
         ) {
+            LaunchedEffect(uiState) {
+                when (uiState) {
+                    is SettingUiState.Success -> {
+                        val success: SettingUiState.Success = uiState as SettingUiState.Success
+                        when (success.action) {
+                            SettingScreenAction.LOGOUT -> {
+                                ProcessPhoenix.triggerRebirth(context)
+                            }
+
+                            SettingScreenAction.CLEAR_ALL_STAMP -> {}
+                        }
+                    }
+
+                    is SettingUiState.Failure -> {
+                        Toast.makeText(
+                            context,
+                            "요청에 실패했습니다. 재시도해주세요",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    else -> {}
+                }
+            }
+
             Toolbar(
                 modifier = Modifier.padding(bottom = 10.dp),
                 title = {
@@ -183,14 +220,70 @@ fun SettingScreen(
                 )
             }
         }
+        if (uiState is SettingUiState.Dialog) {
+            AlertDialog(
+                action = (uiState as SettingUiState.Dialog).action,
+                onLogout = { viewModel.onLogout() },
+                onClearStamps = { viewModel.onClearAllStamps() },
+                onDismiss = { viewModel.onDismiss() }
+            )
+        }
     }
 }
+
+@Composable
+private fun AlertDialog(
+    action: SettingScreenAction,
+    onLogout: () -> Unit,
+    onClearStamps: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val dialogParam = remember(action) {
+        when (action) {
+            SettingScreenAction.LOGOUT -> {
+                AlertDialogModel(
+                    "로그아웃을 하시겠습니까?",
+                    "사진, 메모가 삭제되고\n전체 미션이 미완료상태로 초기화됩니다.",
+                    { onDismiss() },
+                    { onLogout() }
+                )
+            }
+
+            SettingScreenAction.CLEAR_ALL_STAMP -> {
+                AlertDialogModel(
+                    "미션을 초기화 하시겠습니까?",
+                    "사진, 메모가 삭제되고\n전체 미션이 미완료상태로 초기화됩니다.",
+                    { onDismiss() },
+                    { onClearStamps() }
+                )
+            }
+        }
+    }
+    val (title, subTitle, onCancel, onConfirm) = dialogParam
+    DoubleOptionDialog(
+        title = title,
+        subTitle = subTitle,
+        onConfirm = onConfirm,
+        onCancel = onCancel
+    )
+}
+
+private data class AlertDialogModel(
+    val title: String,
+    val subTitle: String = "",
+    val onCancel: () -> Unit,
+    val onConfirm: () -> Unit
+)
 
 @DefaultPreview
 @Composable
 private fun SettingScreenPreview() {
     SettingScreen(
         navigator = EmptyDestinationsNavigator,
-        viewModel = SettingScreenViewModel()
+        viewModel = SettingScreenViewModel(
+            FakeUserRepository,
+            FakeStampRepository,
+            GetUserIdUseCase(FakeUserRepository)
+        )
     )
 }

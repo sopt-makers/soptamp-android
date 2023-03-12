@@ -41,7 +41,7 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.button.SoptampIconButton
-import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
+import org.sopt.stamp.designsystem.component.dialog.SingleOptionDialog
 import org.sopt.stamp.designsystem.component.layout.LoadingScreen
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
@@ -77,7 +77,7 @@ fun UserMissionListScreen(
             MissionsState.Loading -> LoadingScreen()
             is MissionsState.Failure -> {
                 when ((state as MissionsState.Failure).error) {
-                    Error.NetworkUnavailable -> NetworkErrorDialog {
+                    Error.NetworkUnavailable -> SingleOptionDialog {
                         missionsViewModel.fetchMissions()
                     }
                 }
