@@ -44,6 +44,7 @@ firebase = "31.2.3"
 ktlint = "11.3.1"
 lottie = "6.0.0"
 spotless = "6.16.0"
+process-pheonix = "2.1.2"
 
 [libraries]
 agp = { module = "com.android.tools.build:gradle", version.ref = "gradleplugin" }
@@ -79,7 +80,7 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 compose-destination-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "compose-destination" }
 compose-destination-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destination" }
 compose-hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "dagger-hilt-navigation-compose" }
-compose-lottie = {module="com.airbnb.android:lottie-compose", version.ref = "lottie"}
+compose-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 
@@ -120,6 +121,8 @@ mavericks-navigation = { module = "com.airbnb.android:mavericks-navigation", ver
 mavericks-mockable = { module = "com.airbnb.android:mavericks-mocking", version.ref = "mavericks" }
 
 ktlint = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
+
+process-phoenix = { module = "com.jakewharton:process-phoenix", version.ref = "process-pheonix" }
 
 [bundles]
 compose = [

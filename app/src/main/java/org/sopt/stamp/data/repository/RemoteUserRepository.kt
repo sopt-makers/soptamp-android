@@ -70,4 +70,6 @@ class RemoteUserRepository @Inject constructor(
     }.onSuccess {
         local.nickname = nickname
     }
+
+    override fun fetchUserId() = local.userId
 }

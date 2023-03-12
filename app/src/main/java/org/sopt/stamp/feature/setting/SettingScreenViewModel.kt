@@ -16,8 +16,63 @@
 package org.sopt.stamp.feature.setting
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import org.sopt.stamp.domain.repository.StampRepository
+import org.sopt.stamp.domain.repository.UserRepository
+import org.sopt.stamp.domain.usecase.GetUserIdUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
+enum class SettingScreenAction {
+    CLEAR_ALL_STAMP, LOGOUT;
+}
+
+sealed interface SettingUiState {
+    data class Success(val action: SettingScreenAction) : SettingUiState
+    data class Failure(val throwable: Throwable) : SettingUiState
+    data class Dialog(val action: SettingScreenAction) : SettingUiState
+    object Init : SettingUiState
+}
+
 @HiltViewModel
-class SettingScreenViewModel @Inject constructor() : ViewModel()
+class SettingScreenViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val stampRepository: StampRepository,
+    private val getUserIdUseCase: GetUserIdUseCase
+) : ViewModel() {
+    private val _uiState = MutableSharedFlow<SettingUiState?>(extraBufferCapacity = 1)
+    val uiState = _uiState.asSharedFlow()
+    fun onClearAllStamps() {
+        viewModelScope.launch {
+            _uiState.tryEmit(SettingUiState.Dialog(SettingScreenAction.CLEAR_ALL_STAMP))
+            stampRepository.deleteAllStamps(getUserIdUseCase())
+                .onSuccess {
+                    _uiState.emit(SettingUiState.Success(SettingScreenAction.CLEAR_ALL_STAMP))
+                }.onFailure {
+                    Timber.e(it)
+                    _uiState.emit(SettingUiState.Failure(it))
+                }
+        }
+    }
+
+    fun onLogout() {
+        viewModelScope.launch {
+            _uiState.tryEmit(SettingUiState.Dialog(SettingScreenAction.LOGOUT))
+            userRepository.logout()
+                .onSuccess {
+                    _uiState.emit(SettingUiState.Success(SettingScreenAction.LOGOUT))
+                }.onFailure {
+                    Timber.e(it)
+                    _uiState.emit(SettingUiState.Failure(it))
+                }
+        }
+    }
+
+    fun onDismiss() {
+        _uiState.tryEmit(SettingUiState.Init)
+    }
+}

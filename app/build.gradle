@@ -89,7 +89,7 @@ dependencies {
     implementation libs.retrofit.kotlin.serialization.converter
     implementation libs.timber
     implementation libs.coil.compose
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation libs.process.phoenix
 
     implementation libs.bundles.compose
 
