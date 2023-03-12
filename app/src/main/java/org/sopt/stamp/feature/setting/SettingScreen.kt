@@ -73,7 +73,7 @@ fun SettingScreen(
                 title = "한 마디 편집",
                 optionIconResId = R.drawable.arrow_right
             ) {
-                // TODO by Nunu 한 마디 편집 화면으로 넘어가기
+                navigator.navigate(EditIntroductionScreenDestination)
             },
             SectionUiModel.Spacer,
             SectionUiModel.Option(

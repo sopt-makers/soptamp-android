@@ -38,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
@@ -67,10 +69,14 @@ fun EditIntroductionScreen(
     val isFocused by viewModel.isFocused.collectAsState(false)
     val textFieldModifier = remember(isFocused) {
         val modifier = Modifier
+            .focusRequester(focusRequester)
             .fillMaxWidth()
             .padding(14.dp)
             .defaultMinSize(minHeight = 132.dp)
             .clip(RoundedCornerShape(10.dp))
+            .onFocusChanged {
+                viewModel.onUpdateFocusState(it.isFocused)
+            }
 
         if (!isFocused) {
             modifier
