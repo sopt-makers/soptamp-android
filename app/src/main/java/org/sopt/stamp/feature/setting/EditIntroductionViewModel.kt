@@ -17,7 +17,27 @@ package org.sopt.stamp.feature.setting
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+data class EditIntroductionUiState(
+    val introduction: String = "",
+    val isFocused: Boolean = false
+)
+
 @HiltViewModel
-class EditIntroductionViewModel @Inject constructor() : ViewModel()
+class EditIntroductionViewModel @Inject constructor() : ViewModel() {
+    private val uiState = MutableStateFlow(EditIntroductionUiState())
+    val isFocused = uiState.map { it.isFocused }
+    val introduction = uiState.map { it.introduction }
+
+    fun onUpdateFocusState(isFocused: Boolean) {
+        uiState.update { it.copy(isFocused = isFocused) }
+    }
+
+    fun onIntroductionChanged(introduction: String) {
+        uiState.value = uiState.value.copy(introduction = introduction)
+    }
+}

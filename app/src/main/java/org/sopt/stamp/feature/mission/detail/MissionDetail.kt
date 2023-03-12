@@ -141,7 +141,7 @@ fun MissionDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 ImageContent(imageModel, viewModel::onChangeImage, isEditable)
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(content, viewModel::onChangeContent, getRankTextColor(level.value), isEditable)
+                Memo(content, "메모를 작성해 주세요.", viewModel::onChangeContent, getRankTextColor(level.value), isEditable)
                 if (!isEditable) {
                     Row(
                         horizontalArrangement = Arrangement.End,
