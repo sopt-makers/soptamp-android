@@ -171,7 +171,7 @@ fun EditIntroductionScreen(
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 Text(
-                    text = "미션 완료",
+                    text = "저장",
                     style = SoptTheme.typography.h2,
                     color = SoptTheme.colors.white
                 )
