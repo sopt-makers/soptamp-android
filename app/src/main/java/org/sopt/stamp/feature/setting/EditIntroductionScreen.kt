@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.feature.setting
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,6 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +43,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -53,6 +56,9 @@ import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.Purple300
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.domain.fake.FakeUserRepository
+import org.sopt.stamp.domain.usecase.GetUserIdUseCase
+import org.sopt.stamp.domain.usecase.UpdateProfileUseCase
 import org.sopt.stamp.util.DefaultPreview
 import org.sopt.stamp.util.addFocusCleaner
 
@@ -65,8 +71,11 @@ fun EditIntroductionScreen(
 ) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
     val introduction by viewModel.introduction.collectAsState("")
     val isFocused by viewModel.isFocused.collectAsState(false)
+    val isSuccess by viewModel.isSuccess.collectAsState(false)
+    val error by viewModel.error.collectAsState(null)
     val textFieldModifier = remember(isFocused) {
         val modifier = Modifier
             .focusRequester(focusRequester)
@@ -90,6 +99,20 @@ fun EditIntroductionScreen(
     }
     val backgroundColor = remember(isFocused) {
         if (isFocused) Color.White else Gray50
+    }
+    LaunchedEffect(isSuccess) {
+        if (isSuccess) {
+            resultNavigator.navigateBack(true)
+        }
+    }
+    LaunchedEffect(error) {
+        if (error != null) {
+            Toast.makeText(
+                context,
+                "요청 시 에러가 발생했습니다. 재시도 해주세요.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     SoptTheme {
@@ -136,7 +159,7 @@ fun EditIntroductionScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                onClick = { },
+                onClick = { viewModel.onSubmit() },
                 modifier = Modifier
                     .fillMaxWidth(),
                 enabled = introduction.isNotBlank(),
@@ -162,6 +185,11 @@ fun EditIntroductionScreen(
 private fun EditIntroductionScreenPreview() {
     EditIntroductionScreen(
         resultNavigator = EmptyResultBackNavigator(),
-        viewModel = EditIntroductionViewModel()
+        viewModel = EditIntroductionViewModel(
+            UpdateProfileUseCase(
+                FakeUserRepository,
+                GetUserIdUseCase(FakeUserRepository)
+            )
+        )
     )
 }

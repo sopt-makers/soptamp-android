@@ -16,22 +16,35 @@
 package org.sopt.stamp.feature.setting
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.sopt.stamp.domain.usecase.UpdateProfileUseCase
 import javax.inject.Inject
 
 data class EditIntroductionUiState(
     val introduction: String = "",
-    val isFocused: Boolean = false
+    val isFocused: Boolean = false,
+    val isSuccess: Boolean = false,
+    val error: Throwable? = null
 )
 
 @HiltViewModel
-class EditIntroductionViewModel @Inject constructor() : ViewModel() {
+class EditIntroductionViewModel @Inject constructor(
+    private val updateProfileUseCase: UpdateProfileUseCase
+) : ViewModel() {
     private val uiState = MutableStateFlow(EditIntroductionUiState())
     val isFocused = uiState.map { it.isFocused }
     val introduction = uiState.map { it.introduction }
+    val isSuccess = uiState.map { it.isSuccess }
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+    val error = uiState.map { it.error }
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     fun onUpdateFocusState(isFocused: Boolean) {
         uiState.update { it.copy(isFocused = isFocused) }
@@ -39,5 +52,17 @@ class EditIntroductionViewModel @Inject constructor() : ViewModel() {
 
     fun onIntroductionChanged(introduction: String) {
         uiState.value = uiState.value.copy(introduction = introduction)
+    }
+
+    fun onSubmit() {
+        viewModelScope.launch {
+            uiState.update { it.copy(isSuccess = false) }
+            updateProfileUseCase(uiState.value.introduction)
+                .onSuccess {
+                    uiState.update { it.copy(isSuccess = true) }
+                }.onFailure { error ->
+                    uiState.update { it.copy(isSuccess = false, error = error) }
+                }
+        }
     }
 }
