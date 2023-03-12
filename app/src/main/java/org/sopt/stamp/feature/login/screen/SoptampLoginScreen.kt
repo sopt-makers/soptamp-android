@@ -68,7 +68,7 @@ fun LoginPageScreen(
     LaunchedEffect(Unit) {
         viewModel.onAutoLogin()
     }
-    
+
     if (!viewState.isComplete) {
         SoptTheme {
             Column(
