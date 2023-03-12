@@ -39,9 +39,7 @@ interface UserService {
 
     // 닉네임 중복검사
     @GET("auth")
-    suspend fun checkNickname(
-        @Query("nickname") nickname: String
-    ): Response<UserResponse>
+    suspend fun checkNickname(@Query("nickname") nickname: String)
 
     // 이메일 중복검사
     @GET("auth")

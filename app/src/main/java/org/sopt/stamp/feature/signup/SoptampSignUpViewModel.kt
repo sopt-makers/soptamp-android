@@ -23,6 +23,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.sopt.stamp.data.repository.RemoteUserRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,16 +75,14 @@ class SoptampSignUpViewModel @Inject constructor(
     private fun checkNickname() {
         viewModelScope.launch {
             viewState.value.nickname?.let {
-                userRepository.checkNickname(it).let { res ->
-                    res.message.let {
-                        _viewState.update { prevState ->
-                            prevState.copy(
-                                errorMessage = it
-                            )
-                        }
-                    }
-                    if (res.statusCode == 200) {
-                        _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
+                runCatching {
+                    userRepository.checkNickname(it)
+                }.onSuccess {
+                    _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
+                }.onFailure { error ->
+                    Timber.e(error)
+                    _viewState.update { state ->
+                        state.copy(errorMessage = error.message)
                     }
                 }
             }

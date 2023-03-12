@@ -17,16 +17,20 @@ package org.sopt.stamp.feature.setting.nickname
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,8 +54,11 @@ import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.Purple300
 import org.sopt.stamp.designsystem.style.Red200
 import org.sopt.stamp.designsystem.style.SoptTheme
+import org.sopt.stamp.domain.fake.FakeUserRepository
+import org.sopt.stamp.domain.usecase.user.CheckNicknameDuplicateUseCase
 import org.sopt.stamp.util.DefaultPreview
 import org.sopt.stamp.util.addFocusCleaner
+import timber.log.Timber
 
 @SettingNavGraph
 @Destination("nickname")
@@ -66,11 +73,11 @@ fun UpdateNicknameScreen(
     val nickname by viewModel.nickname.collectAsState("")
     val error by viewModel.error.collectAsState(null)
     val isError by viewModel.isError.collectAsState(false)
+    val message by viewModel.message.collectAsState("")
     val textFieldModifier = remember(isFocused, isError) {
         val modifier = Modifier
             .focusRequester(focusRequester)
             .fillMaxWidth()
-            .padding(14.dp)
             .clip(RoundedCornerShape(10.dp))
             .onFocusChanged {
                 viewModel.onUpdateFocusState(it.isFocused)
@@ -88,6 +95,9 @@ fun UpdateNicknameScreen(
     }
     val backgroundColor = remember(isFocused) {
         if (isFocused) Color.White else Gray50
+    }
+    LaunchedEffect(isError) {
+        Timber.d("Nunu isError $isError")
     }
 
     SoptTheme {
@@ -135,6 +145,33 @@ fun UpdateNicknameScreen(
                 },
                 isError = error != null
             )
+            Spacer(modifier = Modifier.height(12.dp))
+            if (message.isNotBlank() && isFocused) {
+                Text(
+                    text = message,
+                    style = SoptTheme.typography.caption2,
+                    color = if (isError) SoptTheme.colors.error300 else SoptTheme.colors.access300
+                )
+            }
+            Spacer(modifier = Modifier.height(if (message.isNotBlank() && isFocused) 26.dp else 52.dp))
+            Button(
+                onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = SoptTheme.colors.purple300,
+                    disabledBackgroundColor = SoptTheme.colors.purple200
+                ),
+                contentPadding = PaddingValues(vertical = 16.dp),
+                enabled = !isError && nickname.isNotBlank()
+            ) {
+                Text(
+                    text = "닉네임 변경",
+                    style = SoptTheme.typography.h2,
+                    color = SoptTheme.colors.white
+                )
+            }
         }
     }
 }
@@ -144,6 +181,8 @@ fun UpdateNicknameScreen(
 private fun UpdateNicknameScreenPreview() {
     UpdateNicknameScreen(
         navigator = EmptyDestinationsNavigator,
-        viewModel = UpdateNicknameViewModel()
+        viewModel = UpdateNicknameViewModel(
+            CheckNicknameDuplicateUseCase(FakeUserRepository)
+        )
     )
 }

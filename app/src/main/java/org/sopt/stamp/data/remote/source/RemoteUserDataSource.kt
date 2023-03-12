@@ -51,13 +51,8 @@ internal class RemoteUserDataSource @Inject constructor(
         )
     }
 
-    override suspend fun checkNickname(nickname: String): UserResponse {
-        val response = userService.checkNickname(nickname)
-        return UserResponse(
-            response.body()?.userId,
-            response.body()?.message,
-            response.code()
-        )
+    override suspend fun checkNickname(nickname: String) {
+        return userService.checkNickname(nickname)
     }
 
     override suspend fun checkEmail(email: String): UserResponse {

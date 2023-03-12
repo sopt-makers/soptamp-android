@@ -20,9 +20,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
+import org.sopt.stamp.domain.usecase.user.CheckNicknameDuplicateUseCase
+import retrofit2.HttpException
 import javax.inject.Inject
 
 enum class UpdateNicknameErrorState {
@@ -35,11 +40,14 @@ data class UpdateNicknameUiState(
     val nickname: String = "",
     val isFocused: Boolean = false,
     val isSuccess: Boolean = false,
-    val error: UpdateNicknameErrorState? = null
+    val error: UpdateNicknameErrorState? = null,
+    val message: String = ""
 )
 
 @HiltViewModel
-class UpdateNicknameViewModel @Inject constructor() : ViewModel() {
+class UpdateNicknameViewModel @Inject constructor(
+    private val checkNicknameDuplicateUseCase: CheckNicknameDuplicateUseCase
+) : ViewModel() {
     private val uiState = MutableStateFlow(UpdateNicknameUiState())
     val nickname = uiState.map { it.nickname }
     val isFocused = uiState.map { it.isFocused }
@@ -48,10 +56,43 @@ class UpdateNicknameViewModel @Inject constructor() : ViewModel() {
     val error = uiState.map { it.error }
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     val isError = error.map { it != null }
+    val message = uiState.map { it.message }
+
+    init {
+        viewModelScope.launch {
+            nickname.debounce(500L)
+                .filter { it.isNotBlank() }
+                .collectLatest {
+                    checkNicknameDuplicateUseCase(it)
+                        .onSuccess {
+                            uiState.value = uiState.value.copy(
+                                message = "사용가능한 닉네임입니다.",
+                                error = null
+                            )
+                        }.onFailure { error ->
+                            if (error is HttpException) {
+                                uiState.value = uiState.value.copy(
+                                    message = "사용 중인 이름입니다.",
+                                    error = UpdateNicknameErrorState.IS_NOT_NEW
+                                )
+                            } else {
+                                uiState.value = uiState.value.copy(
+                                    message = "요청 시에 에러가 발생했습니다.",
+                                    error = UpdateNicknameErrorState.REQUEST_ERROR
+                                )
+                            }
+                        }
+                }
+        }
+
+    }
 
     fun onUpdateNickname(new: String) {
         if (new.isBlank() && uiState.value.isFocused) {
-            uiState.value = uiState.value.copy(error = UpdateNicknameErrorState.INPUT_EMPTY)
+            uiState.value = uiState.value.copy(
+                error = UpdateNicknameErrorState.INPUT_EMPTY,
+                message = "한글/영문 10자 이하로 입력해주세요."
+            )
         }
         if (new.length <= 10) {
             uiState.value = uiState.value.copy(nickname = new)
@@ -61,7 +102,11 @@ class UpdateNicknameViewModel @Inject constructor() : ViewModel() {
     fun onUpdateFocusState(isFocused: Boolean) {
         uiState.value = uiState.value.copy(
             isFocused = isFocused,
-            error = if (!isFocused) null else uiState.value.error
+            error = if (!isFocused && uiState.value.error != UpdateNicknameErrorState.IS_NOT_NEW) {
+                null
+            } else {
+                uiState.value.error
+            }
         )
     }
 }

@@ -28,7 +28,7 @@ object FakeUserRepository : UserRepository {
         clientToken: String
     ) = fakeUser
 
-    override suspend fun checkNickname(nickname: String) = fakeUser
+    override suspend fun checkNickname(nickname: String) = Unit
 
     override suspend fun checkEmail(email: String) = fakeUser
 
