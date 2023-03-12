@@ -47,6 +47,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.sopt.stamp.config.navigation.SettingNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
@@ -55,21 +57,24 @@ import org.sopt.stamp.designsystem.style.Purple300
 import org.sopt.stamp.designsystem.style.Red200
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeUserRepository
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import org.sopt.stamp.domain.usecase.user.CheckNicknameDuplicateUseCase
+import org.sopt.stamp.domain.usecase.user.UpdateNicknameUseCase
 import org.sopt.stamp.util.DefaultPreview
 import org.sopt.stamp.util.addFocusCleaner
-import timber.log.Timber
 
 @SettingNavGraph
 @Destination("nickname")
 @Composable
 fun UpdateNicknameScreen(
     navigator: DestinationsNavigator,
+    resultNavigator: ResultBackNavigator<Boolean>,
     viewModel: UpdateNicknameViewModel = hiltViewModel()
 ) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
     val isFocused by viewModel.isFocused.collectAsState(false)
+    val isSuccess by viewModel.isSuccess.collectAsState(false)
     val nickname by viewModel.nickname.collectAsState("")
     val error by viewModel.error.collectAsState(null)
     val isError by viewModel.isError.collectAsState(false)
@@ -96,8 +101,10 @@ fun UpdateNicknameScreen(
     val backgroundColor = remember(isFocused) {
         if (isFocused) Color.White else Gray50
     }
-    LaunchedEffect(isError) {
-        Timber.d("Nunu isError $isError")
+    LaunchedEffect(isSuccess) {
+        if (isSuccess) {
+            resultNavigator.navigateBack(true)
+        }
     }
 
     SoptTheme {
@@ -155,7 +162,7 @@ fun UpdateNicknameScreen(
             }
             Spacer(modifier = Modifier.height(if (message.isNotBlank() && isFocused) 26.dp else 52.dp))
             Button(
-                onClick = { },
+                onClick = { viewModel.onPress() },
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
@@ -182,7 +189,12 @@ private fun UpdateNicknameScreenPreview() {
     UpdateNicknameScreen(
         navigator = EmptyDestinationsNavigator,
         viewModel = UpdateNicknameViewModel(
-            CheckNicknameDuplicateUseCase(FakeUserRepository)
-        )
+            CheckNicknameDuplicateUseCase(FakeUserRepository),
+            UpdateNicknameUseCase(
+                FakeUserRepository,
+                GetUserIdUseCase(FakeUserRepository)
+            )
+        ),
+        resultNavigator = EmptyResultBackNavigator()
     )
 }

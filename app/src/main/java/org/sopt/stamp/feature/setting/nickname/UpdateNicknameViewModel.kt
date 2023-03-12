@@ -25,8 +25,10 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.stamp.domain.usecase.user.CheckNicknameDuplicateUseCase
+import org.sopt.stamp.domain.usecase.user.UpdateNicknameUseCase
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -46,7 +48,8 @@ data class UpdateNicknameUiState(
 
 @HiltViewModel
 class UpdateNicknameViewModel @Inject constructor(
-    private val checkNicknameDuplicateUseCase: CheckNicknameDuplicateUseCase
+    private val checkNicknameDuplicateUseCase: CheckNicknameDuplicateUseCase,
+    private val updateNicknameUseCase: UpdateNicknameUseCase
 ) : ViewModel() {
     private val uiState = MutableStateFlow(UpdateNicknameUiState())
     val nickname = uiState.map { it.nickname }
@@ -77,7 +80,7 @@ class UpdateNicknameViewModel @Inject constructor(
                                 )
                             } else {
                                 uiState.value = uiState.value.copy(
-                                    message = "요청 시에 에러가 발생했습니다.",
+                                    message = "사용 중인 이름입니다.",
                                     error = UpdateNicknameErrorState.REQUEST_ERROR
                                 )
                             }
@@ -107,5 +110,27 @@ class UpdateNicknameViewModel @Inject constructor(
                 uiState.value.error
             }
         )
+    }
+
+    fun onPress() {
+        viewModelScope.launch {
+            updateNicknameUseCase(uiState.value.nickname)
+                .onSuccess {
+                    uiState.update {
+                        it.copy(
+                            isSuccess = true,
+                            error = null
+                        )
+                    }
+                }.onFailure {
+                    uiState.update {
+                        it.copy(
+                            error = UpdateNicknameErrorState.REQUEST_ERROR,
+                            message = "요청 시에 에러가 발생했습니다.",
+                            isSuccess = false
+                        )
+                    }
+                }
+        }
     }
 }
