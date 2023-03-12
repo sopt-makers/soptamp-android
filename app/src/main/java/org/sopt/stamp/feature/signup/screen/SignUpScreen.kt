@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.feature.signup.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.sopt.stamp.config.navigation.SignUpNavGraph
+import org.sopt.stamp.designsystem.component.layout.SoptColumn
+import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeUserRepository
@@ -46,20 +51,30 @@ import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 @Destination("Page")
 @Composable
 fun SignUpPageScreen(
+    navigator: DestinationsNavigator,
     viewModel: SoptampSignUpViewModel = hiltViewModel()
 ) {
     SoptTheme {
         Scaffold(
             topBar = {
-                SoptTopAppBar(
-                    title = { Text(text = "회원가입") }
+                Toolbar(
+                    modifier = Modifier.padding(bottom = 10.dp),
+                    title = {
+                        Text(
+                            text = "닉네임 변경",
+                            style = SoptTheme.typography.h2,
+                            modifier = Modifier.padding(start = 4.dp),
+                            color = SoptTheme.colors.onSurface
+                        )
+                    },
+                    onBack = { navigator.popBackStack() }
                 )
             }
         ) { padding ->
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            SoptColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(SoptTheme.colors.white),
             ) {
                 val nickname = remember { mutableStateOf(TextFieldValue()) }
                 val email = remember { mutableStateOf(TextFieldValue()) }
@@ -74,7 +89,6 @@ fun SignUpPageScreen(
                     keyboardType = KeyboardType.Text,
                     putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
                 )
-
                 Spacer(modifier = Modifier.height(20.dp))
                 SignUpInput(
                     "이메일",
@@ -228,7 +242,8 @@ private fun SignUpTextField(
 fun PreviewSignUpScreen() {
     SoptTheme {
         SignUpPageScreen(
-            viewModel = SoptampSignUpViewModel(FakeUserRepository)
+            viewModel = SoptampSignUpViewModel(FakeUserRepository),
+            navigator = EmptyDestinationsNavigator
         )
     }
 }

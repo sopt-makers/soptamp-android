@@ -16,28 +16,22 @@
 package org.sopt.stamp.feature.login.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +41,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.LoginNavGraph
+import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.domain.usecase.auth.AutoLoginUseCase
@@ -54,13 +49,14 @@ import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import org.sopt.stamp.feature.destinations.MissionListScreenDestination
 import org.sopt.stamp.feature.destinations.SignUpPageScreenDestination
 import org.sopt.stamp.feature.login.LoginAction
-import org.sopt.stamp.feature.login.SoptampLoginViewModel
+import org.sopt.stamp.feature.login.LoginViewModel
+import org.sopt.stamp.feature.login.component.LoginTextField
 
 @LoginNavGraph(true)
 @Destination("page")
 @Composable
 fun LoginPageScreen(
-    viewModel: SoptampLoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -75,8 +71,10 @@ fun LoginPageScreen(
 
     if (!uiState.isComplete) {
         SoptTheme {
-            Column(
-                modifier = Modifier.padding(20.dp),
+            SoptColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(SoptTheme.colors.white),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -86,9 +84,8 @@ fun LoginPageScreen(
                 Image(
                     painter = painterResource(id = R.drawable.ic_soptamp),
                     contentDescription = "soptamp logo",
-                    modifier = Modifier.padding(vertical = 72.dp)
                 )
-
+                Spacer(modifier = Modifier.height(72.dp))
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
@@ -112,13 +109,12 @@ fun LoginPageScreen(
                             viewModel.handleAction(LoginAction.PutPassword(input))
                         }
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "계정찾기",
+                        text = "계정 찾기",
                         textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable(onClick = { }),
-                        style = SoptTheme.typography.caption3,
+                        modifier = Modifier.clickable { },
+                        style = SoptTheme.typography.caption2,
                         color = SoptTheme.colors.onSurface50
                     )
                 }
@@ -127,77 +123,34 @@ fun LoginPageScreen(
                 Box {
                     Button(
                         onClick = { viewModel.handleAction(LoginAction.Login) },
-                        shape = RoundedCornerShape(9.dp),
+                        shape = RoundedCornerShape(10.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
+                            .height(56.dp),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFC292FF),
-                            contentColor = Color(0xFFFFFFFF)
+                            backgroundColor = SoptTheme.colors.purple300,
+                            contentColor = SoptTheme.colors.white
                         )
                     ) {
-                        Text(text = "로그인")
+                        Text(
+                            text = "로그인",
+                            style = SoptTheme.typography.h2,
+                            color = SoptTheme.colors.white
+                        )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = "회원가입",
                     textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.clickable(onClick = { navigator.navigate(SignUpPageScreenDestination) }),
-                    style = SoptTheme.typography.caption1
+                    modifier = Modifier
+                        .clickable { navigator.navigate(SignUpPageScreenDestination) },
+                    style = SoptTheme.typography.caption1,
+                    color = SoptTheme.colors.onSurface90
                 )
             }
         }
     }
-}
-
-@Composable
-private fun LoginTextField(
-    inputDesc: String,
-    keyboardType: KeyboardType,
-    input: MutableState<TextFieldValue>,
-    fillMaxWidth: Boolean,
-    putInput: (String) -> Unit
-) {
-    var modifier = Modifier
-        .clip(RoundedCornerShape(10.dp))
-        .border(
-            width = if (input.value.text.isEmpty()) 0.dp else 1.dp,
-            color = Color(0xFFC292FF),
-            shape = RoundedCornerShape(10.dp)
-        )
-    modifier = if (fillMaxWidth) modifier.fillMaxWidth() else modifier
-
-    TextField(
-        value = input.value,
-        label = { Text(text = inputDesc) },
-        modifier = modifier,
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = if (input.value.text.isEmpty()) SoptTheme.colors.onSurface5 else Color.White,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            textColor = SoptTheme.colors.onSurface90,
-            placeholderColor = SoptTheme.colors.onSurface60
-        ),
-        visualTransformation = if (keyboardType == KeyboardType.Password) {
-            PasswordVisualTransformation()
-        } else {
-            VisualTransformation.None
-        },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        onValueChange = {
-            input.value = it
-            putInput(input.value.text)
-        },
-        placeholder = {
-            Text(
-                text = inputDesc,
-                style = SoptTheme.typography.caption1
-            )
-        }
-    )
 }
 
 @Preview(showBackground = true)
@@ -205,7 +158,7 @@ private fun LoginTextField(
 fun PreviewLoginScreen() {
     SoptTheme {
         LoginPageScreen(
-            viewModel = SoptampLoginViewModel(
+            viewModel = LoginViewModel(
                 FakeUserRepository,
                 AutoLoginUseCase(GetUserIdUseCase(FakeUserRepository))
             ),

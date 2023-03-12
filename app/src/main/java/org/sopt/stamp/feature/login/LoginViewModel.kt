@@ -29,12 +29,12 @@ import org.sopt.stamp.domain.usecase.auth.AutoLoginUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class SoptampLoginViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val autoLoginUseCase: AutoLoginUseCase
 ) : ViewModel(), LoginHandleAction {
 
-    private val _uiState = MutableStateFlow(SoptampLoginViewState())
+    private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent = Channel<SingleEvent>(Channel.BUFFERED)
