@@ -20,11 +20,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +39,7 @@ import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.feature.signup.SignUpAction
 import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
 import org.sopt.stamp.feature.signup.component.PasswordTextField
-import org.sopt.stamp.feature.signup.component.SignUpTextField
+import org.sopt.stamp.feature.signup.component.SignUpInputContainer
 
 @SignUpNavGraph(true)
 @Destination("Page")
@@ -80,7 +78,7 @@ fun SignUpPageScreen(
                 val email = remember { mutableStateOf(TextFieldValue()) }
                 val password = remember { mutableStateOf(TextFieldValue()) }
                 Spacer(modifier = Modifier.height(20.dp))
-                SignUpInput(
+                SignUpInputContainer(
                     "닉네임",
                     "닉네임을 입력해주세요",
                     nickname,
@@ -89,7 +87,7 @@ fun SignUpPageScreen(
                     putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                SignUpInput(
+                SignUpInputContainer(
                     "이메일",
                     "이메일을 입력해주세요",
                     email,
@@ -124,44 +122,6 @@ fun SignUpPageScreen(
                         text = "가입하기",
                         style = SoptTheme.typography.h2
                     )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SignUpInput(
-    inputTitle: String,
-    inputDesc: String,
-    input: MutableState<TextFieldValue>,
-    keyboardType: KeyboardType,
-    checkInput: () -> Unit,
-    putInput: (String) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(text = inputTitle, modifier = Modifier.padding(bottom = 16.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            SignUpTextField(inputDesc, input, keyboardType, false, putInput)
-            Box {
-                Button(
-                    onClick = { checkInput.invoke() },
-                    shape = RoundedCornerShape(9.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .padding(start = 4.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0xFFC292FF),
-                        contentColor = Color(0xFFFFFFFF)
-                    )
-                ) {
-                    Text(text = "확인")
                 }
             }
         }
