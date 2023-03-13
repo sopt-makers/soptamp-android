@@ -43,7 +43,7 @@ crashlytics = "2.9.4"
 firebase = "31.2.3"
 ktlint = "11.3.1"
 lottie = "6.0.0"
-spotless = "6.16.0"
+spotless = "6.17.0"
 process-pheonix = "2.1.2"
 
 [libraries]
