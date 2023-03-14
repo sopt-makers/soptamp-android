@@ -30,7 +30,7 @@ object FakeUserRepository : UserRepository {
 
     override suspend fun checkNickname(nickname: String) = Unit
 
-    override suspend fun checkEmail(email: String) = fakeUser
+    override suspend fun checkEmail(email: String) = Unit
 
     override suspend fun login(email: String, password: String) = fakeUser
 
@@ -43,6 +43,7 @@ object FakeUserRepository : UserRepository {
     override suspend fun updatePassword(userId: Int, password: String) = runCatching {}
 
     override suspend fun updateNickname(userId: Int, nickname: String) = runCatching {}
+    override fun updateLocalUserInfo(userId: Int, profileMessage: String) = Unit
 
     override fun fetchUserId() = 1
 }

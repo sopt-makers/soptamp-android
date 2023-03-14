@@ -18,23 +18,45 @@ package org.sopt.stamp.feature.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.sopt.stamp.data.repository.RemoteUserRepository
+import org.sopt.stamp.domain.repository.UserRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class SoptampSignUpViewModel @Inject constructor(
-    private val userRepository: RemoteUserRepository
+class SignUpViewModel @Inject constructor(
+    private val userRepository: UserRepository
 ) : ViewModel(), SignUpHandleAction {
-    private val _viewState = MutableStateFlow(SoptampSignUpViewState.init())
-    val viewState = _viewState.asStateFlow()
+    private val _uiState = MutableStateFlow(SignUpUiState())
+    val uiState = _uiState.asStateFlow()
 
-    private val _singleEvent = Channel<SingleEvent>(Channel.BUFFERED)
-    val singleEvent = _singleEvent.receiveAsFlow()
+    private val _uiEvent = Channel<SingleEvent>(Channel.BUFFERED)
+    val isSignUpSuccess = _uiEvent.receiveAsFlow()
+        .map { it is SingleEvent.SignUpSuccess }
+    val isSubmitEnabled = uiState.map {
+        !it.email.isNullOrBlank() && !it.nickname.isNullOrBlank() && !it.password.isNullOrBlank() &&
+            !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
+    }
+
+    init {
+        uiState.debounce(200)
+            .filter {
+                !it.password.isNullOrBlank() && !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
+            }
+            .onEach {
+                _uiState.update { it.copy(errorMessage = "") }
+            }.launchIn(viewModelScope)
+    }
 
     override fun handleAction(action: SignUpAction) {
         when (action) {
@@ -45,28 +67,28 @@ class SoptampSignUpViewModel @Inject constructor(
             is SignUpAction.SignUp -> signUp()
             is SignUpAction.CheckNickname -> checkNickname()
             is SignUpAction.CheckEmail -> checkEmail()
-            is SignUpAction.CheckPassword -> checkPassword()
+            else -> {}
         }
     }
 
     private fun signUp() {
         viewModelScope.launch {
             userRepository.signup(
-                viewState.value.nickname.orEmpty(),
-                viewState.value.email.orEmpty(),
-                viewState.value.password.orEmpty(),
+                uiState.value.nickname.orEmpty(),
+                uiState.value.email.orEmpty(),
+                uiState.value.password.orEmpty(),
                 "android",
                 "null"
             ).let { res ->
                 res.message.let {
-                    _viewState.update { prevState ->
+                    _uiState.update { prevState ->
                         prevState.copy(
                             errorMessage = it
                         )
                     }
                 }
                 if (res.statusCode == 200) {
-                    _singleEvent.trySend(SingleEvent.SignUpSuccess)
+                    _uiEvent.trySend(SingleEvent.SignUpSuccess)
                 }
             }
         }
@@ -74,14 +96,14 @@ class SoptampSignUpViewModel @Inject constructor(
 
     private fun checkNickname() {
         viewModelScope.launch {
-            viewState.value.nickname?.let {
+            uiState.value.nickname?.let {
                 runCatching {
                     userRepository.checkNickname(it)
                 }.onSuccess {
-                    _singleEvent.trySend(SingleEvent.CheckNicknameSuccess)
+                    _uiEvent.trySend(SingleEvent.CheckNicknameSuccess)
                 }.onFailure { error ->
                     Timber.e(error)
-                    _viewState.update { state ->
+                    _uiState.update { state ->
                         state.copy(errorMessage = error.message)
                     }
                 }
@@ -90,48 +112,20 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun checkEmail() {
+        val email = uiState.value.email ?: ""
         viewModelScope.launch {
-            viewState.value.email?.let {
-                userRepository.checkEmail(it).let { res ->
-                    res.message.let {
-                        _viewState.update { prevState ->
-                            prevState.copy(
-                                errorMessage = it
-                            )
-                        }
-                    }
-                    if (res.statusCode == 200) {
-                        _singleEvent.trySend(SingleEvent.CheckEmailSuccess)
-                    }
-                }
+            runCatching {
+                userRepository.checkEmail(email)
+            }.onSuccess {
+                _uiState.update { it.copy(email = email) }
+            }.onFailure {
+                _uiState.update { it.copy(errorMessage = it.errorMessage) }
             }
         }
     }
 
-    @OptIn(FlowPreview::class)
-    private fun checkPassword() {
-        viewState.debounce(200)
-            .onEach { state ->
-                if (!state.password.isNullOrBlank() && !state.passwordConfirm.isNullOrBlank() &&
-                    (state.password == state.passwordConfirm)
-                ) {
-                    _viewState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = ""
-                        )
-                    }
-                } else {
-                    _viewState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = ""
-                        )
-                    }
-                }
-            }.launchIn(viewModelScope)
-    }
-
     private fun putNickname(input: String) {
-        _viewState.update { prevState ->
+        _uiState.update { prevState ->
             prevState.copy(
                 nickname = input
             )
@@ -139,29 +133,21 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun putEmail(input: String) {
-        _viewState.update { prevState ->
-            prevState.copy(
-                email = input
-            )
+        _uiState.update {
+            it.copy(email = input)
         }
     }
 
     private fun putPassword(input: String) {
-        _viewState.update { prevState ->
-            prevState.copy(
-                password = input
-            )
-        }
-        checkPassword()
+        _uiState.update { it.copy(password = input) }
     }
 
     private fun putPasswordConfirm(input: String) {
-        _viewState.update { prevState ->
+        _uiState.update { prevState ->
             prevState.copy(
                 passwordConfirm = input
             )
         }
-        checkPassword()
     }
 }
 
@@ -181,7 +167,6 @@ sealed interface SignUpAction {
 }
 
 sealed interface SingleEvent {
-    object Loading : SingleEvent
     object SignUpSuccess : SingleEvent
     object CheckNicknameSuccess : SingleEvent
     object CheckEmailSuccess : SingleEvent

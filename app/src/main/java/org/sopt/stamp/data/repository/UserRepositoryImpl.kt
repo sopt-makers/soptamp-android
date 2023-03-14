@@ -21,7 +21,7 @@ import org.sopt.stamp.domain.model.User
 import org.sopt.stamp.domain.repository.UserRepository
 import javax.inject.Inject
 
-class RemoteUserRepository @Inject constructor(
+class UserRepositoryImpl @Inject constructor(
     private val remote: UserDataSource,
     private val local: SoptampDataStore
 ) : UserRepository {
@@ -35,7 +35,7 @@ class RemoteUserRepository @Inject constructor(
 
     override suspend fun checkNickname(nickname: String) = remote.checkNickname(nickname)
 
-    override suspend fun checkEmail(email: String): User = remote.checkEmail(email).toUser()
+    override suspend fun checkEmail(email: String) = remote.checkEmail(email)
 
     override suspend fun login(email: String, password: String): User = remote.login(email, password).toUser()
     override suspend fun logout(): Result<Unit> = runCatching { local.clear() }
@@ -69,6 +69,13 @@ class RemoteUserRepository @Inject constructor(
         remote.updateNickname(userId, nickname)
     }.onSuccess {
         local.nickname = nickname
+    }
+
+    override fun updateLocalUserInfo(userId: Int, profileMessage: String) {
+        local.apply {
+            this.userId = userId
+            this.profileMessage = profileMessage
+        }
     }
 
     override fun fetchUserId() = local.userId
