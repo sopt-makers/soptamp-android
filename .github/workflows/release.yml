@@ -2,7 +2,8 @@ name: Makers Release Test
 
 on:
   push:
-    branches: [ release ]
+    branches:
+      - 'release/**'
 
 defaults:
   run:
