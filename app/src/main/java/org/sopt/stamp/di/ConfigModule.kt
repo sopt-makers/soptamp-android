@@ -19,7 +19,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -32,8 +31,8 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.sopt.stamp.App
 import org.sopt.stamp.BuildConfig
+import org.sopt.stamp.FlipperInitializer
 import org.sopt.stamp.di.constant.Constant
 import org.sopt.stamp.di.constant.Strings
 import retrofit2.Retrofit
@@ -62,7 +61,7 @@ object ConfigModule {
         @Logging loggingInterceptor: Interceptor
     ) = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
-        .addNetworkInterceptor(FlipperOkhttpInterceptor(App.networkFlipperPlugin))
+        .apply { FlipperInitializer.addFlipperNetworkPlugin(this) }
         .build()
 
     @OptIn(ExperimentalSerializationApi::class)
