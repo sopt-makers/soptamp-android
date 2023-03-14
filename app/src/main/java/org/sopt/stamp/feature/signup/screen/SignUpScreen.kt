@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.sopt.stamp.config.navigation.SignUpNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
@@ -48,9 +51,18 @@ import org.sopt.stamp.feature.signup.component.SignUpInputContainer
 @Composable
 fun SignUpPageScreen(
     navigator: DestinationsNavigator,
+    resultBackNavigator: ResultBackNavigator<Boolean>,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
+    val isSignUpSuccess by viewModel.isSignUpSuccess.collectAsState(false)
+
+    LaunchedEffect(isSignUpSuccess) {
+        if (isSignUpSuccess) {
+            resultBackNavigator.navigateBack(true)
+        }
+    }
+
     SoptTheme {
         Scaffold(
             topBar = {
@@ -80,6 +92,7 @@ fun SignUpPageScreen(
                 val nickname = remember { mutableStateOf(TextFieldValue()) }
                 val email = remember { mutableStateOf(TextFieldValue()) }
                 val password = remember { mutableStateOf(TextFieldValue()) }
+                val passwordConfirm = remember { mutableStateOf(TextFieldValue()) }
                 Spacer(modifier = Modifier.height(20.dp))
                 SignUpInputContainer(
                     "닉네임",
@@ -104,6 +117,7 @@ fun SignUpPageScreen(
                     "비밀번호를 입력해주세요.",
                     "비밀번호를 다시 입력해주세요.",
                     password,
+                    passwordConfirm,
                     checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
                     keyboardType = KeyboardType.Password,
                     putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
@@ -140,6 +154,7 @@ fun PreviewSignUpScreen() {
     SoptTheme {
         SignUpPageScreen(
             viewModel = SignUpViewModel(FakeUserRepository),
+            resultBackNavigator = EmptyResultBackNavigator(),
             navigator = EmptyDestinationsNavigator
         )
     }

@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.feature.login.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -39,6 +41,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.result.EmptyResultRecipient
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.LoginNavGraph
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
@@ -57,9 +62,11 @@ import org.sopt.stamp.feature.login.component.LoginTextField
 @Composable
 fun LoginPageScreen(
     viewModel: LoginViewModel = hiltViewModel(),
+    resultRecipient: ResultRecipient<SignUpPageScreenDestination, Boolean>,
     navigator: DestinationsNavigator
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
     LaunchedEffect(uiState) {
         if (uiState.isComplete) {
             navigator.navigate(MissionListScreenDestination())
@@ -67,6 +74,20 @@ fun LoginPageScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.onAutoLogin()
+    }
+    resultRecipient.onNavResult { result ->
+        when (result) {
+            is NavResult.Canceled -> Unit
+            is NavResult.Value -> {
+                if (result.value) {
+                    Toast.makeText(
+                        context,
+                        "회원가입에 성공했습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     if (!uiState.isComplete) {
@@ -162,7 +183,8 @@ fun PreviewLoginScreen() {
                 FakeUserRepository,
                 AutoLoginUseCase(GetUserIdUseCase(FakeUserRepository))
             ),
-            navigator = EmptyDestinationsNavigator
+            navigator = EmptyDestinationsNavigator,
+            resultRecipient = EmptyResultRecipient()
         )
     }
 }

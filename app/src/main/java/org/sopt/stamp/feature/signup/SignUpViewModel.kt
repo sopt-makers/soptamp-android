@@ -41,10 +41,11 @@ class SignUpViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent = Channel<SingleEvent>(Channel.BUFFERED)
-    val uiEvent = _uiEvent.receiveAsFlow()
+    val isSignUpSuccess = _uiEvent.receiveAsFlow()
+        .map { it is SingleEvent.SignUpSuccess }
     val isSubmitEnabled = uiState.map {
         !it.email.isNullOrBlank() && !it.nickname.isNullOrBlank() && !it.password.isNullOrBlank() &&
-            !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
+                !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
     }
 
     init {

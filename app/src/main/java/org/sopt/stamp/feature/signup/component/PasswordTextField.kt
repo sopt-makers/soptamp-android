@@ -37,6 +37,7 @@ fun PasswordTextField(
     firstInputDesc: String,
     secondInputDesc: String,
     password: MutableState<TextFieldValue>,
+    passwordConfirm: MutableState<TextFieldValue>,
     checkInputSame: () -> Unit,
     keyboardType: KeyboardType,
     putPassword: (String) -> Unit,
@@ -49,7 +50,7 @@ fun PasswordTextField(
         Spacer(modifier = Modifier.height(16.dp))
         SignUpTextField(firstInputDesc, password, keyboardType, true, putPassword)
         Spacer(modifier = Modifier.height(12.dp))
-        SignUpTextField(secondInputDesc, password, keyboardType, true, putPasswordConfirm)
+        SignUpTextField(secondInputDesc, passwordConfirm, keyboardType, true, putPasswordConfirm)
     }
 }
 
@@ -62,6 +63,7 @@ private fun PasswordTextFieldPreview() {
             "비밀번호",
             "비밀번호를 입력해주세요.",
             "비밀번호를 다시 입력해주세요.",
+            password,
             password,
             checkInputSame = { },
             keyboardType = KeyboardType.Password,
