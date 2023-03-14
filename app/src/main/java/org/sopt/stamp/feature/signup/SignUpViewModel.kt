@@ -45,7 +45,7 @@ class SignUpViewModel @Inject constructor(
         .map { it is SingleEvent.SignUpSuccess }
     val isSubmitEnabled = uiState.map {
         !it.email.isNullOrBlank() && !it.nickname.isNullOrBlank() && !it.password.isNullOrBlank() &&
-                !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
+            !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
     }
 
     init {
