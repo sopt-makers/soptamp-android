@@ -1,6 +1,6 @@
 <div align="center">
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <h1>📝 SOPTAMP</h1> 
@@ -70,6 +70,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://velog.io/@l2hyunwoo"><img src="https://avatars.githubusercontent.com/u/54518925?v=4?s=100" width="100px;" alt="Hyun-Woo Lee"/><br /><sub><b>Hyun-Woo Lee</b></sub></a><br /><a href="https://github.com/sopt-makers/soptamp-android/commits?author=l2hyunwoo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sery270"><img src="https://avatars.githubusercontent.com/u/59532818?v=4?s=100" width="100px;" alt="Seran Park"/><br /><sub><b>Seran Park</b></sub></a><br /><a href="https://github.com/sopt-makers/soptamp-android/commits?author=sery270" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
