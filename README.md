@@ -1,7 +1,5 @@
 <div align="center">
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 
 <h1>📝 SOPTAMP</h1> 
 
@@ -10,6 +8,9 @@
 <p align="center">
     <img src="https://img.shields.io/badge/Kotlin-1.8.10-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white"/>
     <img src="https://img.shields.io/badge/Compose-1.4.3-4285F4?style=for-the-badge&logo=Jetpack-Compose&logoColor=white"/>
+    <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+    [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+    <!-- ALL-CONTRIBUTORS-BADGE:END -->
 </p>
 <br />
 
@@ -43,6 +44,30 @@ SOPT 공식 앱에서는 솝트인이라면 꼭! 즐겨야 하는 활동들을 �
 
 ![Alt](https://repobeats.axiom.co/api/embed/5254e07b03ef58d0610efd49207f2d918e1703e6.svg "Repobeats analytics image")
 
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://velog.io/@l2hyunwoo"><img src="https://avatars.githubusercontent.com/u/54518925?v=4?s=100" width="100px;" alt="Hyun-Woo Lee"/><br /><sub><b>Hyun-Woo Lee</b></sub></a><br /><a href="https://github.com/sopt-makers/soptamp-android/commits?author=l2hyunwoo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sery270"><img src="https://avatars.githubusercontent.com/u/59532818?v=4?s=100" width="100px;" alt="Seran Park"/><br /><sub><b>Seran Park</b></sub></a><br /><a href="https://github.com/sopt-makers/soptamp-android/commits?author=sery270" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://antilog.tistory.com"><img src="https://avatars.githubusercontent.com/u/45380072?v=4?s=100" width="100px;" alt="Jinsu Park"/><br /><sub><b>Jinsu Park</b></sub></a><br /><a href="https://github.com/sopt-makers/soptamp-android/commits?author=jinsu4755" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
 <h1>License</h1>
 
 Copyright 2023 SOPT - Shout Our Passion Together
@@ -58,26 +83,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="http://velog.io/@l2hyunwoo"><img src="https://avatars.githubusercontent.com/u/54518925?v=4?s=100" width="100px;" alt="Hyun-Woo Lee"/><br /><sub><b>Hyun-Woo Lee</b></sub></a><br /><a href="https://github.com/sopt-makers/soptamp-android/commits?author=l2hyunwoo" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sery270"><img src="https://avatars.githubusercontent.com/u/59532818?v=4?s=100" width="100px;" alt="Seran Park"/><br /><sub><b>Seran Park</b></sub></a><br /><a href="https://github.com/sopt-makers/soptamp-android/commits?author=sery270" title="Code">💻</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
