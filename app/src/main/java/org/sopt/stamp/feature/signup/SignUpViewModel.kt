@@ -27,14 +27,28 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class SoptampSignUpViewModel @Inject constructor(
+class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel(), SignUpHandleAction {
-    private val _uiState = MutableStateFlow(SoptampSignUpViewState())
+    private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent = Channel<SingleEvent>(Channel.BUFFERED)
     val uiEvent = _uiEvent.receiveAsFlow()
+    val isSubmitEnabled = uiState.map {
+        !it.email.isNullOrBlank() && !it.nickname.isNullOrBlank() && !it.password.isNullOrBlank() &&
+            !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
+    }
+
+    init {
+        uiState.debounce(200)
+            .filter {
+                !it.password.isNullOrBlank() && !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
+            }
+            .onEach {
+                _uiState.update { it.copy(errorMessage = "") }
+            }.launchIn(viewModelScope)
+    }
 
     override fun handleAction(action: SignUpAction) {
         when (action) {
@@ -45,7 +59,7 @@ class SoptampSignUpViewModel @Inject constructor(
             is SignUpAction.SignUp -> signUp()
             is SignUpAction.CheckNickname -> checkNickname()
             is SignUpAction.CheckEmail -> checkEmail()
-            is SignUpAction.CheckPassword -> checkPassword()
+            else -> {}
         }
     }
 
@@ -90,44 +104,16 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun checkEmail() {
+        val email = uiState.value.email ?: ""
         viewModelScope.launch {
-            uiState.value.email?.let {
-                userRepository.checkEmail(it).let { res ->
-                    res.message.let {
-                        _uiState.update { prevState ->
-                            prevState.copy(
-                                errorMessage = it
-                            )
-                        }
-                    }
-                    if (res.statusCode == 200) {
-                        _uiEvent.trySend(SingleEvent.CheckEmailSuccess)
-                    }
-                }
+            runCatching {
+                userRepository.checkEmail(email)
+            }.onSuccess {
+                _uiState.update { it.copy(email = email) }
+            }.onFailure {
+                _uiState.update { it.copy(errorMessage = it.errorMessage) }
             }
         }
-    }
-
-    @OptIn(FlowPreview::class)
-    private fun checkPassword() {
-        uiState.debounce(200)
-            .onEach { state ->
-                if (!state.password.isNullOrBlank() && !state.passwordConfirm.isNullOrBlank() &&
-                    (state.password == state.passwordConfirm)
-                ) {
-                    _uiState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = ""
-                        )
-                    }
-                } else {
-                    _uiState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = ""
-                        )
-                    }
-                }
-            }.launchIn(viewModelScope)
     }
 
     private fun putNickname(input: String) {
@@ -139,20 +125,13 @@ class SoptampSignUpViewModel @Inject constructor(
     }
 
     private fun putEmail(input: String) {
-        _uiState.update { prevState ->
-            prevState.copy(
-                email = input
-            )
+        _uiState.update {
+            it.copy(email = input)
         }
     }
 
     private fun putPassword(input: String) {
-        _uiState.update { prevState ->
-            prevState.copy(
-                password = input
-            )
-        }
-        checkPassword()
+        _uiState.update { it.copy(password = input) }
     }
 
     private fun putPasswordConfirm(input: String) {
@@ -161,7 +140,6 @@ class SoptampSignUpViewModel @Inject constructor(
                 passwordConfirm = input
             )
         }
-        checkPassword()
     }
 }
 
@@ -181,7 +159,6 @@ sealed interface SignUpAction {
 }
 
 sealed interface SingleEvent {
-    object Loading : SingleEvent
     object SignUpSuccess : SingleEvent
     object CheckNicknameSuccess : SingleEvent
     object CheckEmailSuccess : SingleEvent

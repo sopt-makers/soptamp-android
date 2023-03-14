@@ -17,6 +17,7 @@ package org.sopt.stamp.feature.signup.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.util.DefaultPreview
@@ -72,7 +74,6 @@ fun SignUpTextField(
 
     TextField(
         value = input.value,
-        label = { Text(text = inputDesc) },
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.textFieldColors(
@@ -90,10 +91,12 @@ fun SignUpTextField(
         placeholder = {
             Text(
                 text = inputDesc,
-                style = SoptTheme.typography.caption1
+                style = SoptTheme.typography.caption1,
+                textAlign = TextAlign.Center
             )
         },
-        textStyle = SoptTheme.typography.caption1
+        textStyle = SoptTheme.typography.caption1,
+        singleLine = true
     )
 }
 
@@ -103,11 +106,10 @@ private fun SignUpTextFieldPreview() {
     SoptTheme {
         val nickname = remember { mutableStateOf(TextFieldValue()) }
         SignUpTextField(
-            "닉네임",
-            nickname,
+            inputDesc = "닉네임",
+            input = nickname,
             keyboardType = KeyboardType.Text,
-            fillMaxWidth = true,
-            putInput = { }
-        )
+            fillMaxWidth = true
+        ) { }
     }
 }

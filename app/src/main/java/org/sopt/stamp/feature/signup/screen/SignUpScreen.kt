@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -37,7 +39,7 @@ import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.feature.signup.SignUpAction
-import org.sopt.stamp.feature.signup.SoptampSignUpViewModel
+import org.sopt.stamp.feature.signup.SignUpViewModel
 import org.sopt.stamp.feature.signup.component.PasswordTextField
 import org.sopt.stamp.feature.signup.component.SignUpInputContainer
 
@@ -46,8 +48,9 @@ import org.sopt.stamp.feature.signup.component.SignUpInputContainer
 @Composable
 fun SignUpPageScreen(
     navigator: DestinationsNavigator,
-    viewModel: SoptampSignUpViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
     SoptTheme {
         Scaffold(
             topBar = {
@@ -115,8 +118,11 @@ fun SignUpPageScreen(
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = SoptTheme.colors.purple300,
-                        contentColor = SoptTheme.colors.white
-                    )
+                        contentColor = SoptTheme.colors.white,
+                        disabledBackgroundColor = SoptTheme.colors.purple200,
+                        disabledContentColor = SoptTheme.colors.white
+                    ),
+                    enabled = isSubmitEnabled
                 ) {
                     Text(
                         text = "가입하기",
@@ -133,7 +139,7 @@ fun SignUpPageScreen(
 fun PreviewSignUpScreen() {
     SoptTheme {
         SignUpPageScreen(
-            viewModel = SoptampSignUpViewModel(FakeUserRepository),
+            viewModel = SignUpViewModel(FakeUserRepository),
             navigator = EmptyDestinationsNavigator
         )
     }

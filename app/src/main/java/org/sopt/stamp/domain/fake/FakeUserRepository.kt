@@ -30,7 +30,7 @@ object FakeUserRepository : UserRepository {
 
     override suspend fun checkNickname(nickname: String) = Unit
 
-    override suspend fun checkEmail(email: String) = fakeUser
+    override suspend fun checkEmail(email: String) = Unit
 
     override suspend fun login(email: String, password: String) = fakeUser
 

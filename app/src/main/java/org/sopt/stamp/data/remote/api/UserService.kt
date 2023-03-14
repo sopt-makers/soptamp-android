@@ -45,7 +45,7 @@ interface UserService {
     @GET("auth")
     suspend fun checkEmail(
         @Query("email") email: String
-    ): Response<UserResponse>
+    )
 
     // 로그인
     @POST("user/login")

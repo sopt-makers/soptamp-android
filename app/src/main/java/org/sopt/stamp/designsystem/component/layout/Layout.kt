@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.designsystem.component.layout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -27,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.sopt.stamp.designsystem.style.SoptTheme
 
 @Composable
 fun SoptColumn(
@@ -36,7 +38,9 @@ fun SoptColumn(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 20.dp),
+        modifier = modifier
+            .padding(horizontal = 20.dp)
+            .background(SoptTheme.colors.white),
         verticalArrangement,
         horizontalAlignment,
         content = content

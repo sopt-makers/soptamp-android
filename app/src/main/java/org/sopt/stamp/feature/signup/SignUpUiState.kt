@@ -15,7 +15,7 @@
  */
 package org.sopt.stamp.feature.signup
 
-data class SoptampSignUpViewState(
+data class SignUpUiState(
     val nickname: String? = null,
     val email: String? = null,
     val password: String? = null,
