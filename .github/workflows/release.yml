@@ -1,7 +1,7 @@
 name: Makers Release Test
 
 on:
-  pull_request:
+  push:
     branches: [ release ]
 
 defaults:
