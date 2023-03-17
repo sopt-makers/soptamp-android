@@ -17,13 +17,10 @@ package org.sopt.stamp.data.remote.source
 
 import org.sopt.stamp.data.remote.api.RankService
 import org.sopt.stamp.data.remote.api.UserService
-import org.sopt.stamp.data.remote.model.request.LoginRequest
-import org.sopt.stamp.data.remote.model.request.SignUpRequest
-import org.sopt.stamp.data.remote.model.request.UpdateNicknameRequest
-import org.sopt.stamp.data.remote.model.request.UpdatePasswordRequest
-import org.sopt.stamp.data.remote.model.request.UpdateProfileMessageRequest
+import org.sopt.stamp.data.remote.model.request.*
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import org.sopt.stamp.data.source.UserDataSource
+import retrofit2.HttpException
 import javax.inject.Inject
 
 internal class RemoteUserDataSource @Inject constructor(
@@ -44,11 +41,16 @@ internal class RemoteUserDataSource @Inject constructor(
                 password
             )
         )
-        return UserResponse(
-            response.body()?.userId,
-            response.body()?.message,
-            response.code()
-        )
+
+        return if (response.isSuccessful) {
+            UserResponse(
+                response.body()?.userId,
+                response.body()?.message,
+                response.code()
+            )
+        } else {
+            throw HttpException(response)
+        }
     }
 
     override suspend fun checkNickname(nickname: String) {
@@ -61,11 +63,15 @@ internal class RemoteUserDataSource @Inject constructor(
         val response = userService.login(
             LoginRequest(email, password)
         )
-        return UserResponse(
-            response.body()?.userId,
-            response.body()?.message,
-            response.code()
-        )
+        return if (response.isSuccessful) {
+            UserResponse(
+                response.body()?.userId,
+                response.body()?.message,
+                response.code()
+            )
+        } else {
+            throw HttpException(response)
+        }
     }
 
     override suspend fun withdraw(userId: Int) {
