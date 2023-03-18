@@ -76,9 +76,7 @@ fun TextField(
     val containerModifier = remember(isFocused) {
         val baseModifier = modifier
             .focusRequester(focusRequester)
-            .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
-            .padding(horizontal = 14.dp, vertical = 16.dp)
             .onFocusChanged { onFocusChanged(it.isFocused) }
 
         if (!isFocused) {

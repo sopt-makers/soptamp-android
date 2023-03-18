@@ -39,6 +39,7 @@ import org.sopt.stamp.util.DefaultPreview
 
 @Composable
 fun SignUpTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     placeHolder: String,
@@ -49,8 +50,8 @@ fun SignUpTextField(
     val isEmpty = remember(value) {
         value.isEmpty()
     }
-    val modifier = remember(fillMaxWidth, isEmpty) {
-        val baseModifier = Modifier
+    val containerModifier = remember(fillMaxWidth, isEmpty) {
+        val baseModifier = modifier
             .clip(RoundedCornerShape(10.dp))
             .border(
                 width = if (isEmpty) 0.dp else 1.dp,
@@ -73,7 +74,7 @@ fun SignUpTextField(
 
     TextField(
         value = value,
-        modifier = modifier,
+        modifier = containerModifier,
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = if (isEmpty) SoptTheme.colors.onSurface5 else Color.White,

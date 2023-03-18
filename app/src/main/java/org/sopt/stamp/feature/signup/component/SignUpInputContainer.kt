@@ -15,12 +15,14 @@
  */
 package org.sopt.stamp.feature.signup.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,7 +38,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.util.DefaultPreview
@@ -45,42 +49,42 @@ import org.sopt.stamp.util.DefaultPreview
 fun SignUpInputContainer(
     value: String,
     onValueChange: (String) -> Unit,
-    inputTitle: String,
-    inputDesc: String,
+    title: String,
+    placeHolder: String,
     keyboardType: KeyboardType,
-    checkInput: () -> Unit,
+    onCheck: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = inputTitle,
+            text = title,
             style = SoptTheme.typography.sub1,
-            color = SoptTheme.colors.onSurface90
+            color = SoptTheme.colors.onSurface90,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
-            horizontalArrangement = Arrangement.Center,
+                .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.Top
         ) {
             SignUpTextField(
+                modifier = Modifier.weight(1f),
                 value = value,
                 onValueChange = onValueChange,
-                placeHolder = inputDesc,
+                placeHolder = placeHolder,
                 keyboardType = keyboardType,
                 fillMaxWidth = false,
             )
             Button(
-                onClick = { checkInput.invoke() },
+                onClick = { onCheck() },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
-                    .weight(1f)
                     .width(60.dp)
-                    .padding(start = 4.dp)
-                    .fillMaxSize(),
+                    .fillMaxHeight()
+                    .padding(start = 4.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = SoptTheme.colors.purple300,
                     contentColor = SoptTheme.colors.white,
@@ -105,11 +109,11 @@ private fun SignUpInputContainerReview() {
     SoptTheme {
         var password by remember { mutableStateOf("") }
         SignUpInputContainer(
-            inputTitle = "",
-            inputDesc = "",
+            title = "닉네임",
+            placeHolder = "한글/영문 10자 이하로 입력해주세요",
             value = password,
             keyboardType = KeyboardType.Email,
-            checkInput = { },
+            onCheck = { },
             onValueChange = { password = it }
         )
     }
