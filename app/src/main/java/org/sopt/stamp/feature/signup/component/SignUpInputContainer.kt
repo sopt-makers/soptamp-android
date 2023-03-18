@@ -30,25 +30,25 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
 fun SignUpInputContainer(
+    value: String,
+    onValueChange: (String) -> Unit,
     inputTitle: String,
     inputDesc: String,
-    input: MutableState<TextFieldValue>,
     keyboardType: KeyboardType,
     checkInput: () -> Unit,
-    putInput: (String) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -67,11 +67,11 @@ fun SignUpInputContainer(
             verticalAlignment = Alignment.Top
         ) {
             SignUpTextField(
-                inputDesc,
-                input,
-                keyboardType,
-                false,
-                putInput
+                value = value,
+                onValueChange = onValueChange,
+                placeHolder = inputDesc,
+                keyboardType = keyboardType,
+                fillMaxWidth = false,
             )
             Button(
                 onClick = { checkInput.invoke() },
@@ -88,7 +88,7 @@ fun SignUpInputContainer(
                     disabledContentColor = SoptTheme.colors.white
                 ),
                 contentPadding = PaddingValues(0.dp),
-                enabled = input.value.text.isNotBlank()
+                enabled = value.isNotBlank()
             ) {
                 Text(
                     text = "확인",
@@ -103,14 +103,14 @@ fun SignUpInputContainer(
 @Composable
 private fun SignUpInputContainerReview() {
     SoptTheme {
-        val password = remember { mutableStateOf(TextFieldValue()) }
+        var password by remember { mutableStateOf("") }
         SignUpInputContainer(
             inputTitle = "",
             inputDesc = "",
-            input = password,
+            value = password,
             keyboardType = KeyboardType.Email,
             checkInput = { },
-            putInput = { }
+            onValueChange = { password = it }
         )
     }
 }

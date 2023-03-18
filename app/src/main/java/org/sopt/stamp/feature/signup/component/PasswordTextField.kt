@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,24 +32,36 @@ import org.sopt.stamp.util.DefaultPreview
 
 @Composable
 fun PasswordTextField(
-    inputTitle: String,
-    firstInputDesc: String,
-    secondInputDesc: String,
-    password: MutableState<TextFieldValue>,
-    passwordConfirm: MutableState<TextFieldValue>,
-    checkInputSame: () -> Unit,
+    title: String,
+    password: String,
+    onChangePassword: (String) -> Unit,
+    passwordCheck: String,
+    onChangePasswordCheck: (String) -> Unit,
+    passwordPlaceholder: String,
+    passwordCheckPlaceholder: String,
     keyboardType: KeyboardType,
-    putPassword: (String) -> Unit,
-    putPasswordConfirm: (String) -> Unit
+    isChecked: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = inputTitle)
+        Text(text = title)
         Spacer(modifier = Modifier.height(16.dp))
-        SignUpTextField(firstInputDesc, password, keyboardType, true, putPassword)
+        SignUpTextField(
+            value = password,
+            onValueChange = onChangePassword,
+            placeHolder = passwordPlaceholder,
+            keyboardType = keyboardType,
+            fillMaxWidth = true
+        )
         Spacer(modifier = Modifier.height(12.dp))
-        SignUpTextField(secondInputDesc, passwordConfirm, keyboardType, true, putPasswordConfirm)
+        SignUpTextField(
+            value = passwordCheck,
+            onValueChange = onChangePasswordCheck,
+            placeHolder = passwordCheckPlaceholder,
+            keyboardType = keyboardType,
+            fillMaxWidth = true
+        )
     }
 }
 
@@ -60,15 +71,15 @@ private fun PasswordTextFieldPreview() {
     SoptTheme {
         val password = remember { mutableStateOf(TextFieldValue()) }
         PasswordTextField(
-            "비밀번호",
-            "비밀번호를 입력해주세요.",
-            "비밀번호를 다시 입력해주세요.",
-            password,
-            password,
-            checkInputSame = { },
+            title = "비밀번호",
+            password = password.value.text,
+            onChangePassword = { password.value = TextFieldValue(it) },
+            passwordCheck = "",
+            onChangePasswordCheck = {},
+            passwordPlaceholder = "비밀번호를 입력해주세요",
+            passwordCheckPlaceholder = "비밀번호를 한번 더 입력해주세요",
             keyboardType = KeyboardType.Password,
-            putPassword = { },
-            putPasswordConfirm = { }
+            isChecked = {}
         )
     }
 }

@@ -17,38 +17,37 @@ package org.sopt.stamp.feature.signup.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.sopt.stamp.designsystem.component.textfield.TextField
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
 fun SignUpTextField(
-    inputDesc: String,
-    input: MutableState<TextFieldValue>,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeHolder: String,
     keyboardType: KeyboardType,
-    fillMaxWidth: Boolean,
-    putInput: (String) -> Unit
+    fillMaxWidth: Boolean
 ) {
     val colors = SoptTheme.colors
-    val isEmpty = remember(input) {
-        input.value.text.isEmpty()
+    val isEmpty = remember(value) {
+        value.isEmpty()
     }
     val modifier = remember(fillMaxWidth, isEmpty) {
         val baseModifier = Modifier
@@ -73,7 +72,7 @@ fun SignUpTextField(
     }
 
     TextField(
-        value = input.value,
+        value = value,
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.textFieldColors(
@@ -84,13 +83,10 @@ fun SignUpTextField(
             placeholderColor = SoptTheme.colors.onSurface60
         ),
         visualTransformation = visualTransformation,
-        onValueChange = {
-            input.value = it
-            putInput(input.value.text)
-        },
+        onValueChange = { onValueChange(it) },
         placeholder = {
             Text(
-                text = inputDesc,
+                text = placeHolder,
                 style = SoptTheme.typography.caption1,
                 textAlign = TextAlign.Center
             )
@@ -104,12 +100,13 @@ fun SignUpTextField(
 @Composable
 private fun SignUpTextFieldPreview() {
     SoptTheme {
-        val nickname = remember { mutableStateOf(TextFieldValue()) }
+        var nickname by remember { mutableStateOf("") }
         SignUpTextField(
-            inputDesc = "닉네임",
-            input = nickname,
+            placeHolder = "닉네임",
+            value = nickname,
             keyboardType = KeyboardType.Text,
-            fillMaxWidth = true
-        ) { }
+            fillMaxWidth = true,
+            onValueChange = { nickname = it }
+        )
     }
 }

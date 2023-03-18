@@ -21,13 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,10 +35,7 @@ import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.fake.FakeUserRepository
-import org.sopt.stamp.feature.signup.SignUpAction
 import org.sopt.stamp.feature.signup.SignUpViewModel
-import org.sopt.stamp.feature.signup.component.PasswordTextField
-import org.sopt.stamp.feature.signup.component.SignUpInputContainer
 
 @SignUpNavGraph(true)
 @Destination("Page")
@@ -54,13 +45,9 @@ fun SignUpPageScreen(
     resultBackNavigator: ResultBackNavigator<Boolean>,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
-    val isSignUpSuccess by viewModel.isSignUpSuccess.collectAsState(false)
 
-    LaunchedEffect(isSignUpSuccess) {
-        if (isSignUpSuccess) {
-            resultBackNavigator.navigateBack(true)
-        }
+    LaunchedEffect(Unit) {
+        resultBackNavigator.navigateBack(true)
     }
 
     SoptTheme {
@@ -89,43 +76,17 @@ fun SignUpPageScreen(
                     .fillMaxSize()
                     .background(SoptTheme.colors.white)
             ) {
-                val nickname = remember { mutableStateOf(TextFieldValue()) }
-                val email = remember { mutableStateOf(TextFieldValue()) }
-                val password = remember { mutableStateOf(TextFieldValue()) }
-                val passwordConfirm = remember { mutableStateOf(TextFieldValue()) }
                 Spacer(modifier = Modifier.height(20.dp))
-                SignUpInputContainer(
-                    "닉네임",
-                    "닉네임을 입력해주세요",
-                    nickname,
-                    checkInput = { viewModel.handleAction(SignUpAction.CheckNickname) },
-                    keyboardType = KeyboardType.Text,
-                    putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
-                )
+                // TODO: 닉네임 입력 컴포넌트
                 Spacer(modifier = Modifier.height(20.dp))
-                SignUpInputContainer(
-                    "이메일",
-                    "이메일을 입력해주세요",
-                    email,
-                    checkInput = { viewModel.handleAction(SignUpAction.CheckEmail) },
-                    keyboardType = KeyboardType.Email,
-                    putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) }
-                )
+                // TODO: 이메일 입력 컴포넌트
                 Spacer(modifier = Modifier.height(20.dp))
-                PasswordTextField(
-                    "비밀번호",
-                    "비밀번호를 입력해주세요.",
-                    "비밀번호를 다시 입력해주세요.",
-                    password,
-                    passwordConfirm,
-                    checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
-                    keyboardType = KeyboardType.Password,
-                    putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
-                    putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) }
-                )
+                // TODO: 비밀번호 입력 컴포넌트
                 Spacer(modifier = Modifier.height(90.dp))
                 Button(
-                    onClick = { viewModel.handleAction(SignUpAction.SignUp) },
+                    onClick = {
+                        // TODO: 가입하기 버튼 클릭 시,
+                    },
                     shape = RoundedCornerShape(9.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -136,7 +97,7 @@ fun SignUpPageScreen(
                         disabledBackgroundColor = SoptTheme.colors.purple200,
                         disabledContentColor = SoptTheme.colors.white
                     ),
-                    enabled = isSubmitEnabled
+                    enabled = false
                 ) {
                     Text(
                         text = "가입하기",

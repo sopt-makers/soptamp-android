@@ -16,9 +16,25 @@
 package org.sopt.stamp.feature.signup
 
 data class SignUpUiState(
-    val nickname: String? = null,
-    val email: String? = null,
-    val password: String? = null,
-    val passwordConfirm: String? = null,
-    val errorMessage: String? = null
-)
+    val nickname: String = "",
+    val email: String = "",
+    val isNewEmail: Boolean = false,
+    val isNewNickname: Boolean = false,
+    val password: String = "",
+    val passwordCheck: String = "",
+) {
+    val isEmailEnabled: Boolean
+        get() = EMAIL_PATTERN.matches(email) && email.isNotBlank()
+    val isNicknameEnabled: Boolean
+        get() = NICKNAME_PATTERN.matches(nickname) && nickname.isNotBlank()
+    val isPasswordEnabled: Boolean
+        get() = PASSWORD_PATTERN.matches(password) && password.isNotBlank()
+    val isPasswordCheckEnabled: Boolean
+        get() = password == passwordCheck && password.isNotBlank()
+
+    private companion object {
+        val EMAIL_PATTERN = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
+        val NICKNAME_PATTERN = Regex("[a-zA-Z가-힣]+")
+        val PASSWORD_PATTERN = Regex("^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}\$")
+    }
+}
