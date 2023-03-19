@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.domain.model.Archive
 import org.sopt.stamp.domain.repository.StampRepository
-import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import org.sopt.stamp.feature.mission.model.ImageModel
 import timber.log.Timber
 import javax.inject.Inject

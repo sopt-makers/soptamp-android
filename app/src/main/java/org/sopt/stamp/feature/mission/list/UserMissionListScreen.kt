@@ -90,7 +90,7 @@ fun UserMissionListScreen(
                 missionListUiModel = (state as MissionsState.Success).missionListUiModel,
                 isMe = args.userId == missionsViewModel.userId,
                 onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) },
-                onClickBack = { resultNavigator.navigateBack() },
+                onClickBack = { resultNavigator.navigateBack() }
             )
         }
     }
@@ -104,7 +104,7 @@ fun UserMissionListScreen(
     missionListUiModel: MissionListUiModel,
     isMe: Boolean,
     onMissionItemClick: (item: MissionNavArgs) -> Unit = {},
-    onClickBack: () -> Unit = {},
+    onClickBack: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
