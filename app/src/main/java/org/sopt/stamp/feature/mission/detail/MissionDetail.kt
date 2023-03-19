@@ -72,7 +72,7 @@ fun MissionDetailScreen(
     resultNavigator: ResultBackNavigator<Boolean>,
     viewModel: MissionDetailViewModel = hiltViewModel()
 ) {
-    val (id, title, level, isCompleted) = args
+    val (id, title, level, isCompleted, isMe, userId) = args
     val content by viewModel.content.collectAsState("")
     val imageModel by viewModel.imageModel.collectAsState(ImageModel.Empty)
     val isSuccess by viewModel.isSuccess.collectAsState(false)
@@ -98,7 +98,7 @@ fun MissionDetailScreen(
     )
 
     LaunchedEffect(Unit) {
-        viewModel.initMissionState(id, isCompleted)
+        viewModel.initMissionState(id, isCompleted, isMe, userId)
     }
     LaunchedEffect(isSuccess, progress) {
         if (progress >= 0.99f && isSuccess) {
@@ -139,10 +139,10 @@ fun MissionDetailScreen(
                     toolbarIconType
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                ImageContent(imageModel, viewModel::onChangeImage, isEditable)
+                ImageContent(imageModel, viewModel::onChangeImage, isEditable && isMe)
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(content, "메모를 작성해 주세요.", viewModel::onChangeContent, getRankTextColor(level.value), isEditable)
-                if (!isEditable) {
+                Memo(content, "메모를 작성해 주세요.", viewModel::onChangeContent, getRankTextColor(level.value), isEditable && isMe)
+                if (!isEditable || !isMe) {
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.fillMaxWidth()
@@ -156,7 +156,7 @@ fun MissionDetailScreen(
                 }
             }
 
-            if (isEditable) {
+            if (isEditable && isMe) {
                 Button(
                     onClick = { viewModel.onSubmit() },
                     modifier = Modifier
@@ -205,7 +205,9 @@ fun MissionDetailPreview() {
         id = 1,
         title = "앱잼 팀원 다 함께 바다 보고 오기",
         level = MissionLevel.of(2),
-        isCompleted = false
+        isCompleted = false,
+        isMe = true,
+        userId = 1
     )
     SoptTheme {
         MissionDetailScreen(args, EmptyResultBackNavigator(), viewModel())
