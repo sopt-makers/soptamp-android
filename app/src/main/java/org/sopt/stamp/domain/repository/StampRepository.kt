@@ -29,6 +29,11 @@ interface StampRepository {
         missionId: Int
     ): Result<Archive>
 
+    suspend fun getMissionContent(
+        userId: Int,
+        missionId: Int
+    ): Result<Archive>
+
     suspend fun modifyMission(
         missionId: Int,
         imageUri: ImageModel,

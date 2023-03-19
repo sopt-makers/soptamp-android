@@ -23,11 +23,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.domain.model.Archive
 import org.sopt.stamp.domain.repository.StampRepository
+import org.sopt.stamp.domain.usecase.auth.GetUserIdUseCase
 import org.sopt.stamp.feature.mission.model.ImageModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -45,7 +45,8 @@ data class PostUiState(
     val isCompleted: Boolean = false,
     val toolbarIconType: ToolbarIconType = ToolbarIconType.NONE,
     val isDeleteSuccess: Boolean = false,
-    val isDeleteDialogVisible: Boolean = false
+    val isDeleteDialogVisible: Boolean = false,
+    val isMe: Boolean = true
 ) {
     companion object {
         fun from(data: Archive) = PostUiState(
@@ -62,15 +63,12 @@ class MissionDetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val uiState = MutableStateFlow(PostUiState())
 
-    val isError = uiState.map { it.isError }
-        .zip(uiState.map { it.error }) { isError, error ->
-            Pair(isError, error)
-        }
+    val isMe = uiState.map { it.isMe }
     val isSuccess = uiState.map { it.isSuccess }
     val content = uiState.map { it.content }
     val imageModel = uiState.map { it.imageUri }
-    val isSubmitEnabled = content.combine(imageModel) { content, image ->
-        content.isNotEmpty() && !image.isEmpty()
+    val isSubmitEnabled = combine(content, imageModel, isMe) { content, image, isMe ->
+        content.isNotEmpty() && !image.isEmpty() && isMe
     }
     val isCompleted = uiState.map { it.isCompleted }
     val toolbarIconType = uiState.map { it.toolbarIconType }
@@ -82,7 +80,7 @@ class MissionDetailViewModel @Inject constructor(
     val isDeleteSuccess = uiState.map { it.isDeleteSuccess }
     val isDeleteDialogVisible = uiState.map { it.isDeleteDialogVisible }
 
-    fun initMissionState(id: Int, isCompleted: Boolean) {
+    fun initMissionState(id: Int, isCompleted: Boolean, isMe: Boolean, userId: Int) {
         viewModelScope.launch {
             uiState.update {
                 it.copy(
@@ -90,15 +88,25 @@ class MissionDetailViewModel @Inject constructor(
                     isError = false,
                     error = null,
                     isLoading = true,
-                    isSuccess = false
+                    isSuccess = false,
+                    isMe = isMe
                 )
             }
-            repository.getMissionContent(id)
+            repository.getMissionContent(userId, id)
                 .onSuccess {
+                    val option = if (!isMe) {
+                        ToolbarIconType.NONE
+                    } else {
+                        if (isCompleted) {
+                            ToolbarIconType.WRITE
+                        } else {
+                            ToolbarIconType.NONE
+                        }
+                    }
                     val result = PostUiState.from(it).copy(
                         stampId = it.id,
                         isCompleted = isCompleted,
-                        toolbarIconType = if (isCompleted) ToolbarIconType.WRITE else ToolbarIconType.NONE,
+                        toolbarIconType = option,
                         createdAt = it.createdAt ?: ""
                     )
                     uiState.update { result }

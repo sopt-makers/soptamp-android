@@ -84,11 +84,13 @@ fun UserMissionListScreen(
             }
 
             is MissionsState.Success -> UserMissionListScreen(
+                userId = args.userId,
                 userName = args.nickname,
                 description = args.description,
                 missionListUiModel = (state as MissionsState.Success).missionListUiModel,
+                isMe = args.userId == missionsViewModel.userId,
                 onMissionItemClick = { item -> navigator.navigate(MissionDetailScreenDestination(item)) },
-                onClickBack = { resultNavigator.navigateBack() }
+                onClickBack = { resultNavigator.navigateBack() },
             )
         }
     }
@@ -96,11 +98,13 @@ fun UserMissionListScreen(
 
 @Composable
 fun UserMissionListScreen(
+    userId: Int,
     userName: String,
     description: String,
     missionListUiModel: MissionListUiModel,
+    isMe: Boolean,
     onMissionItemClick: (item: MissionNavArgs) -> Unit = {},
-    onClickBack: () -> Unit = {}
+    onClickBack: () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -124,7 +128,9 @@ fun UserMissionListScreen(
             Spacer(modifier = Modifier.size(33.dp))
             MissionsGridComponent(
                 missions = missionListUiModel.missionList,
-                onMissionItemClick = { onMissionItemClick(it) }
+                onMissionItemClick = { onMissionItemClick(it) },
+                isMe = isMe,
+                userId = userId
             )
         }
     }
@@ -236,7 +242,9 @@ fun PreviewUserMissionListScreen() {
                         isCompleted = true
                     )
                 )
-            )
+            ),
+            isMe = false,
+            userId = 1
         )
     }
 }

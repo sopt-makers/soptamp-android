@@ -31,14 +31,14 @@ import retrofit2.http.Path
 interface StampService {
     @GET("stamp/{missionId}")
     suspend fun retrieveStamp(
-        @Header("userId") userId: Int = 158,
+        @Header("userId") userId: Int,
         @Path("missionId") missionId: Int
     ): StampResponse
 
     @Multipart
     @PUT("stamp/{missionId}")
     suspend fun modifyStamp(
-        @Header("userId") userId: Int = 158,
+        @Header("userId") userId: Int,
         @Path("missionId") missionId: Int,
         @Part("stampContent") stampContent: RequestBody,
         @Part imgUrl: List<MultipartBody.Part>? = null
@@ -47,7 +47,7 @@ interface StampService {
     @Multipart
     @POST("stamp/{missionId}")
     suspend fun registerStamp(
-        @Header("userId") userId: Int = 158,
+        @Header("userId") userId: Int,
         @Path("missionId") missionId: Int,
         @Part("stampContent") stampContent: RequestBody,
         @Part imgUrl: List<MultipartBody.Part>? = null
@@ -55,12 +55,12 @@ interface StampService {
 
     @DELETE("stamp/{missionId}")
     suspend fun deleteStamp(
-        @Header("userId") userId: Int = 158,
+        @Header("userId") userId: Int,
         @Path("missionId") missionId: Int
     )
 
     @DELETE("stamp/all")
     suspend fun deleteAllStamps(
-        @Header("userId") userId: Int = 158
+        @Header("userId") userId: Int
     )
 }

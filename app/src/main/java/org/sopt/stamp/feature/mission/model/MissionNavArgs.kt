@@ -23,29 +23,35 @@ data class MissionNavArgs(
     val id: Int,
     val title: String,
     val level: MissionLevel,
-    val isCompleted: Boolean
+    val isCompleted: Boolean,
+    val isMe: Boolean,
+    val userId: Int
 )
 
-fun MissionUiModel.toArgs() = MissionNavArgs(
+fun MissionUiModel.toArgs(isMe: Boolean, userId: Int) = MissionNavArgs(
     id = this.id,
     title = this.title,
     level = this.level,
-    isCompleted = this.isCompleted
+    isCompleted = this.isCompleted,
+    isMe = isMe,
+    userId = userId
 )
 
 @NavTypeSerializer
 class MissionNavArgsSerializer : DestinationsNavTypeSerializer<MissionNavArgs> {
     override fun toRouteString(value: MissionNavArgs): String {
-        return "${value.id}::${value.title}::${value.level}::${value.isCompleted}"
+        return "${value.id}::${value.title}::${value.level}::${value.isCompleted}::${value.isMe}::${value.userId}"
     }
 
     override fun fromRouteString(routeStr: String): MissionNavArgs {
-        val (id, title, level, isCompleted) = routeStr.split("::")
+        val it = routeStr.split("::")
         return MissionNavArgs(
-            id = id.toInt(),
-            title = title,
-            level = MissionLevel.of(level.toInt()),
-            isCompleted = isCompleted.toBoolean()
+            id = it[0].toInt(),
+            title = it[1],
+            level = MissionLevel.of(it[2].toInt()),
+            isCompleted = it[3].toBoolean(),
+            isMe = it[4].toBoolean(),
+            userId = it[5].toInt()
         )
     }
 }

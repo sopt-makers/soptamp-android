@@ -107,6 +107,7 @@ fun MissionListScreen(
             }
 
             is MissionsState.Success -> MissionListScreen(
+                userId = missionsViewModel.userId,
                 missionListUiModel = (state as MissionsState.Success).missionListUiModel,
                 menuTexts = MissionsFilter.getTitleOfMissionsList(),
                 onMenuClick = { filter -> missionsViewModel.fetchMissions(filter = filter) },
@@ -120,6 +121,7 @@ fun MissionListScreen(
 
 @Composable
 fun MissionListScreen(
+    userId: Int,
     missionListUiModel: MissionListUiModel,
     menuTexts: List<String>,
     onMenuClick: (String) -> Unit = {},
@@ -159,7 +161,9 @@ fun MissionListScreen(
             } else {
                 MissionsGridComponent(
                     missions = missionListUiModel.missionList,
-                    onMissionItemClick = { onMissionItemClick(it) }
+                    onMissionItemClick = { onMissionItemClick(it) },
+                    isMe = true,
+                    userId = userId
                 )
             }
         }
@@ -169,7 +173,9 @@ fun MissionListScreen(
 @Composable
 fun MissionsGridComponent(
     missions: List<MissionUiModel>,
-    onMissionItemClick: (item: MissionNavArgs) -> Unit = {}
+    onMissionItemClick: (item: MissionNavArgs) -> Unit = {},
+    isMe: Boolean = true,
+    userId: Int
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -180,7 +186,7 @@ fun MissionsGridComponent(
             MissionComponent(
                 mission = missionUiModel,
                 onClick = {
-                    onMissionItemClick(missionUiModel.toArgs())
+                    onMissionItemClick(missionUiModel.toArgs(isMe, userId))
                 }
             )
         }
@@ -361,6 +367,7 @@ fun PreviewMissionListScreen() {
     )
     SoptTheme {
         MissionListScreen(
+            userId = 1,
             missionListUiModel,
             listOf("전체 미션", "완료 미션", "미완료 미션")
         )
