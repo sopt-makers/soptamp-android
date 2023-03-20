@@ -32,19 +32,22 @@ import org.sopt.stamp.designsystem.component.ratingbar.RatingBar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.ranking.getRankTextColor
+import org.sopt.stamp.feature.ranking.headerBackgroundColorOf
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
 fun Header(
     title: String,
     stars: Int,
-    toolbarIconType: ToolbarIconType
+    toolbarIconType: ToolbarIconType,
+    isMe: Boolean,
+    isCompleted: Boolean
 ) {
     Surface(
         modifier = Modifier
             .background(
-                color = if (toolbarIconType == ToolbarIconType.WRITE) {
-                    getRankTextColor(stars).copy(alpha = 0.1F)
+                color = if ((!isMe || isCompleted) && toolbarIconType == ToolbarIconType.WRITE) {
+                    headerBackgroundColorOf(stars)
                 } else {
                     SoptTheme.colors.onSurface5
                 },
@@ -76,6 +79,12 @@ fun Header(
 @Composable
 private fun HeaderPreview() {
     SoptTheme {
-        Header(title = "오늘은 무슨 일을 할까?", stars = 2, ToolbarIconType.WRITE)
+        Header(
+            title = "오늘은 무슨 일을 할까?",
+            stars = 2,
+            toolbarIconType = ToolbarIconType.WRITE,
+            isMe = true,
+            isCompleted = false
+        )
     }
 }
