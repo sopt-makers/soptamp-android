@@ -38,7 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -48,12 +47,13 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import kotlinx.coroutines.delay
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
+import org.sopt.stamp.designsystem.component.dialog.DoubleOptionDialog
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.domain.MissionLevel
-import org.sopt.stamp.designsystem.component.dialog.DoubleOptionDialog
+import org.sopt.stamp.domain.fake.FakeStampRepository
 import org.sopt.stamp.feature.mission.detail.component.Header
 import org.sopt.stamp.feature.mission.detail.component.ImageContent
 import org.sopt.stamp.feature.mission.detail.component.Memo
@@ -136,12 +136,22 @@ fun MissionDetailScreen(
                 Header(
                     title = title,
                     stars = level.value,
-                    toolbarIconType
+                    toolbarIconType = toolbarIconType
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                ImageContent(imageModel, viewModel::onChangeImage, isEditable && isMe)
+                ImageContent(
+                    imageModel = imageModel,
+                    onChangeImage = viewModel::onChangeImage,
+                    isEditable = isEditable && isMe
+                )
                 Spacer(modifier = Modifier.height(12.dp))
-                Memo(content, "메모를 작성해 주세요.", viewModel::onChangeContent, getRankTextColor(level.value), isEditable && isMe)
+                Memo(
+                    value = content,
+                    placeHolder = "메모를 작성해 주세요.",
+                    onValueChange = viewModel::onChangeContent,
+                    borderColor = getRankTextColor(level.value),
+                    isEditable = isEditable && isMe && isSuccess
+                )
                 if (!isEditable || !isMe) {
                     Row(
                         horizontalArrangement = Arrangement.End,
@@ -210,6 +220,10 @@ fun MissionDetailPreview() {
         userId = 1
     )
     SoptTheme {
-        MissionDetailScreen(args, EmptyResultBackNavigator(), viewModel())
+        MissionDetailScreen(
+            args,
+            EmptyResultBackNavigator(),
+            MissionDetailViewModel(FakeStampRepository)
+        )
     }
 }
