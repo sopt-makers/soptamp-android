@@ -82,6 +82,7 @@ fun Memo(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             textColor = SoptTheme.colors.onSurface90,
+            disabledTextColor = SoptTheme.colors.onSurface90,
             placeholderColor = SoptTheme.colors.onSurface60
         ),
         textStyle = SoptTheme.typography.caption1,
@@ -104,7 +105,7 @@ private fun MemoPreview() {
             onValueChange = {},
             borderColor = getRankTextColor(2),
             placeHolder = "",
-            isEditable = true
+            isEditable = false
         )
     }
 }
