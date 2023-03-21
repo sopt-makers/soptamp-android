@@ -87,7 +87,7 @@ fun Toolbar(
             Image(
                 painter = ToolbarIconType.getResourceFrom(iconOption),
                 contentDescription = "Option Menu Icon",
-                modifier = Modifier.clickable(onClick = onPressIcon)
+                modifier = Modifier.noRippleClickable(onClick = onPressIcon)
             )
         }
     }
