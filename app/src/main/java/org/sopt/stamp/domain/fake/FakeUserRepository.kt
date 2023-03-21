@@ -46,4 +46,5 @@ object FakeUserRepository : UserRepository {
     override fun updateLocalUserInfo(userId: Int, profileMessage: String) = Unit
 
     override fun fetchUserId() = 1
+    override fun getIsOnboardingSeen() = false
 }

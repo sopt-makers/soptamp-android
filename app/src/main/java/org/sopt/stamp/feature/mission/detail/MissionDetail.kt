@@ -138,7 +138,7 @@ fun MissionDetailScreen(
                     stars = level.value,
                     toolbarIconType = toolbarIconType,
                     isMe = isMe,
-                    isCompleted = isCompleted,
+                    isCompleted = isCompleted
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 ImageContent(
