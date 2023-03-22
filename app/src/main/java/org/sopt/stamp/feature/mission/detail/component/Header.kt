@@ -31,7 +31,7 @@ import org.sopt.stamp.R
 import org.sopt.stamp.designsystem.component.ratingbar.RatingBar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.designsystem.style.SoptTheme
-import org.sopt.stamp.feature.ranking.getRankTextColor
+import org.sopt.stamp.feature.ranking.getLevelTextColor
 import org.sopt.stamp.feature.ranking.headerBackgroundColorOf
 import org.sopt.stamp.util.DefaultPreview
 
@@ -64,7 +64,7 @@ fun Header(
             RatingBar(
                 icon = R.drawable.ic_star,
                 stars = stars,
-                selectedColor = getRankTextColor(rank = stars)
+                selectedColor = getLevelTextColor(rank = stars)
             )
             Text(
                 text = title,

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import org.sopt.stamp.designsystem.style.Gray50
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.designsystem.style.White
-import org.sopt.stamp.feature.ranking.getRankTextColor
+import org.sopt.stamp.feature.ranking.getLevelTextColor
 import org.sopt.stamp.util.DefaultPreview
 
 @Composable
@@ -103,7 +103,7 @@ private fun MemoPreview() {
         Memo(
             value = "안돼",
             onValueChange = {},
-            borderColor = getRankTextColor(2),
+            borderColor = getLevelTextColor(2),
             placeHolder = "",
             isEditable = false
         )
