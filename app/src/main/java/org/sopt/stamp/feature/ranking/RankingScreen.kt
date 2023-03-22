@@ -134,7 +134,7 @@ fun RankingScreen(
             end = 16.dp
         )
         Box(
-            modifier = Modifier.pullRefresh(refreshingState),
+            modifier = Modifier.pullRefresh(refreshingState)
         ) {
             LazyColumn(
                 state = listState,
