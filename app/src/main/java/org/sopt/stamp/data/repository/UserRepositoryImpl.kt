@@ -31,7 +31,7 @@ class UserRepositoryImpl @Inject constructor(
         password: String,
         osType: String,
         clientToken: String
-    ): User = remote.signup(nickname, email, password, osType, clientToken).toUser()
+    ): Int = remote.signup(nickname, email, password, osType, clientToken).userId
 
     override suspend fun checkNickname(nickname: String) = remote.checkNickname(nickname)
 

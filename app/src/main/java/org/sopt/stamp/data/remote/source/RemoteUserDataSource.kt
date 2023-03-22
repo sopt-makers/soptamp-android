@@ -18,6 +18,7 @@ package org.sopt.stamp.data.remote.source
 import org.sopt.stamp.data.remote.api.RankService
 import org.sopt.stamp.data.remote.api.UserService
 import org.sopt.stamp.data.remote.model.request.*
+import org.sopt.stamp.data.remote.model.response.SignUpResponse
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import org.sopt.stamp.data.source.UserDataSource
 import retrofit2.HttpException
@@ -33,24 +34,14 @@ internal class RemoteUserDataSource @Inject constructor(
         password: String,
         osType: String,
         clientToken: String
-    ): UserResponse {
-        val response = userService.signup(
+    ): SignUpResponse {
+        return userService.signup(
             SignUpRequest(
                 nickname,
                 email,
                 password
             )
         )
-
-        return if (response.isSuccessful) {
-            UserResponse(
-                response.body()?.userId,
-                response.body()?.message,
-                response.code()
-            )
-        } else {
-            throw HttpException(response)
-        }
     }
 
     override suspend fun checkNickname(nickname: String) {

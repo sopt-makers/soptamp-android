@@ -15,147 +15,227 @@
  */
 package org.sopt.stamp.feature.signup.screen
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.result.ResultBackNavigator
+import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.SignUpNavGraph
-import org.sopt.stamp.designsystem.component.layout.SoptColumn
-import org.sopt.stamp.designsystem.component.toolbar.Toolbar
+import org.sopt.stamp.designsystem.component.button.SoptampButton
+import org.sopt.stamp.designsystem.component.button.SoptampIconButton
+import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
+import org.sopt.stamp.designsystem.component.layout.LoadingScreen
+import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
-import org.sopt.stamp.domain.fake.FakeUserRepository
-import org.sopt.stamp.feature.signup.SignUpAction
+import org.sopt.stamp.feature.destinations.LoginPageScreenDestination
+import org.sopt.stamp.feature.destinations.SignUpCompleteScreenDestination
 import org.sopt.stamp.feature.signup.SignUpViewModel
-import org.sopt.stamp.feature.signup.component.PasswordTextField
-import org.sopt.stamp.feature.signup.component.SignUpInputContainer
+import org.sopt.stamp.feature.signup.component.RegisterInputField
+import org.sopt.stamp.feature.signup.component.RegisterPasswordInputField
+import org.sopt.stamp.feature.signup.model.RegisterState
+import org.sopt.stamp.feature.signup.model.RegisterUiModel
+import org.sopt.stamp.util.rememberKeyBoardState
 
 @SignUpNavGraph(true)
-@Destination("Page")
+@Destination("register")
 @Composable
 fun SignUpPageScreen(
     navigator: DestinationsNavigator,
     resultBackNavigator: ResultBackNavigator<Boolean>,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    val isSubmitEnabled by viewModel.isSubmitEnabled.collectAsState(false)
-    val isSignUpSuccess by viewModel.isSignUpSuccess.collectAsState(false)
-
-    LaunchedEffect(isSignUpSuccess) {
-        if (isSignUpSuccess) {
-            resultBackNavigator.navigateBack(true)
-        }
-    }
+    val state by viewModel.state.collectAsState()
 
     SoptTheme {
-        Scaffold(
-            topBar = {
-                Toolbar(
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        bottom = 10.dp
-                    ),
-                    title = {
-                        Text(
-                            text = "닉네임 변경",
-                            style = SoptTheme.typography.h2,
-                            modifier = Modifier.padding(start = 4.dp),
-                            color = SoptTheme.colors.onSurface
-                        )
-                    },
-                    onBack = { navigator.popBackStack() }
-                )
+        Box(modifier = Modifier.fillMaxSize()) {
+            var uiModel by remember {
+                mutableStateOf(RegisterState.Default(RegisterUiModel.empty).uiModel)
             }
-        ) { padding ->
-            SoptColumn(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .background(SoptTheme.colors.white)
-            ) {
-                val nickname = remember { mutableStateOf(TextFieldValue()) }
-                val email = remember { mutableStateOf(TextFieldValue()) }
-                val password = remember { mutableStateOf(TextFieldValue()) }
-                val passwordConfirm = remember { mutableStateOf(TextFieldValue()) }
-                Spacer(modifier = Modifier.height(20.dp))
-                SignUpInputContainer(
-                    "닉네임",
-                    "닉네임을 입력해주세요",
-                    nickname,
-                    checkInput = { viewModel.handleAction(SignUpAction.CheckNickname) },
-                    keyboardType = KeyboardType.Text,
-                    putInput = { input -> viewModel.handleAction(SignUpAction.PutNickname(input)) }
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                SignUpInputContainer(
-                    "이메일",
-                    "이메일을 입력해주세요",
-                    email,
-                    checkInput = { viewModel.handleAction(SignUpAction.CheckEmail) },
-                    keyboardType = KeyboardType.Email,
-                    putInput = { input -> viewModel.handleAction(SignUpAction.PutEmail(input)) }
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                PasswordTextField(
-                    "비밀번호",
-                    "비밀번호를 입력해주세요.",
-                    "비밀번호를 다시 입력해주세요.",
-                    password,
-                    passwordConfirm,
-                    checkInputSame = { viewModel.handleAction(SignUpAction.CheckPassword) },
-                    keyboardType = KeyboardType.Password,
-                    putPassword = { input -> viewModel.handleAction(SignUpAction.PutPassword(input)) },
-                    putPasswordConfirm = { input -> viewModel.handleAction(SignUpAction.PutPasswordConfirm(input)) }
-                )
-                Spacer(modifier = Modifier.height(90.dp))
-                Button(
-                    onClick = { viewModel.handleAction(SignUpAction.SignUp) },
-                    shape = RoundedCornerShape(9.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = SoptTheme.colors.purple300,
-                        contentColor = SoptTheme.colors.white,
-                        disabledBackgroundColor = SoptTheme.colors.purple200,
-                        disabledContentColor = SoptTheme.colors.white
-                    ),
-                    enabled = isSubmitEnabled
-                ) {
-                    Text(
-                        text = "가입하기",
-                        style = SoptTheme.typography.h2
+            when (state) {
+                is RegisterState.Default -> {
+                    uiModel = (state as RegisterState.Default).uiModel
+                }
+
+                RegisterState.Loading -> {
+                    LoadingScreen()
+                }
+
+                is RegisterState.Failure -> {
+                    NetworkErrorDialog {
+                        viewModel.onRetry((state as RegisterState.Failure).current)
+                    }
+                }
+
+                RegisterState.Success -> {
+                    navigator.navigate(
+                        direction = SignUpCompleteScreenDestination,
+                        builder = {
+                            popUpTo(LoginPageScreenDestination) { inclusive = true }
+                        }
                     )
                 }
             }
+            RegisterScreen(
+                uiModel = uiModel,
+                onNicknameChange = { viewModel.putNickname(it) },
+                onEmailChange = { viewModel.putEmail(it) },
+                onPasswordChange = { viewModel.putPassword(it) },
+                onPasswordConfirmChange = { viewModel.putPasswordConfirm(it) },
+                onClickCheckNickname = { viewModel.checkNickName(it) },
+                onClickCheckEmail = { viewModel.checkEmail(it) },
+                onClickRegister = { viewModel.onSubmit() },
+                onClickBackNav = { resultBackNavigator.navigateBack() }
+            )
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun PreviewSignUpScreen() {
+fun RegisterScreen(
+    uiModel: RegisterUiModel = RegisterUiModel.empty,
+    onNicknameChange: (String) -> Unit = {},
+    onEmailChange: (String) -> Unit = {},
+    onPasswordChange: (String) -> Unit = {},
+    onPasswordConfirmChange: (String) -> Unit = {},
+    onClickCheckNickname: (String) -> Unit = {},
+    onClickCheckEmail: (String) -> Unit = {},
+    onClickRegister: () -> Unit = {},
+    onClickBackNav: () -> Unit = {}
+) {
+    Scaffold(
+        topBar = { RegisterHeader(onClickBackNav = { onClickBackNav() }) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = paddingValues.calculateBottomPadding()
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            val isShowKeyboard by rememberKeyBoardState()
+            var isFocusPassword by remember { mutableStateOf(false) }
+            var isFocusPasswordConfirm by remember { mutableStateOf(false) }
+            val inputNickname = remember {
+                mutableStateOf(TextFieldValue(uiModel.nickname))
+            }
+            val inputEmail = remember {
+                mutableStateOf(TextFieldValue(uiModel.email))
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            AnimatedVisibility(
+                visible = !((isFocusPassword or isFocusPasswordConfirm) and isShowKeyboard),
+                enter = slideInVertically(),
+                exit = slideOutVertically()
+            ) {
+                Column {
+                    RegisterInputField(
+                        title = "닉네임",
+                        input = inputNickname,
+                        onTextChange = { onNicknameChange(it) },
+                        labelText = "한글/영문 10자 이하로 입력해주세요.",
+                        isError = !(uiModel.nicknameCheckState.isPass),
+                        message = uiModel.nicknameCheckMessage,
+                        onClickButton = { onClickCheckNickname(inputNickname.value.text) }
+                    )
+                    Spacer(modifier = Modifier.size(38.dp))
+                    RegisterInputField(
+                        title = "이메일",
+                        input = inputEmail,
+                        onTextChange = { onEmailChange(it) },
+                        labelText = "이메일을 입력해주세요.",
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        isError = !(uiModel.emailCheckState.isPass),
+                        message = uiModel.emailCheckMessage,
+                        onClickButton = { onClickCheckEmail(inputEmail.value.text) }
+                    )
+                    Spacer(modifier = Modifier.size(38.dp))
+                }
+            }
+            RegisterPasswordInputField(
+                title = "비밀번호",
+                onPasswordChange = { onPasswordChange(it) },
+                onPasswordConfirmChange = { onPasswordConfirmChange(it) },
+                passwordLabelText = "영문, 숫자, 특수문자 포함 8자 이상 16자 이하 입력해주세요.",
+                passwordConfirmLabelText = "확인을 위해 비밀번호를 한 번 더 입력해주세요.",
+                isErrorPassword = !uiModel.passwordCheckState.isPass,
+                isErrorPasswordConfirm = !uiModel.passwordConfirmCheckState.isPass,
+                message = uiModel.passwordCheckMessage,
+                onFocusPassword = { isFocusPassword = it.hasFocus },
+                onFocusPasswordConfirm = { isFocusPasswordConfirm = it.hasFocus }
+            )
+            Spacer(modifier = Modifier.size(68.dp))
+            SoptampButton(
+                text = "가입하기",
+                textStyle = SoptTheme.typography.h2,
+                textColor = SoptTheme.colors.white,
+                buttonColors = ButtonDefaults.buttonColors(
+                    backgroundColor = SoptTheme.colors.purple300,
+                    disabledBackgroundColor = SoptTheme.colors.purple200
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onClickRegister() },
+                isEnable = uiModel.isRegisterEnable
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+fun RegisterHeader(
+    onClickBackNav: () -> Unit = {}
+) {
+    SoptTopAppBar(
+        title = { RegisterHeaderTitle() },
+        navigationIcon = {
+            SoptampIconButton(
+                imageVector = ImageVector.vectorResource(id = R.drawable.arrow_left),
+                onClick = { onClickBackNav() }
+            )
+        },
+        contentPadding = PaddingValues(start = 16.dp)
+    )
+}
+
+@Composable
+fun RegisterHeaderTitle() {
+    Text(
+        text = "회원가입",
+        style = SoptTheme.typography.h2,
+        color = SoptTheme.colors.black,
+        fontSize = 20.sp
+    )
+}
+
+@Preview(backgroundColor = 0xFFFFF, showBackground = true)
+@Composable
+fun PreviewRegisterScreen() {
     SoptTheme {
-        SignUpPageScreen(
-            viewModel = SignUpViewModel(FakeUserRepository),
-            resultBackNavigator = EmptyResultBackNavigator(),
-            navigator = EmptyDestinationsNavigator
-        )
+        RegisterScreen()
     }
 }

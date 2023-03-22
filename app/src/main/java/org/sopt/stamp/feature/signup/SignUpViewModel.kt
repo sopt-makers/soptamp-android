@@ -18,156 +18,181 @@ package org.sopt.stamp.feature.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.sopt.stamp.domain.repository.UserRepository
-import timber.log.Timber
+import org.sopt.stamp.feature.signup.model.CheckState
+import org.sopt.stamp.feature.signup.model.RegisterState
+import org.sopt.stamp.feature.signup.model.RegisterUiModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository
-) : ViewModel(), SignUpHandleAction {
-    private val _uiState = MutableStateFlow(SignUpUiState())
-    val uiState = _uiState.asStateFlow()
+) : ViewModel() {
+    private val _state: MutableStateFlow<RegisterState> = MutableStateFlow(RegisterState.Default(RegisterUiModel.empty))
+    val state = _state.asStateFlow()
 
-    private val _uiEvent = Channel<SingleEvent>(Channel.BUFFERED)
-    val isSignUpSuccess = _uiEvent.receiveAsFlow()
-        .map { it is SingleEvent.SignUpSuccess }
-    val isSubmitEnabled = uiState.map {
-        !it.email.isNullOrBlank() && !it.nickname.isNullOrBlank() && !it.password.isNullOrBlank() &&
-            !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
-    }
-
-    init {
-        uiState.debounce(200)
-            .filter {
-                !it.password.isNullOrBlank() && !it.passwordConfirm.isNullOrBlank() && (it.password == it.passwordConfirm)
-            }
-            .onEach {
-                _uiState.update { it.copy(errorMessage = "") }
-            }.launchIn(viewModelScope)
-    }
-
-    override fun handleAction(action: SignUpAction) {
-        when (action) {
-            is SignUpAction.PutNickname -> putNickname(action.input)
-            is SignUpAction.PutEmail -> putEmail(action.input)
-            is SignUpAction.PutPassword -> putPassword(action.input)
-            is SignUpAction.PutPasswordConfirm -> putPasswordConfirm(action.input)
-            is SignUpAction.SignUp -> signUp()
-            is SignUpAction.CheckNickname -> checkNickname()
-            is SignUpAction.CheckEmail -> checkEmail()
-            else -> {}
+    fun putNickname(nickname: String) {
+        _state.update { prevState ->
+            check(prevState is RegisterState.Default)
+            prevState.copy(
+                uiModel = prevState.uiModel.updateNickname(nickname)
+            )
         }
     }
 
-    private fun signUp() {
+    fun putEmail(email: String) {
+        _state.update { prevState ->
+            check(prevState is RegisterState.Default)
+            prevState.copy(
+                uiModel = prevState.uiModel.updateEmail(email)
+            )
+        }
+    }
+
+    fun putPassword(password: String) {
+        _state.update { prevState ->
+            check(prevState is RegisterState.Default)
+            prevState.copy(
+                uiModel = prevState.uiModel.updatePassword(password)
+            )
+        }
+    }
+
+    fun putPasswordConfirm(passwordConfirm: String) {
+        _state.update { prevState ->
+            check(prevState is RegisterState.Default)
+            prevState.copy(
+                uiModel = prevState.uiModel.updatePasswordConfirm(passwordConfirm)
+            )
+        }
+    }
+
+    fun checkNickName(nickname: String) {
         viewModelScope.launch {
-            userRepository.signup(
-                uiState.value.nickname.orEmpty(),
-                uiState.value.email.orEmpty(),
-                uiState.value.password.orEmpty(),
-                "android",
-                "null"
-            ).let { res ->
-                res.message.let {
-                    _uiState.update { prevState ->
-                        prevState.copy(
-                            errorMessage = it
+            runCatching {
+                userRepository.checkNickname(nickname)
+            }.onSuccess {
+                updateNickNamePassState()
+            }.onFailure {
+                _state.update { prevState ->
+                    check(prevState is RegisterState.Default)
+                    prevState.copy(
+                        uiModel = prevState.uiModel.copy(
+                            nicknameCheckMessage = "이미 사용중인 닉네임입니다.",
+                            nicknameCheckState = CheckState.NONE_PASS,
+                            isCheckNickname = false,
+                            isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
                         )
-                    }
+                    )
                 }
-                if (res.statusCode == 200) {
-                    _uiEvent.trySend(SingleEvent.SignUpSuccess)
-                }
-            }
-        }
-    }
-
-    private fun checkNickname() {
-        viewModelScope.launch {
-            uiState.value.nickname?.let {
-                runCatching {
-                    userRepository.checkNickname(it)
-                }.onSuccess {
-                    _uiEvent.trySend(SingleEvent.CheckNicknameSuccess)
-                }.onFailure { error ->
-                    Timber.e(error)
-                    _uiState.update { state ->
-                        state.copy(errorMessage = error.message)
-                    }
+                _state.update {
+                    check(it is RegisterState.Default)
+                    it.copy(
+                        uiModel = it.uiModel.copy(
+                            isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
+                        )
+                    )
                 }
             }
         }
     }
 
-    private fun checkEmail() {
-        val email = uiState.value.email ?: ""
+    fun checkEmail(email: String) {
         viewModelScope.launch {
             runCatching {
                 userRepository.checkEmail(email)
             }.onSuccess {
-                _uiState.update { it.copy(email = email) }
+                updateEmailPassState()
             }.onFailure {
-                _uiState.update { it.copy(errorMessage = it.errorMessage) }
+                _state.update { prevState ->
+                    check(prevState is RegisterState.Default)
+                    prevState.copy(
+                        uiModel = prevState.uiModel.copy(
+                            emailCheckMessage = "이미 등록된 이메일입니다.",
+                            emailCheckState = CheckState.NONE_PASS,
+                            isCheckEmail = false,
+                            isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
+                        )
+                    )
+                }
+                _state.update {
+                    check(it is RegisterState.Default)
+                    it.copy(
+                        uiModel = it.uiModel.copy(
+                            isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
+                        )
+                    )
+                }
             }
         }
     }
 
-    private fun putNickname(input: String) {
-        _uiState.update { prevState ->
+    private fun updateNickNamePassState() {
+        _state.update { prevState ->
+            check(prevState is RegisterState.Default)
             prevState.copy(
-                nickname = input
+                uiModel = prevState.uiModel.copy(
+                    nicknameCheckMessage = "사용 가능한 이름입니다.",
+                    nicknameCheckState = CheckState.PASS,
+                    isCheckNickname = true,
+                    isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
+                )
+            )
+        }
+        _state.update {
+            check(it is RegisterState.Default)
+            it.copy(
+                uiModel = it.uiModel.copy(
+                    isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
+                )
             )
         }
     }
 
-    private fun putEmail(input: String) {
-        _uiState.update {
-            it.copy(email = input)
+    fun onSubmit() {
+        val currentState = _state.value as RegisterState.Default
+        val nickname = currentState.uiModel.nickname
+        val email = currentState.uiModel.email
+        val password = currentState.uiModel.password
+        _state.value = RegisterState.Loading
+        viewModelScope.launch {
+            runCatching {
+                userRepository.signup(nickname, email, password, "android", "null")
+            }.onSuccess {
+                _state.value = RegisterState.Success
+            }.onFailure {
+                _state.value = RegisterState.Failure(currentState.uiModel)
+            }
         }
     }
 
-    private fun putPassword(input: String) {
-        _uiState.update { it.copy(password = input) }
+    fun onRetry(uiModel: RegisterUiModel) {
+        _state.value = RegisterState.Default(uiModel)
     }
 
-    private fun putPasswordConfirm(input: String) {
-        _uiState.update { prevState ->
+    private fun updateEmailPassState() {
+        _state.update { prevState ->
+            check(prevState is RegisterState.Default)
             prevState.copy(
-                passwordConfirm = input
+                uiModel = prevState.uiModel.copy(
+                    emailCheckMessage = "사용 가능한 이메일입니다.",
+                    emailCheckState = CheckState.PASS,
+                    isCheckEmail = true,
+                    isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
+                )
+            )
+        }
+        _state.update {
+            check(it is RegisterState.Default)
+            it.copy(
+                uiModel = it.uiModel.copy(
+                    isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
+                )
             )
         }
     }
-}
-
-interface SignUpHandleAction {
-    fun handleAction(action: SignUpAction)
-}
-
-sealed interface SignUpAction {
-    data class PutNickname(val input: String) : SignUpAction
-    data class PutEmail(val input: String) : SignUpAction
-    data class PutPassword(val input: String) : SignUpAction
-    data class PutPasswordConfirm(val input: String) : SignUpAction
-    object CheckNickname : SignUpAction
-    object CheckEmail : SignUpAction
-    object CheckPassword : SignUpAction
-    object SignUp : SignUpAction
-}
-
-sealed interface SingleEvent {
-    object SignUpSuccess : SingleEvent
-    object CheckNicknameSuccess : SingleEvent
-    object CheckEmailSuccess : SingleEvent
 }

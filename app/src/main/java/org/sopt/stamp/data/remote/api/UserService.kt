@@ -19,6 +19,7 @@ import org.sopt.stamp.data.remote.model.request.LoginRequest
 import org.sopt.stamp.data.remote.model.request.SignUpRequest
 import org.sopt.stamp.data.remote.model.request.UpdateNicknameRequest
 import org.sopt.stamp.data.remote.model.request.UpdatePasswordRequest
+import org.sopt.stamp.data.remote.model.response.SignUpResponse
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -35,7 +36,7 @@ interface UserService {
     @POST("user/signup")
     suspend fun signup(
         @Body request: SignUpRequest
-    ): Response<UserResponse>
+    ): SignUpResponse
 
     // 닉네임 중복검사
     @GET("auth")
