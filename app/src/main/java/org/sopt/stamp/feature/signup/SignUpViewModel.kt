@@ -78,6 +78,25 @@ class SignUpViewModel @Inject constructor(
             }.onSuccess {
                 updateNickNamePassState()
             }.onFailure {
+                _state.update { prevState ->
+                    check(prevState is RegisterState.Default)
+                    prevState.copy(
+                        uiModel = prevState.uiModel.copy(
+                            nicknameCheckMessage = "이미 사용중인 닉네임입니다.",
+                            nicknameCheckState = CheckState.NONE_PASS,
+                            isCheckNickname = false,
+                            isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
+                        )
+                    )
+                }
+                _state.update {
+                    check(it is RegisterState.Default)
+                    it.copy(
+                        uiModel = it.uiModel.copy(
+                            isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
+                        )
+                    )
+                }
             }
         }
     }
@@ -93,9 +112,18 @@ class SignUpViewModel @Inject constructor(
                     check(prevState is RegisterState.Default)
                     prevState.copy(
                         uiModel = prevState.uiModel.copy(
-                            nicknameCheckMessage = "사용 가능한 이름입니다.",
-                            nicknameCheckState = CheckState.NONE_PASS,
-                            isCheckNickname = false
+                            emailCheckMessage = "이미 등록된 이메일입니다.",
+                            emailCheckState = CheckState.NONE_PASS,
+                            isCheckEmail = false,
+                            isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
+                        )
+                    )
+                }
+                _state.update {
+                    check(it is RegisterState.Default)
+                    it.copy(
+                        uiModel = it.uiModel.copy(
+                            isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
                         )
                     )
                 }
@@ -110,7 +138,16 @@ class SignUpViewModel @Inject constructor(
                 uiModel = prevState.uiModel.copy(
                     nicknameCheckMessage = "사용 가능한 이름입니다.",
                     nicknameCheckState = CheckState.PASS,
-                    isCheckNickname = true
+                    isCheckNickname = true,
+                    isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
+                )
+            )
+        }
+        _state.update {
+            check(it is RegisterState.Default)
+            it.copy(
+                uiModel = it.uiModel.copy(
+                    isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
                 )
             )
         }
@@ -144,7 +181,16 @@ class SignUpViewModel @Inject constructor(
                 uiModel = prevState.uiModel.copy(
                     emailCheckMessage = "사용 가능한 이메일입니다.",
                     emailCheckState = CheckState.PASS,
-                    isCheckEmail = true
+                    isCheckEmail = true,
+                    isRegisterEnable = prevState.uiModel.onCheckRegisterEnabled()
+                )
+            )
+        }
+        _state.update {
+            check(it is RegisterState.Default)
+            it.copy(
+                uiModel = it.uiModel.copy(
+                    isRegisterEnable = it.uiModel.onCheckRegisterEnabled()
                 )
             )
         }

@@ -35,7 +35,8 @@ data class RegisterUiModel(
     val isAllInputNotEmpty: Boolean = false,
     val isComplete: Boolean = false,
     val isCheckNickname: Boolean = false,
-    val isCheckEmail: Boolean = false
+    val isCheckEmail: Boolean = false,
+    val isRegisterEnable: Boolean = false
 ) {
 
     fun updateNickname(value: String): RegisterUiModel {
@@ -44,7 +45,8 @@ data class RegisterUiModel(
             nickname = nickname.value,
             nicknameCheckState = if (value.isEmpty() or nickname.isValid) CheckState.NONE else CheckState.NONE_PASS,
             nicknameCheckMessage = nickname.errorMessage,
-            isAllInputNotEmpty = isAllInputIsNotEmpty()
+            isAllInputNotEmpty = isAllInputIsNotEmpty(),
+            isRegisterEnable = isAllInputIsNotEmpty() && isCheckNickname && isCheckEmail
         )
     }
 
@@ -54,7 +56,8 @@ data class RegisterUiModel(
             email = email.value,
             emailCheckState = if (value.isEmpty() or email.isValid) CheckState.NONE else CheckState.NONE_PASS,
             emailCheckMessage = email.errorMessage,
-            isAllInputNotEmpty = isAllInputIsNotEmpty()
+            isAllInputNotEmpty = isAllInputIsNotEmpty(),
+            isRegisterEnable = isAllInputIsNotEmpty() && isCheckNickname && isCheckEmail
         )
     }
 
@@ -64,7 +67,8 @@ data class RegisterUiModel(
             password = password.value,
             passwordCheckState = if (value.isEmpty() or password.isValid) CheckState.NONE else CheckState.NONE_PASS,
             passwordCheckMessage = password.errorMessage,
-            isAllInputNotEmpty = isAllInputIsNotEmpty()
+            isAllInputNotEmpty = isAllInputIsNotEmpty(),
+            isRegisterEnable = isAllInputIsNotEmpty() && isCheckNickname && isCheckEmail
         )
     }
 
@@ -82,12 +86,15 @@ data class RegisterUiModel(
             } else {
                 NOT_EQUAL_PASSWORD_MESSAGE
             },
-            isAllInputNotEmpty = isAllInputIsNotEmpty()
+            isAllInputNotEmpty = isAllInputIsNotEmpty(),
+            isRegisterEnable = isAllInputIsNotEmpty() && isCheckNickname && isCheckEmail
         )
     }
 
     private fun isAllInputIsNotEmpty() =
         (nickname.isNotEmpty() and email.isNotEmpty() and password.isNotEmpty() and passwordConfirm.isNotEmpty())
+
+    fun onCheckRegisterEnabled() = isAllInputIsNotEmpty() && isCheckNickname && isCheckEmail
 
     companion object {
         val empty = RegisterUiModel()

@@ -199,7 +199,7 @@ fun RegisterScreen(
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onClickRegister() },
-                isEnable = uiModel.isAllInputNotEmpty
+                isEnable = uiModel.isRegisterEnable
             )
             Spacer(modifier = Modifier.weight(1f))
         }
