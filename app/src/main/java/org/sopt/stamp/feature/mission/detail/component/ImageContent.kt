@@ -20,7 +20,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.sopt.stamp.designsystem.component.util.noRippleClickable
 import org.sopt.stamp.designsystem.style.SoptTheme
 import org.sopt.stamp.feature.mission.model.ImageModel
 
@@ -71,7 +71,7 @@ fun ImageContent(
                         color = SoptTheme.colors.onSurface5,
                         shape = RoundedCornerShape(10.dp)
                     )
-                    .clickable {
+                    .noRippleClickable {
                         if (isEditable) {
                             photoPickerLauncher.launch(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)

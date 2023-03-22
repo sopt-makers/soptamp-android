@@ -90,6 +90,20 @@ fun LoginPageScreen(
         }
     }
 
+    if (!viewModel.isOnboardingSeen) {
+        SoptTheme {
+            SoptColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(SoptTheme.colors.white)
+            ) {
+                OnboardingScreen {
+                    viewModel.isOnboardingSeen = true
+                }
+            }
+        }
+    }
+
     if (!uiState.isComplete) {
         SoptTheme {
             SoptColumn(
@@ -99,6 +113,11 @@ fun LoginPageScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (!viewModel.isOnboardingSeen) {
+                    OnboardingScreen {
+                        viewModel.updateOnboardingSeen(true)
+                    }
+                }
                 val username = remember { mutableStateOf(TextFieldValue()) }
                 val password = remember { mutableStateOf(TextFieldValue()) }
 

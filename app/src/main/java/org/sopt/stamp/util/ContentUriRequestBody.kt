@@ -27,7 +27,7 @@ import okio.source
 
 class ContentUriRequestBody(
     context: Context,
-    private val uri: Uri
+    private val uri: Uri?
 ) : RequestBody() {
     private val contentResolver = context.contentResolver
 
@@ -35,17 +35,19 @@ class ContentUriRequestBody(
     private var size = -1L
 
     init {
-        contentResolver.query(
-            uri,
-            arrayOf(MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DISPLAY_NAME),
-            null,
-            null,
-            null
-        )?.use { cursor ->
-            if (cursor.moveToFirst()) {
-                size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE))
-                fileName =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
+        if (uri != null) {
+            contentResolver.query(
+                uri,
+                arrayOf(MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DISPLAY_NAME),
+                null,
+                null,
+                null
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE))
+                    fileName =
+                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
+                }
             }
         }
     }
@@ -55,11 +57,13 @@ class ContentUriRequestBody(
     override fun contentLength(): Long = size
 
     override fun contentType(): MediaType? =
-        contentResolver.getType(uri)?.toMediaTypeOrNull()
+        uri?.let { contentResolver.getType(it)?.toMediaTypeOrNull() }
 
     override fun writeTo(sink: BufferedSink) {
-        contentResolver.openInputStream(uri)?.source()?.use { source ->
-            sink.writeAll(source)
+        uri?.let {
+            contentResolver.openInputStream(it)?.source()?.use { source ->
+                sink.writeAll(source)
+            }
         }
     }
 

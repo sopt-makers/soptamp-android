@@ -107,7 +107,7 @@ class StampRepositoryImpl @Inject constructor(
                 }
             }
 
-            is ImageModel.Remote -> null
+            is ImageModel.Remote -> listOf(ContentUriRequestBody(context, null).toFormData("imgUrl"))
         }
         return runCatching {
             service.modifyStamp(

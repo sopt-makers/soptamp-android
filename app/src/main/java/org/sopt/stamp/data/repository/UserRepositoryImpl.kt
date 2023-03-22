@@ -79,4 +79,8 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun fetchUserId() = local.userId
+    override fun getIsOnboardingSeen() = local.isOnboardingSeen
+    override fun updateOnboardingSeen(value: Boolean) {
+        local.isOnboardingSeen = value
+    }
 }

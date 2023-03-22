@@ -34,6 +34,10 @@ class SoptampDataStore @Inject constructor(
         get() = dataStore.getString("nickname", "") ?: "String"
         set(value) = dataStore.edit { putString("nickname", value) }
 
+    var isOnboardingSeen: Boolean
+        get() = dataStore.getBoolean("is_onboarding_seen", false)
+        set(value) = dataStore.edit { putBoolean("is_onboarding_seen", value) }
+
     fun clear() {
         userId = -1
         profileMessage = ""

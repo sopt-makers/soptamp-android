@@ -33,3 +33,11 @@ fun getRankBackgroundColor(rank: Int) = when (rank) {
     3 -> SoptTheme.colors.mint200
     else -> SoptTheme.colors.onSurface5
 }
+
+@Composable
+fun headerBackgroundColorOf(rank: Int) = when (rank) {
+    1 -> SoptTheme.colors.pink100
+    2 -> SoptTheme.colors.purple100
+    3 -> SoptTheme.colors.mint100
+    else -> SoptTheme.colors.onSurface5
+}

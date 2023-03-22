@@ -15,6 +15,9 @@
  */
 package org.sopt.stamp.feature.login
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,6 +43,8 @@ class LoginViewModel @Inject constructor(
     private val _uiEvent = Channel<SingleEvent>(Channel.BUFFERED)
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    var isOnboardingSeen by mutableStateOf(userRepository.getIsOnboardingSeen())
+
     override fun handleAction(action: LoginAction) {
         when (action) {
             is LoginAction.Login -> login()
@@ -53,6 +58,11 @@ class LoginViewModel @Inject constructor(
         if (result) {
             updateLoginComplete()
         }
+    }
+
+    fun updateOnboardingSeen(value: Boolean) {
+        userRepository.updateOnboardingSeen(true)
+        isOnboardingSeen = true
     }
 
     private fun login() {
