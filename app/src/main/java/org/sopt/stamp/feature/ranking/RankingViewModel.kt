@@ -15,6 +15,9 @@
  */
 package org.sopt.stamp.feature.ranking
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,17 +38,29 @@ class RankingViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state: MutableStateFlow<RankingState> = MutableStateFlow(RankingState.Loading)
     val state: StateFlow<RankingState> = _state.asStateFlow()
+    var isRefreshing by mutableStateOf(false)
 
     init {
         fetchRanking()
+    }
+
+    fun onRefresh() {
+        viewModelScope.launch {
+            isRefreshing = true
+            fetchRanking()
+        }
     }
 
     fun fetchRanking() = viewModelScope.launch {
         _state.value = RankingState.Loading
         rankingRepository.getRanking()
             .mapCatching { it.toUiModel() }
-            .onSuccess { ranking -> onSuccessStateChange(ranking) }
-            .onFailure {
+            .onSuccess { ranking ->
+                if (isRefreshing) {
+                    isRefreshing = false
+                }
+                onSuccessStateChange(ranking)
+            }.onFailure {
                 _state.value = RankingState.Failure
             }
     }

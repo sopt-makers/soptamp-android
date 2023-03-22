@@ -16,18 +16,24 @@
 package org.sopt.stamp.feature.ranking
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -71,6 +77,8 @@ fun RankingScreen(
             }
 
             is RankingState.Success -> RankingScreen(
+                refreshing = rankingViewModel.isRefreshing,
+                onRefresh = { rankingViewModel.onRefresh() },
                 rankingListUiModel = (state as RankingState.Success).uiModel,
                 userId = (state as RankingState.Success).userId,
                 onClickBack = { resultNavigator.navigateBack() },
@@ -80,13 +88,20 @@ fun RankingScreen(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankingScreen(
+    refreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
     rankingListUiModel: RankingListUiModel,
     userId: Int,
     onClickBack: () -> Unit = {},
     onClickUser: (RankerNavArg) -> Unit = {}
 ) {
+    val refreshingState = rememberPullRefreshState(
+        refreshing = refreshing,
+        onRefresh = onRefresh
+    )
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val scrollOffsetPx = (-257).dp.toPx()
@@ -118,27 +133,32 @@ fun RankingScreen(
             start = 16.dp,
             end = 16.dp
         )
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(defaultPadding),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(bottom = 70.dp)
+        Box(
+            modifier = Modifier.pullRefresh(refreshingState),
         ) {
-            item {
-                TopRankerList(
-                    topRanker = rankingListUiModel.topRankingList,
-                    onClickTopRankerBubble = { ranker -> onClickUser(ranker.toArgs()) }
-                )
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.padding(defaultPadding),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(bottom = 70.dp)
+            ) {
+                item {
+                    TopRankerList(
+                        topRanker = rankingListUiModel.topRankingList,
+                        onClickTopRankerBubble = { ranker -> onClickUser(ranker.toArgs()) }
+                    )
+                }
+                items(rankingListUiModel.otherRankingList) { item ->
+                    RankListItem(
+                        item = item,
+                        isMyRanking = item.userId == userId,
+                        onClickUser = { ranker ->
+                            if (userId != ranker.userId) onClickUser(ranker.toArgs())
+                        }
+                    )
+                }
             }
-            items(rankingListUiModel.otherRankingList) { item ->
-                RankListItem(
-                    item = item,
-                    isMyRanking = item.userId == userId,
-                    onClickUser = { ranker ->
-                        if (userId != ranker.userId) onClickUser(ranker.toArgs())
-                    }
-                )
-            }
+            PullRefreshIndicator(refreshing, refreshingState, Modifier.align(Alignment.TopCenter))
         }
     }
 }
@@ -180,6 +200,9 @@ fun PreviewRankingScreen() {
         )
     }
     SoptTheme {
-        RankingScreen(RankingListUiModel(previewRanking), 6)
+        RankingScreen(
+            rankingListUiModel = RankingListUiModel(previewRanking),
+            userId = 6
+        )
     }
 }
