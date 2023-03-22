@@ -49,7 +49,7 @@ data class PostUiState(
 ) {
     companion object {
         fun from(data: Archive) = PostUiState(
-            id = data.id,
+            id = data.missionId,
             imageUri = if (data.images.isEmpty()) ImageModel.Empty else ImageModel.Remote(data.images),
             content = data.contents
         )
@@ -159,6 +159,7 @@ class MissionDetailViewModel @Inject constructor(
     fun onSubmit() {
         viewModelScope.launch {
             val currentState = uiState.value
+            Timber.d("MissionDetailViewModel onSubmit() $currentState")
             val (id, imageUri, content) = currentState
             uiState.update {
                 it.copy(isError = false, error = null, isLoading = true)

@@ -63,6 +63,7 @@ import org.sopt.stamp.feature.mission.model.MissionNavArgs
 import org.sopt.stamp.feature.ranking.getRankBackgroundColor
 import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
+import timber.log.Timber
 
 @MissionNavGraph
 @Destination("detail")
@@ -98,6 +99,7 @@ fun MissionDetailScreen(
     )
 
     LaunchedEffect(Unit) {
+        Timber.d("MissionDetailScreen: $id, $isCompleted, $isMe, $userId")
         viewModel.initMissionState(id, isCompleted, isMe, userId)
     }
     LaunchedEffect(isSuccess, progress) {
@@ -152,7 +154,7 @@ fun MissionDetailScreen(
                     placeHolder = "메모를 작성해 주세요.",
                     onValueChange = viewModel::onChangeContent,
                     borderColor = getRankTextColor(level.value),
-                    isEditable = isEditable && isMe && isSuccess
+                    isEditable = isEditable && isMe && !isSuccess
                 )
                 if (!isEditable || !isMe) {
                     Row(

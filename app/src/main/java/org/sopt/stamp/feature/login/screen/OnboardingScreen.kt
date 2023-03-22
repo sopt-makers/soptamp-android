@@ -3,7 +3,6 @@ package org.sopt.stamp.feature.login.screen
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -62,7 +61,7 @@ fun OnboardingScreen(
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
             pageCount = onboardingPages.size,
-            state = pageState,
+            state = pageState
         ) {
             OnboardingPage(
                 image = onboardingPages[pageState.currentPage].image,
@@ -102,7 +101,7 @@ fun OnboardingButton(
             disabledBackgroundColor = SoptTheme.colors.purple200
         ),
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(10.dp)
     ) {
         Text(
             text = "시작하기",
