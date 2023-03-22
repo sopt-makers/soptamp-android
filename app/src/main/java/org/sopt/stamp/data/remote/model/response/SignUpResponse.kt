@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sopt.stamp.feature.signup.model
+package org.sopt.stamp.data.remote.model.response
 
-sealed class RegisterState {
-    object Loading : RegisterState()
-    data class Default(val uiModel: RegisterUiModel) : RegisterState()
-    data class Failure(val current: RegisterUiModel) : RegisterState()
-    object Success : RegisterState()
-}
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SignUpResponse(
+    @SerialName("userId")
+    val userId: Int
+)

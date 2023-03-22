@@ -82,6 +82,27 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+    fun checkEmail(email: String) {
+        viewModelScope.launch {
+            runCatching {
+                userRepository.checkEmail(email)
+            }.onSuccess {
+                updateEmailPassState()
+            }.onFailure {
+                _state.update { prevState ->
+                    check(prevState is RegisterState.Default)
+                    prevState.copy(
+                        uiModel = prevState.uiModel.copy(
+                            nicknameCheckMessage = "사용 가능한 이름입니다.",
+                            nicknameCheckState = CheckState.NONE_PASS,
+                            isCheckNickname = false
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     private fun updateNickNamePassState() {
         _state.update { prevState ->
             check(prevState is RegisterState.Default)
@@ -93,6 +114,27 @@ class SignUpViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    fun onSubmit() {
+        val currentState = _state.value as RegisterState.Default
+        val nickname = currentState.uiModel.nickname
+        val email = currentState.uiModel.email
+        val password = currentState.uiModel.password
+        _state.value = RegisterState.Loading
+        viewModelScope.launch {
+            runCatching {
+                userRepository.signup(nickname, email, password, "android", "null")
+            }.onSuccess {
+                _state.value = RegisterState.Success
+            }.onFailure {
+                _state.value = RegisterState.Failure(currentState.uiModel)
+            }
+        }
+    }
+
+    fun onRetry(uiModel: RegisterUiModel) {
+        _state.value = RegisterState.Default(uiModel)
     }
 
     private fun updateEmailPassState() {

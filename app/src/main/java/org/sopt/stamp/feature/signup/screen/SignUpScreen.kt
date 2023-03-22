@@ -39,9 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import com.ramcosta.composedestinations.navigation.popUpTo
-import com.ramcosta.composedestinations.result.EmptyResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.SignUpNavGraph
@@ -51,7 +49,6 @@ import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
 import org.sopt.stamp.designsystem.component.layout.LoadingScreen
 import org.sopt.stamp.designsystem.component.topappbar.SoptTopAppBar
 import org.sopt.stamp.designsystem.style.SoptTheme
-import org.sopt.stamp.domain.fake.FakeUserRepository
 import org.sopt.stamp.feature.destinations.LoginPageScreenDestination
 import org.sopt.stamp.feature.destinations.SignUpCompleteScreenDestination
 import org.sopt.stamp.feature.signup.SignUpViewModel
@@ -70,6 +67,7 @@ fun SignUpPageScreen(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+
     SoptTheme {
         Box(modifier = Modifier.fillMaxSize()) {
             var uiModel by remember {
@@ -84,8 +82,19 @@ fun SignUpPageScreen(
                     LoadingScreen()
                 }
 
-                RegisterState.Failure -> {
-                    NetworkErrorDialog()
+                is RegisterState.Failure -> {
+                    NetworkErrorDialog {
+                        viewModel.onRetry((state as RegisterState.Failure).current)
+                    }
+                }
+
+                RegisterState.Success -> {
+                    navigator.navigate(
+                        direction = SignUpCompleteScreenDestination,
+                        builder = {
+                            popUpTo(LoginPageScreenDestination) { inclusive = true }
+                        }
+                    )
                 }
             }
             RegisterScreen(
@@ -94,24 +103,14 @@ fun SignUpPageScreen(
                 onEmailChange = { viewModel.putEmail(it) },
                 onPasswordChange = { viewModel.putPassword(it) },
                 onPasswordConfirmChange = { viewModel.putPasswordConfirm(it) },
-                onClickCheckNickname = {},
-                onClickCheckEmail = {},
-                onClickRegister = {
-                    navigator.navigate(
-                        direction = SignUpCompleteScreenDestination,
-                        builder = {
-                            popUpTo(LoginPageScreenDestination) {
-                                inclusive = true
-                            }
-                        }
-                    )
-                },
+                onClickCheckNickname = { viewModel.checkNickName(it) },
+                onClickCheckEmail = { viewModel.checkEmail(it) },
+                onClickRegister = { viewModel.onSubmit() },
                 onClickBackNav = { resultBackNavigator.navigateBack() }
             )
         }
     }
 }
-
 
 @Composable
 fun RegisterScreen(
@@ -120,8 +119,8 @@ fun RegisterScreen(
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onPasswordConfirmChange: (String) -> Unit = {},
-    onClickCheckNickname: () -> Unit = {},
-    onClickCheckEmail: () -> Unit = {},
+    onClickCheckNickname: (String) -> Unit = {},
+    onClickCheckEmail: (String) -> Unit = {},
     onClickRegister: () -> Unit = {},
     onClickBackNav: () -> Unit = {}
 ) {
@@ -161,7 +160,7 @@ fun RegisterScreen(
                         labelText = "한글/영문 NN자로 입력해주세요.",
                         isError = !(uiModel.nicknameCheckState.isPass),
                         message = uiModel.nicknameCheckMessage,
-                        onClickButton = { onClickCheckNickname() }
+                        onClickButton = { onClickCheckNickname(inputNickname.value.text) }
                     )
                     Spacer(modifier = Modifier.size(38.dp))
                     RegisterInputField(
@@ -172,7 +171,7 @@ fun RegisterScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         isError = !(uiModel.emailCheckState.isPass),
                         message = uiModel.emailCheckMessage,
-                        onClickButton = { onClickCheckEmail() }
+                        onClickButton = { onClickCheckEmail(inputEmail.value.text) }
                     )
                     Spacer(modifier = Modifier.size(38.dp))
                 }
@@ -238,17 +237,5 @@ fun RegisterHeaderTitle() {
 fun PreviewRegisterScreen() {
     SoptTheme {
         RegisterScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSignUpScreen() {
-    SoptTheme {
-        SignUpPageScreen(
-            viewModel = SignUpViewModel(FakeUserRepository),
-            resultBackNavigator = EmptyResultBackNavigator(),
-            navigator = EmptyDestinationsNavigator
-        )
     }
 }
