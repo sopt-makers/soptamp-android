@@ -157,7 +157,7 @@ fun RegisterScreen(
                         title = "닉네임",
                         input = inputNickname,
                         onTextChange = { onNicknameChange(it) },
-                        labelText = "한글/영문 NN자로 입력해주세요.",
+                        labelText = "한글/영문 10자 이하로 입력해주세요.",
                         isError = !(uiModel.nicknameCheckState.isPass),
                         message = uiModel.nicknameCheckMessage,
                         onClickButton = { onClickCheckNickname(inputNickname.value.text) }

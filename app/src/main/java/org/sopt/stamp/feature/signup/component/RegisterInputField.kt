@@ -86,7 +86,7 @@ fun RegisterInputField(
                     backgroundColor = SoptTheme.colors.purple300,
                     disabledBackgroundColor = SoptTheme.colors.purple200
                 ),
-                isEnable = input.value.text.isNotEmpty(),
+                isEnable = !isError && input.value.text.isNotEmpty(),
                 onClick = { onClickButton() }
             )
         }

@@ -24,7 +24,7 @@ data class Nickname(
     companion object {
         @JvmStatic
         val NICKNAME_REGEX = "^[A-Za-z가-힣]{0,11}$"
-        const val INVALID_NICKNAME_MESSAGE = "한글/영문 11자로 입력해주세요."
+        const val INVALID_NICKNAME_MESSAGE = "한글/영문 10자 이하로 입력해주세요."
     }
 }
 
