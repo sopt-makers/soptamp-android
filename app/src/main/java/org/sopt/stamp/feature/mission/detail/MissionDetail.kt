@@ -60,7 +60,8 @@ import org.sopt.stamp.feature.mission.detail.component.Memo
 import org.sopt.stamp.feature.mission.detail.component.PostSubmissionBadge
 import org.sopt.stamp.feature.mission.model.ImageModel
 import org.sopt.stamp.feature.mission.model.MissionNavArgs
-import org.sopt.stamp.feature.ranking.getRankBackgroundColor
+import org.sopt.stamp.feature.ranking.getLevelBackgroundColor
+import org.sopt.stamp.feature.ranking.getLevelTextColor
 import org.sopt.stamp.feature.ranking.getRankTextColor
 import org.sopt.stamp.util.DefaultPreview
 import timber.log.Timber
@@ -179,8 +180,8 @@ fun MissionDetailScreen(
                     enabled = isSubmitEnabled,
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = getRankTextColor(level.value),
-                        disabledBackgroundColor = getRankBackgroundColor(level.value)
+                        backgroundColor = getLevelTextColor(level.value),
+                        disabledBackgroundColor = getLevelBackgroundColor(level.value)
                     ),
                     contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
