@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 @Stable
 class SoptColors(
     white: Color,
+    black: Color,
     purple300: Color,
     purple200: Color,
     purple100: Color,
@@ -56,6 +57,8 @@ class SoptColors(
     isLight: Boolean
 ) {
     var white by mutableStateOf(white)
+        private set
+    var black by mutableStateOf(black)
         private set
     var purple300 by mutableStateOf(purple300)
         private set
@@ -109,6 +112,7 @@ class SoptColors(
 
     fun copy(): SoptColors = SoptColors(
         white = Color.White,
+        black = Color.Black,
         purple300 = purple300,
         purple200 = purple200,
         purple100 = purple100,
@@ -168,6 +172,7 @@ class SoptColors(
 
 fun soptLightColors(
     white: Color = Color.White,
+    black: Color = Color.Black,
     purple300: Color = Purple300,
     purple200: Color = Purple200,
     purple100: Color = Purple100,
@@ -194,6 +199,7 @@ fun soptLightColors(
     onSurface5: Color = Gray50
 ) = SoptColors(
     white,
+    black,
     purple300,
     purple200,
     purple100,
