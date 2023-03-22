@@ -60,6 +60,11 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun updateOnboardingSeen(value: Boolean) {
+        userRepository.updateOnboardingSeen(true)
+        isOnboardingSeen = true
+    }
+
     private fun login() {
         viewModelScope.launch {
             runCatching {

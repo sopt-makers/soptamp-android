@@ -47,4 +47,5 @@ object FakeUserRepository : UserRepository {
 
     override fun fetchUserId() = 1
     override fun getIsOnboardingSeen() = false
+    override fun updateOnboardingSeen(value: Boolean) = Unit
 }

@@ -30,4 +30,5 @@ interface UserRepository {
     fun updateLocalUserInfo(userId: Int, profileMessage: String)
     fun fetchUserId(): Int
     fun getIsOnboardingSeen(): Boolean
+    fun updateOnboardingSeen(value: Boolean)
 }
