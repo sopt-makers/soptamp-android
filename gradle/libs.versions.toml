@@ -36,7 +36,7 @@ timber = "5.0.1"
 coil = "2.2.2"
 compose-destination = "1.8.33-beta"
 compose-material3 = "1.0.1"
-mavericks = "3.0.1"
+mavericks = "3.0.2"
 
 google-services = "4.3.15"
 crashlytics = "2.9.4"
