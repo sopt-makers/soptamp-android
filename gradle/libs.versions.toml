@@ -45,6 +45,8 @@ ktlint = "11.3.1"
 lottie = "6.0.0"
 spotless = "6.17.0"
 process-pheonix = "2.1.2"
+sentry = "3.4.3"
+sentry-android = "6.16.0"
 
 [libraries]
 agp = { module = "com.android.tools.build:gradle", version.ref = "gradleplugin" }
@@ -121,6 +123,7 @@ mavericks-navigation = { module = "com.airbnb.android:mavericks-navigation", ver
 mavericks-mockable = { module = "com.airbnb.android:mavericks-mocking", version.ref = "mavericks" }
 
 ktlint = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
+sentry-compose = { module = "io.sentry:sentry-compose-android", version.ref = "sentry-android" }
 
 process-phoenix = { module = "com.jakewharton:process-phoenix", version.ref = "process-pheonix" }
 
@@ -162,3 +165,4 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspplugin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
