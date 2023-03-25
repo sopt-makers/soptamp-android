@@ -9,6 +9,7 @@ plugins {
     alias libs.plugins.ksp
     alias libs.plugins.kotlinx.serialization
     alias libs.plugins.spotless
+    alias libs.plugins.sentry
 }
 
 Properties properties = new Properties()
@@ -32,6 +33,7 @@ android {
 
         buildConfigField "String", "SOPTAMP_API_KEY", properties["apiKey"]
         buildConfigField "String", "SOPTAMP_DATA_STORE_KEY", properties["dataStoreKey"]
+        manifestPlaceholders = [sentryDsn: properties["sentryDsn"]]
     }
 
     buildTypes {
@@ -90,6 +92,7 @@ dependencies {
     implementation libs.timber
     implementation libs.coil.compose
     implementation libs.process.phoenix
+    implementation libs.sentry.compose
 
     implementation libs.bundles.compose
 
