@@ -17,6 +17,7 @@ package org.sopt.stamp.designsystem.component.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
@@ -46,48 +47,55 @@ fun ErrorDialog(
         mutableStateOf(true)
     }
     if (openDialog) {
-        AlertDialog(
-            onDismissRequest = { openDialog = false },
-            title = {
-                Text(
-                    text = title,
-                    style = SoptTheme.typography.sub1,
-                    color = Color.Black,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            },
-            text = {
-                content?.let {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.55f))
+                .noRippleClickable { }
+        ) {
+            AlertDialog(
+                onDismissRequest = { openDialog = false },
+                title = {
                     Text(
-                        text = it,
-                        style = SoptTheme.typography.caption3,
-                        color = SoptTheme.colors.onSurface50,
+                        text = title,
+                        style = SoptTheme.typography.sub1,
+                        color = Color.Black,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
+                },
+                text = {
+                    content?.let {
+                        Text(
+                            text = it,
+                            style = SoptTheme.typography.caption3,
+                            color = SoptTheme.colors.onSurface50,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                },
+                buttons = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Color(0xFFFF8080))
+                            .noRippleClickable {
+                                onRetry()
+                                openDialog = false
+                            }
+                            .padding(vertical = 15.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = retryButtonText,
+                            style = SoptTheme.typography.sub1,
+                            color = Color.White
+                        )
+                    }
                 }
-            },
-            buttons = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color(0xFFFF8080))
-                        .noRippleClickable {
-                            onRetry()
-                            openDialog = false
-                        }
-                        .padding(vertical = 15.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = retryButtonText,
-                        style = SoptTheme.typography.sub1,
-                        color = Color.White
-                    )
-                }
-            }
-        )
+            )
+        }
     }
 }
 

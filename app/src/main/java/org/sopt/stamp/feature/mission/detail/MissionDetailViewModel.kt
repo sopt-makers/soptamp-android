@@ -28,6 +28,7 @@ import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
 import org.sopt.stamp.domain.model.Archive
 import org.sopt.stamp.domain.repository.StampRepository
 import org.sopt.stamp.feature.mission.model.ImageModel
+import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -78,6 +79,7 @@ class MissionDetailViewModel @Inject constructor(
         .filter { it.isNotEmpty() }
     val isDeleteSuccess = uiState.map { it.isDeleteSuccess }
     val isDeleteDialogVisible = uiState.map { it.isDeleteDialogVisible }
+    val isError = uiState.map { it.isError }
 
     fun initMissionState(id: Int, isCompleted: Boolean, isMe: Boolean, userId: Int) {
         viewModelScope.launch {
@@ -111,8 +113,14 @@ class MissionDetailViewModel @Inject constructor(
                     uiState.update { result }
                 }.onFailure { error ->
                     Timber.e(error)
-                    uiState.update {
-                        it.copy(isLoading = false, isError = true, error = error)
+                    if (error is HttpException) {
+                        uiState.update {
+                            it.copy(isLoading = false, isError = true, error = error)
+                        }
+                    } else {
+                        uiState.update {
+                            it.copy(isLoading = false, error = error)
+                        }
                     }
                 }
         }
@@ -216,6 +224,12 @@ class MissionDetailViewModel @Inject constructor(
                         it.copy(isLoading = false, isError = true, error = error)
                     }
                 }
+        }
+    }
+
+    fun onPressNetworkErrorDialog() {
+        uiState.update {
+            it.copy(isError = false, error = null)
         }
     }
 }

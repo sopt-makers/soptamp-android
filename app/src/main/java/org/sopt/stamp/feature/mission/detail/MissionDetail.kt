@@ -48,6 +48,8 @@ import kotlinx.coroutines.delay
 import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.dialog.DoubleOptionDialog
+import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
+import org.sopt.stamp.designsystem.component.dialog.SingleOptionDialog
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
@@ -84,6 +86,7 @@ fun MissionDetailScreen(
     val createdAt by viewModel.createdAt.collectAsState("")
     val isDeleteSuccess by viewModel.isDeleteSuccess.collectAsState(false)
     val isDeleteDialogVisible by viewModel.isDeleteDialogVisible.collectAsState(false)
+    val isError by viewModel.isError.collectAsState(false)
     val lottieResId = remember(level) {
         when (level.value) {
             1 -> R.raw.pinkstamps
@@ -209,6 +212,11 @@ fun MissionDetailScreen(
                     viewModel.onDelete()
                 }
             )
+        }
+        if (isError) {
+            NetworkErrorDialog {
+                viewModel.onPressNetworkErrorDialog()
+            }
         }
     }
 }
