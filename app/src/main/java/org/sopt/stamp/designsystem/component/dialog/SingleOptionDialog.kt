@@ -41,7 +41,7 @@ fun SingleOptionDialog(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.55f))
-            .noRippleClickable {  }
+            .noRippleClickable { }
     ) {
         AlertDialog(
             onDismissRequest = { onConfirm() },

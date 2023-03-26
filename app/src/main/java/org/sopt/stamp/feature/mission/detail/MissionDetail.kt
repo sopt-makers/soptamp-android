@@ -49,7 +49,6 @@ import org.sopt.stamp.R
 import org.sopt.stamp.config.navigation.MissionNavGraph
 import org.sopt.stamp.designsystem.component.dialog.DoubleOptionDialog
 import org.sopt.stamp.designsystem.component.dialog.NetworkErrorDialog
-import org.sopt.stamp.designsystem.component.dialog.SingleOptionDialog
 import org.sopt.stamp.designsystem.component.layout.SoptColumn
 import org.sopt.stamp.designsystem.component.toolbar.Toolbar
 import org.sopt.stamp.designsystem.component.toolbar.ToolbarIconType
