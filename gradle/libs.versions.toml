@@ -46,7 +46,7 @@ lottie = "6.0.0"
 spotless = "6.17.0"
 process-pheonix = "2.1.2"
 sentry = "3.4.3"
-sentry-android = "6.16.0"
+sentry-android = "6.17.0"
 
 [libraries]
 agp = { module = "com.android.tools.build:gradle", version.ref = "gradleplugin" }
