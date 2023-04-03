@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.data.source
 
+import org.sopt.stamp.data.remote.model.response.NoticeBannerResponse
 import org.sopt.stamp.data.remote.model.response.SignUpResponse
 import org.sopt.stamp.data.remote.model.response.UserResponse
 
@@ -27,4 +28,5 @@ interface UserDataSource {
     suspend fun updatePassword(userId: Int, new: String)
     suspend fun updateNickname(userId: Int, new: String)
     suspend fun updateProfileMessage(userId: Int, new: String)
+    suspend fun getBanner(): NoticeBannerResponse
 }
