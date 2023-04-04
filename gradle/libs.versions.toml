@@ -45,7 +45,7 @@ ktlint = "11.3.1"
 lottie = "6.0.0"
 spotless = "6.17.0"
 process-pheonix = "2.1.2"
-sentry = "3.4.3"
+sentry = "3.5.0"
 sentry-android = "6.17.0"
 
 [libraries]
