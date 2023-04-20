@@ -13,7 +13,7 @@ navigation = "2.5.3"
 startup = "1.1.1"
 security = "1.0.0"
 compose-compiler = "1.4.3"
-splash = "1.0.0"
+splash = "1.0.1"
 
 material = "1.8.0"
 accompanist = "0.30.1"
