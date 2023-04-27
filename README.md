@@ -44,7 +44,7 @@ SOPT 공식 앱에서는 솝트인이라면 꼭! 즐겨야 하는 활동들을 �
 - [Dagger-Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html), [Flow](https://kotlinlang.org/docs/flow.html)
 - [Gradle Version Catalog](https://docs.gradle.org/current/userguide/platforms.html) and [Custom Convention Plugins](https://docs.gradle.org/current/samples/sample_convention_plugins.html)
-- 
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
