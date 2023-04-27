@@ -27,9 +27,14 @@ SOPT 공식 앱에서는 솝트인이라면 꼭! 즐겨야 하는 활동들을 �
 미션을 달성하며 솝트에서의 추억을 보관하고
 랭킹을 올리며 경쟁하는 재미를 느껴보세요.
 
-<h2>Download</h2>
+<h2>⚠️ Archived</h2>
 
-<a href='https://play.google.com/store/apps/details?id=org.sopt.stamp'><img alt='다운로드하기 Google Play' src='https://play.google.com/intl/ko/badges/static/images/badges/ko_badge_web_generic.png' width='40%'/></a>
+이 프로덕트는 추가 개발되지 않습니다.
+
+새로운 SOPT 앱을 보고 싶다면 다음 링크를 확인하세요
+
+[sopt-makeres/sopt-android](https://github.com/sopt-makers/sopt-android)
+[SOPT Play Store](https://play.google.com/store/apps/details?id=org.sopt.official)</h2>
 
 <h2>Tech Stack</h2>
 
