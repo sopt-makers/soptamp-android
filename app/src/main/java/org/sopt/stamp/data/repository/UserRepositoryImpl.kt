@@ -17,6 +17,7 @@ package org.sopt.stamp.data.repository
 
 import org.sopt.stamp.data.local.SoptampDataStore
 import org.sopt.stamp.data.source.UserDataSource
+import org.sopt.stamp.domain.model.Banner
 import org.sopt.stamp.domain.model.User
 import org.sopt.stamp.domain.repository.UserRepository
 import javax.inject.Inject
@@ -82,5 +83,9 @@ class UserRepositoryImpl @Inject constructor(
     override fun getIsOnboardingSeen() = local.isOnboardingSeen
     override fun updateOnboardingSeen(value: Boolean) {
         local.isOnboardingSeen = value
+    }
+
+    override suspend fun getBanner() = runCatching {
+        remote.getBanner().toEntity()
     }
 }

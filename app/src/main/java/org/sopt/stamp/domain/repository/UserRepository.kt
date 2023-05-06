@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.domain.repository
 
+import org.sopt.stamp.domain.model.Banner
 import org.sopt.stamp.domain.model.User
 
 interface UserRepository {
@@ -31,4 +32,5 @@ interface UserRepository {
     fun fetchUserId(): Int
     fun getIsOnboardingSeen(): Boolean
     fun updateOnboardingSeen(value: Boolean)
+    suspend fun getBanner(): Result<Banner>
 }

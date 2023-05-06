@@ -15,6 +15,7 @@
  */
 package org.sopt.stamp.domain.fake
 
+import org.sopt.stamp.domain.model.Banner
 import org.sopt.stamp.domain.model.User
 import org.sopt.stamp.domain.repository.UserRepository
 
@@ -48,4 +49,5 @@ object FakeUserRepository : UserRepository {
     override fun fetchUserId() = 1
     override fun getIsOnboardingSeen() = false
     override fun updateOnboardingSeen(value: Boolean) = Unit
+    override suspend fun getBanner() = runCatching { Banner("", "", "", "") }
 }

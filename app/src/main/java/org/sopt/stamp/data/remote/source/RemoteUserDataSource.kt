@@ -18,6 +18,7 @@ package org.sopt.stamp.data.remote.source
 import org.sopt.stamp.data.remote.api.RankService
 import org.sopt.stamp.data.remote.api.UserService
 import org.sopt.stamp.data.remote.model.request.*
+import org.sopt.stamp.data.remote.model.response.NoticeBannerResponse
 import org.sopt.stamp.data.remote.model.response.SignUpResponse
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import org.sopt.stamp.data.source.UserDataSource
@@ -79,5 +80,9 @@ internal class RemoteUserDataSource @Inject constructor(
 
     override suspend fun updateProfileMessage(userId: Int, new: String) {
         rankService.updateProfileMessage(userId, UpdateProfileMessageRequest(new))
+    }
+
+    override suspend fun getBanner(): NoticeBannerResponse {
+        return userService.getNoticeBanner()
     }
 }

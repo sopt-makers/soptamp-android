@@ -19,6 +19,7 @@ import org.sopt.stamp.data.remote.model.request.LoginRequest
 import org.sopt.stamp.data.remote.model.request.SignUpRequest
 import org.sopt.stamp.data.remote.model.request.UpdateNicknameRequest
 import org.sopt.stamp.data.remote.model.request.UpdatePasswordRequest
+import org.sopt.stamp.data.remote.model.response.NoticeBannerResponse
 import org.sopt.stamp.data.remote.model.response.SignUpResponse
 import org.sopt.stamp.data.remote.model.response.UserResponse
 import retrofit2.Response
@@ -71,4 +72,7 @@ interface UserService {
     // 탈퇴하기
     @DELETE("auth/withdraw")
     suspend fun withdraw(@Header("userId") userId: Int)
+
+    @GET("firebase")
+    suspend fun getNoticeBanner(): NoticeBannerResponse
 }
